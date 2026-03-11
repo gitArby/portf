@@ -1,0 +1,136 @@
+:root {
+    --bg-dark: #0a0a0a;
+    --text-light: #f5f5f5;
+    --text-muted: #888888;
+    --arbyy-green: #00ff66;
+    
+    --font-main: 'Exo 2', sans-serif;
+    --font-heading: 'Orbitron', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    cursor: none; 
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--text-light);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    background-image: url('image.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: var(--bg-dark);
+}
+
+/* ---------------- BOOT OS OBRAZOVKA ---------------- */
+#boot-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #030303; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; font-family: 'Courier New', Courier, monospace; color: var(--arbyy-green); transition: opacity 0.8s ease, visibility 0.8s ease; }
+#boot-screen.hidden { opacity: 0; visibility: hidden; }
+.terminal-text p { font-size: clamp(1rem, 3vw, 1.5rem); margin: 0.5rem 0; opacity: 0; text-shadow: 0 0 5px var(--arbyy-green); }
+.cursor-blink { font-size: clamp(1rem, 3vw, 1.5rem); animation: blink 1s step-end infinite; margin-top: 0.5rem; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* ---------------- CUSTOM KURZOR ---------------- */
+.cursor-dot { width: 8px; height: 8px; background-color: var(--arbyy-green); border-radius: 50%; position: fixed; pointer-events: none; z-index: 1000; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--arbyy-green); transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease; }
+.cursor-dot.active { width: 25px; height: 25px; background-color: transparent; border: 2px solid var(--arbyy-green); animation: cursorPulse 1s infinite alternate; }
+.cursor-outline { width: 30px; height: 30px; border: 2px solid rgba(0, 255, 102, 0.2); border-radius: 50%; position: fixed; pointer-events: none; z-index: 999; transform: translate(-50%, -50%); transition: border-color 0.3s ease; }
+.cursor-outline.active { border-color: rgba(0, 255, 102, 0.6); }
+@keyframes cursorPulse { 0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 5px var(--arbyy-green); } 100% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 15px var(--arbyy-green); } }
+
+/* ---------------- EASTER EGG MATRIX ---------------- */
+#easter-egg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 998; display: none; }
+#mega-trigger { cursor: none; position: relative; z-index: 100; }
+
+/* ---------------- ANIMACE HERO ---------------- */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes assembleText { 0% { letter-spacing: 50px; opacity: 0; filter: blur(10px); transform: scale(1.2); } 100% { letter-spacing: -4px; opacity: 1; filter: blur(0); transform: scale(1); } }
+@keyframes neonPulse { 0% { text-shadow: 0 0 10px rgba(0, 255, 102, 0.2); transform: translateY(0); } 50% { text-shadow: 0 0 30px rgba(0, 255, 102, 0.6), 0 0 60px rgba(0, 255, 102, 0.3); transform: translateY(-8px); } 100% { text-shadow: 0 0 10px rgba(0, 255, 102, 0.2); transform: translateY(0); } }
+
+/* ---------------- GLITCH EFEKT ---------------- */
+@keyframes glitch-anim-1 {
+  0%, 90% { clip-path: inset(100% 0 100% 0); transform: translate(0); }
+  92% { clip-path: inset(20% 0 80% 0); transform: translate(-4px, 2px); }
+  94% { clip-path: inset(50% 0 30% 0); transform: translate(4px, -2px); }
+  96% { clip-path: inset(10% 0 60% 0); transform: translate(-4px, 2px); }
+  98% { clip-path: inset(80% 0 5% 0); transform: translate(4px, -2px); }
+  100% { clip-path: inset(100% 0 100% 0); transform: translate(0); }
+}
+
+@keyframes glitch-anim-2 {
+  0%, 90% { clip-path: inset(100% 0 100% 0); transform: translate(0); }
+  92% { clip-path: inset(10% 0 60% 0); transform: translate(4px, 2px); }
+  94% { clip-path: inset(80% 0 5% 0); transform: translate(-4px, -2px); }
+  96% { clip-path: inset(20% 0 80% 0); transform: translate(4px, 2px); }
+  98% { clip-path: inset(50% 0 30% 0); transform: translate(-4px, -2px); }
+  100% { clip-path: inset(100% 0 100% 0); transform: translate(0); }
+}
+
+.mega-text::before, .mega-text::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; }
+.mega-text::before { left: 3px; text-shadow: -2px 0 red; clip-path: inset(100% 0 100% 0); animation: glitch-anim-1 4s infinite linear alternate-reverse; }
+.mega-text::after { left: -3px; text-shadow: -2px 0 blue; clip-path: inset(100% 0 100% 0); animation: glitch-anim-2 5s infinite linear alternate-reverse; }
+
+/* ---------------- HERO SEKCE ---------------- */
+.hero { height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 1rem; }
+.mega-text { position: relative; font-family: var(--font-heading); font-size: clamp(4rem, 15vw, 8rem); font-weight: 900; color: var(--arbyy-green); letter-spacing: -4px; margin-bottom: -10px; text-transform: lowercase; opacity: 0; animation: assembleText 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, neonPulse 4s infinite alternate ease-in-out 1.5s; }
+.name { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 700; margin-bottom: 0.5rem; opacity: 0; animation: fadeInUp 1s ease-out forwards; animation-delay: 0.8s; }
+.subtitle { font-size: clamp(1rem, 3vw, 1.2rem); color: var(--text-muted); font-weight: 300; opacity: 0; animation: fadeInUp 1s ease-out forwards; animation-delay: 1.1s; }
+.social-links { display: flex; gap: 1.5rem; margin-top: 1.5rem; opacity: 0; animation: fadeInUp 1s ease-out forwards; animation-delay: 1.4s; }
+.social-links a, .discord-badge { color: var(--text-muted); font-size: 1.8rem; text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; cursor: none; }
+.discord-badge span { font-size: 1rem; font-weight: 700; }
+.social-links a:hover, .discord-badge:hover { color: var(--arbyy-green); transform: translateY(-5px); }
+
+/* ---------------- OBSAH ---------------- */
+.container { max-width: 800px; width: 90%; padding: 4rem 0; text-align: center; }
+h3 { font-size: 2rem; color: var(--arbyy-green); margin-bottom: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; font-weight: 300; }
+strong { color: var(--text-light); font-weight: 700; }
+.reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+/* ---------------- DOVEDNOSTI ---------------- */
+.skills-wrapper { display: flex; flex-direction: column; gap: 1.5rem; text-align: left; margin-top: 2rem; width: 100%; }
+.skill-name { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.skill-name i { font-size: 1.8rem; color: var(--text-light); }
+.progress-bar { width: 100%; background-color: #222; border-radius: 8px; height: 30px; overflow: hidden; position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+.progress-fill { width: 0; height: 100%; background-color: var(--arbyy-green); display: flex; align-items: center; justify-content: flex-end; padding-right: 15px; color: var(--bg-dark); font-weight: 900; font-size: 0.95rem; border-radius: 8px; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); font-family: var(--font-main); cursor: none;}
+
+/* ---------------- PROJEKTY ---------------- */
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
+.project-card { background-color: rgba(17, 17, 17, 0.85); border: 1px solid #222; border-radius: 12px; padding: 2.5rem 1.5rem 1.5rem; text-align: left; position: relative; transition: all 0.3s ease; backdrop-filter: blur(5px); }
+.project-card:hover { border-color: var(--arbyy-green); box-shadow: 0 0 20px rgba(0, 255, 102, 0.15); transform: translateY(-5px); }
+.project-card h4 { color: var(--text-light); font-size: 1.3rem; margin-bottom: 0.5rem; font-weight: 700; }
+.project-card p { font-size: 0.95rem; margin-bottom: 0; }
+.wip-badge { position: absolute; top: -12px; right: 20px; background-color: var(--arbyy-green); color: var(--bg-dark); padding: 0.3rem 0.8rem; font-size: 0.75rem; font-weight: 900; border-radius: 20px; text-transform: uppercase; box-shadow: 0 0 10px rgba(0, 255, 102, 0.4); font-family: var(--font-main); }
+
+/* ---------------- TLAČÍTKA ---------------- */
+.btn { display: inline-block; padding: 1rem 2.5rem; border: 2px solid var(--arbyy-green); color: var(--arbyy-green); text-decoration: none; font-weight: 700; border-radius: 8px; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; cursor: none;}
+.btn:hover { background-color: var(--arbyy-green); color: var(--bg-dark); box-shadow: 0 0 15px rgba(0, 255, 102, 0.4); }
+
+/* ---------------- PATIČKA ---------------- */
+footer { padding: 2rem; color: var(--text-muted); font-size: 0.9rem; margin-top: 2rem; text-align: center; font-weight: 300; }
+
+/* ---------------- RESPONSIVITA ---------------- */
+@media (max-width: 600px) { .container { padding: 3rem 0; } p { font-size: 1rem; } .project-card { padding: 2.5rem 1.2rem 1.2rem; } }
+
+/* ---------------- OPTIMALIZACE PRO DOTYKOVÁ ZAŘÍZENÍ (MOBILY) ---------------- */
+@media (hover: none) and (pointer: coarse) {
+    /* Vypne custom kurzor a vrátí normální chování při dotyku */
+    html, .btn, .social-links a, .discord-badge, #mega-trigger, .progress-fill {
+        cursor: auto !important;
+    }
+    .cursor-dot, .cursor-outline {
+        display: none !important;
+    }
+}

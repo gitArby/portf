@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>arbyy.tech | Adam "Arbyy" Macků</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="boot-screen">
+        <div class="terminal-text">
+            <p>> Inicializace arbyy_OS...</p>
+            <p>> Načítání hardwarových modulů... [OK]</p>
+            <p>> Připojování k League of Legends serverům... [OK]</p>
+            <p>> Vítej, uživateli.</p>
+            <div class="cursor-blink">_</div>
+        </div>
+    </div>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <canvas id="easter-egg-canvas"></canvas>
+
+    <header class="hero">
+        <h1 class="mega-text" id="mega-trigger" data-text="arbyy">arbyy</h1>
+        <h2 class="name">Adam "Arbyy" Macků</h2>
+        <p class="subtitle">Tech nadšenec & Hráč her</p>
+        
+        <div class="social-links">
+            <a href="https://github.com/gitArby" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.instagram.com/arbycek" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <div class="discord-badge" title="Můj Discord arbyy">
+                <i class="fa-brands fa-discord"></i> <span>arbyy</span>
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="container reveal">
+        <h3>O mně</h3>
+        <p>
+            Ahoj! Jsem Adam a věnuji se technologiím. Rád nic nedělám, 
+            a – jsem vášnivý hráč her, zejména <strong>League of Legends</strong> a dalších kompetitivních titulů, kde trénuji strategické myšlení.
+        </p>
+    </section>
+
+    <section id="skills" class="container reveal">
+        <h3>Dovednosti & Zájmy</h3>
+        <p>
+            Kromě softwaru a her je mým velkým koníčkem <strong>hardware</strong>. Baví mě skládat počítače, 
+            rozumět tomu, jak věci fungují uvnitř, a neustále sledovat nové trendy v tech světě. 
+            Zde je přehled technologií, kterým se aktuálně věnuji:
+        </p>
+        
+        <div class="skills-wrapper">
+            <div class="skill">
+                <div class="skill-name"><i class="devicon-html5-plain"></i> HTML & CSS</div>
+                <div class="progress-bar"><div class="progress-fill" data-width="42%">42%</div></div>
+            </div>
+            <div class="skill">
+                <div class="skill-name"><i class="devicon-javascript-plain"></i> JavaScript</div>
+                <div class="progress-bar"><div class="progress-fill" data-width="42%">42%</div></div>
+            </div>
+            <div class="skill">
+                <div class="skill-name"><i class="devicon-python-plain"></i> Python</div>
+                <div class="progress-bar"><div class="progress-fill" data-width="67%">67%</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="container reveal">
+        <h3>Projekty</h3>
+        <p>Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:</p>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="wip-badge">On progress</div>
+                <h4>Funny weby pro přítelkyni</h4>
+                <p>Pracuji na vtipných webech s love nebo detective tématikou.</p>
+            </div>
+            <div class="project-card">
+                <div class="wip-badge">On progress</div>
+                <h4>??????????</h4>
+                <p>???????????</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="container reveal">
+        <h3>Kontakt</h3>
+        <p>Máš zájem o spolupráci, nebo si chceš jen zahrát? Napiš mi!</p>
+        <a href="mailto:mackuadam37@gmail.com" class="btn">Poslat e-mail</a>
+    </section>
+
+    <footer>
+        <p>&copy; <span id="current-year"></span> arbyy.tech</p>
+    </footer>
+
+    <script>
+        // --- Bootovací obrazovka arbyy_OS ---
+        window.addEventListener('load', () => {
+            const bootLines = document.querySelectorAll('.terminal-text p');
+            const bootScreen = document.getElementById('boot-screen');
+            let delay = 300;
+            bootLines.forEach((line) => {
+                setTimeout(() => line.style.opacity = '1', delay);
+                delay += 600;
+            });
+            setTimeout(() => {
+                bootScreen.classList.add('hidden');
+                setTimeout(() => bootScreen.style.display = 'none', 800);
+            }, delay + 800);
+        });
+
+        // --- Aktualizace roku ---
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // --- Scroll animace a progress bary ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    const progressFills = entry.target.querySelectorAll('.progress-fill');
+                    progressFills.forEach(fill => fill.style.width = fill.getAttribute('data-width'));
+                }
+            });
+        }, { threshold: 0.2 });
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // --- Custom Kurzor ---
+        const cursorDot = document.querySelector(".cursor-dot");
+        const cursorOutline = document.querySelector(".cursor-outline");
+        window.addEventListener("mousemove", (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 300, fill: "forwards" });
+        });
+        document.querySelectorAll('a, button, .discord-badge, #mega-trigger').forEach(link => {
+            link.addEventListener('mouseover', () => {
+                cursorDot.classList.add('active');
+                cursorOutline.classList.add('active');
+            });
+            link.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('active');
+                cursorOutline.classList.remove('active');
+            });
+        });
+
+        // --- Easter Egg (LoL Matrix) ---
+        let clickCount = 0;
+        let lastClickTime = 0;
+        const trigger = document.getElementById('mega-trigger');
+        const canvas = document.getElementById('easter-egg-canvas');
+        const ctx = canvas.getContext('2d');
+        let animationInterval;
+
+        trigger.addEventListener('click', () => {
+            const currentTime = new Date().getTime();
+            if (currentTime - lastClickTime < 500) clickCount++;
+            else clickCount = 1;
+            lastClickTime = currentTime;
+
+            if (clickCount === 6) {
+                startEasterEgg();
+                clickCount = 0;
+            }
+        });
+
+        function startEasterEgg() {
+            canvas.style.display = 'block';
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            const columns = canvas.width / 20;
+            const drops = [];
+            for (let i = 0; i < columns; i++) drops[i] = 1;
+            const matrixChars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZPENTAKILLlol🏆";
+
+            function draw() {
+                ctx.fillStyle = "rgba(10, 10, 10, 0.05)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#00ff66";
+                ctx.font = "20px var(--font-main)";
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                    ctx.fillText(text, i * 20, drops[i] * 20);
+                    if (drops[i] * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }
+            animationInterval = setInterval(draw, 35);
+            setTimeout(() => {
+                clearInterval(animationInterval);
+                canvas.style.display = 'none';
+                window.removeEventListener('resize', resizeCanvas);
+            }, 5000);
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+    </script>
+</body>
+</html>
