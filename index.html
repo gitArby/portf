@@ -60,6 +60,9 @@
             <li><a href="#projects">Projekty</a></li>
             <li><a href="#contact">Kontakt</a></li>
         </ul>
+<button class="lang-toggle" id="lang-toggle" aria-label="Přepnout jazyk">
+            <span class="lang-opt" id="opt-cs">CZ</span><span class="lang-sep">/</span><span class="lang-opt" id="opt-en">EN</span>
+        </button>
     </nav>
 
     <div id="boot-screen">
@@ -140,9 +143,9 @@
 
     <section id="skills" class="container reveal">
         <h3>Dovednosti & Zájmy</h3>
-        <p>
-            Kromě softwaru a her je mým velkým koníčkem <strong>hardware</strong>. Baví mě skládat počítače, 
-            rozumět tomu, jak věci fungují uvnitř, a neustále sledovat nové trendy v tech světě. 
+        <p class="container-text">
+            Kromě softwaru a her je mým velkým koníčkem <strong>hardware</strong>. Baví mě skládat počítače,
+            rozumět tomu, jak věci fungují uvnitř, a neustále sledovat nové trendy v tech světě.
             Zde je přehled technologií, kterým se aktuálně věnuji:
         </p>
         
@@ -171,7 +174,7 @@
 
     <section id="projects" class="container reveal">
         <h3>Projekty</h3>
-        <p>Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:</p>
+        <p class="proj-text">Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:</p>
         <div class="projects-grid">
             <div class="project-card">
                 <div class="wip-badge">In progress</div>
@@ -190,9 +193,22 @@
 
     <section id="contact" class="container reveal">
         <h3>Kontakt</h3>
-        <p>Máš zájem o spolupráci, nebo si chceš jen zahrát? Napiš mi!</p>
-        <a href="mailto:mackuadam37@gmail.com" class="btn">Poslat e-mail</a>
+        <p class="contact-text">Máš zájem o spolupráci, nebo si chceš jen zahrát? Napiš mi!</p>
+        <div class="contact-email">
+            <a href="mailto:mackuadam37@gmail.com" class="btn">mackuadam37@gmail.com</a>
+            <button class="btn-copy" id="copy-email" title="Zkopírovat">
+                <i class="fa-regular fa-copy"></i>
+            </button>
+        </div>
+        <span class="copy-toast" id="copy-toast">Zkopírováno!</span>
     </section>
+
+    <div class="hw-monitor" id="hw-monitor">
+        <div class="hw-header"><span class="hw-blink"></span> SYS_MONITOR</div>
+        <div class="hw-row"><span class="hw-label">TIME</span><span class="hw-value" id="hw-time">--:--:--</span></div>
+        <div class="hw-row"><span class="hw-label">BAT</span><span class="hw-value" id="hw-battery">--%</span></div>
+        <div class="hw-row"><span class="hw-label">NET</span><span class="hw-value" id="hw-net">--</span></div>
+    </div>
 
     <footer>
         <div class="footer-links">
@@ -218,6 +234,14 @@
                     document.getElementById('main-nav').classList.add('visible');
                 }, 800);
             }, delay + 800);
+        });
+
+        // --- Copy email ---
+        document.getElementById('copy-email').addEventListener('click', () => {
+            navigator.clipboard.writeText('mackuadam37@gmail.com');
+            const toast = document.getElementById('copy-toast');
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 2000);
         });
 
         // --- Rok ---
@@ -382,6 +406,65 @@
             });
         });
 
+        // --- i18n ---
+        const i18n = {
+            cs: {
+                nav: ['O mně', 'Dovednosti', 'LoL', 'Projekty', 'Kontakt'],
+                subtitle: ['Tech nadšenec', 'hráč her', 'PC builder', 'web developer'],
+                about: { title: 'O mně', text: 'Ahoj! Jsem Adam a věnuji se technologiím. Rád relaxuji, ale jsem také vášnivý hráč her, zejména <strong>League of Legends</strong> a dalších kompetitivních titulů, kde trénuji strategické myšlení.' },
+                skills: { title: 'Dovednosti & Zájmy', text: 'Kromě softwaru a her je mým velkým koníčkem <strong>hardware</strong>. Baví mě skládat počítače, rozumět tomu, jak věci fungují uvnitř, a neustále sledovat nové trendy v tech světě. Zde je přehled technologií, kterým se aktuálně věnuji:', techTitle: 'Tech Stack' },
+                lol: { title: 'League of Legends', btn: 'Zobrazit na u.gg' },
+                projects: { title: 'Projekty', text: 'Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:', c1t: 'Funny weby pro přítelkyni', c1d: 'Pracuji na vtipných webech s love nebo detektivní tématikou.', c2t: '??????????', c2d: '???????????' },
+                contact: { title: 'Kontakt', text: 'Máš zájem o spolupráci, nebo si chceš jen zahrát? Napiš mi!' },
+                counters: ['hodin v LoL', 'sestavených PC', 'roky v tech', 'projektů'],
+                nowListening: 'Teď poslouchám', nowPlaying: 'Teď hraju', copyToast: 'Zkopírováno!'
+            },
+            en: {
+                nav: ['About', 'Skills', 'LoL', 'Projects', 'Contact'],
+                subtitle: ['Tech enthusiast', 'gamer', 'PC builder', 'web developer'],
+                about: { title: 'About me', text: 'Hey! I\'m Adam and I\'m passionate about tech. I love to chill, but I\'m also an avid gamer — especially <strong>League of Legends</strong> and other competitive titles where I sharpen my strategic thinking.' },
+                skills: { title: 'Skills & Interests', text: 'Besides software and gaming, my biggest hobby is <strong>hardware</strong>. I love building PCs, understanding how things work inside, and keeping up with the latest tech trends. Here\'s an overview of technologies I currently work with:', techTitle: 'Tech Stack' },
+                lol: { title: 'League of Legends', btn: 'View on u.gg' },
+                projects: { title: 'Projects', text: 'Still pushing forward. Here\'s a small preview of what I\'m currently working on and what\'s coming soon:', c1t: 'Funny websites for my girlfriend', c1d: 'Working on fun websites with love or detective themes.', c2t: '??????????', c2d: '???????????' },
+                contact: { title: 'Contact', text: 'Interested in collaboration, or just want to play? Hit me up!' },
+                counters: ['hours in LoL', 'built PCs', 'years in tech', 'projects'],
+                nowListening: 'Now listening', nowPlaying: 'Now playing', copyToast: 'Copied!'
+            }
+        };
+        let currentLang = localStorage.getItem('lang') || 'cs';
+
+        function applyLanguage(lang) {
+            const t = i18n[lang];
+            document.querySelectorAll('.nav-links a').forEach((a, i) => { if (t.nav[i]) a.textContent = t.nav[i]; });
+            phrases.length = 0; t.subtitle.forEach(p => phrases.push(p));
+            document.querySelector('#about h3').textContent = t.about.title;
+            document.querySelector('#about p').innerHTML = t.about.text;
+            document.querySelector('#skills h3').textContent = t.skills.title;
+            document.querySelector('#skills .container-text').innerHTML = t.skills.text;
+            document.querySelector('.tech-title').textContent = t.skills.techTitle;
+            document.querySelector('#lol-stats h3').textContent = t.lol.title;
+            document.querySelector('#lol-stats .btn').textContent = t.lol.btn;
+            document.querySelector('#projects h3').textContent = t.projects.title;
+            document.querySelector('#projects .proj-text').innerHTML = t.projects.text;
+            const cards = document.querySelectorAll('.project-card');
+            if (cards[0]) { cards[0].querySelector('h4').textContent = t.projects.c1t; cards[0].querySelector('p').textContent = t.projects.c1d; }
+            if (cards[1]) { cards[1].querySelector('h4').textContent = t.projects.c2t; cards[1].querySelector('p').textContent = t.projects.c2d; }
+            document.querySelector('#contact h3').textContent = t.contact.title;
+            document.querySelector('#contact .contact-text').textContent = t.contact.text;
+            document.querySelectorAll('.counter-label').forEach((el, i) => { if (t.counters[i]) el.textContent = t.counters[i]; });
+            document.getElementById('opt-cs').classList.toggle('active', lang === 'cs');
+            document.getElementById('opt-en').classList.toggle('active', lang === 'en');
+            document.documentElement.lang = lang;
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+        }
+
+        document.getElementById('lang-toggle').addEventListener('click', () => {
+            applyLanguage(currentLang === 'cs' ? 'en' : 'cs');
+        });
+
+        applyLanguage(currentLang);
+
         // --- Lanyard (Discord status + Now Playing) ---
         const DISCORD_ID = '938119246196666378';
         function connectLanyard() {
@@ -431,6 +514,47 @@
             }
         }
         connectLanyard();
+
+        // --- Hardware Monitor ---
+        (function initMonitor() {
+            function updateTime() {
+                const n = new Date();
+                document.getElementById('hw-time').textContent =
+                    `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
+            }
+            setInterval(updateTime, 1000);
+            updateTime();
+
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(b => {
+                    const update = () => {
+                        const pct = Math.round(b.level * 100);
+                        document.getElementById('hw-battery').textContent = `${b.charging ? '⚡' : ''}${pct}%`;
+                    };
+                    update();
+                    b.addEventListener('levelchange', update);
+                    b.addEventListener('chargingchange', update);
+                });
+            } else {
+                document.getElementById('hw-battery').textContent = 'N/A';
+            }
+
+            function updateNet() {
+                const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                if (c) {
+                    const type = (c.effectiveType || c.type || '?').toUpperCase();
+                    const dl = c.downlink ? ` ${c.downlink}Mb/s` : '';
+                    document.getElementById('hw-net').textContent = type + dl;
+                } else {
+                    document.getElementById('hw-net').textContent = navigator.onLine ? 'ONLINE' : 'OFFLINE';
+                }
+            }
+            updateNet();
+            window.addEventListener('online', updateNet);
+            window.addEventListener('offline', updateNet);
+            if (navigator.connection) navigator.connection.addEventListener('change', updateNet);
+        })();
+
 
         // --- LoL Stats ---
         (async function fetchLoLStats() {
