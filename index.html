@@ -60,7 +60,10 @@
             <li><a href="#projects">Projekty</a></li>
             <li><a href="#contact">Kontakt</a></li>
         </ul>
-<button class="lang-toggle" id="lang-toggle" aria-label="Přepnout jazyk">
+        <button class="audio-toggle" id="audio-toggle" title="Zvuky">
+            <i class="fa-solid fa-volume-xmark" id="audio-icon"></i>
+        </button>
+        <button class="lang-toggle" id="lang-toggle" aria-label="Přepnout jazyk">
             <span class="lang-opt" id="opt-cs">CZ</span><span class="lang-sep">/</span><span class="lang-opt" id="opt-en">EN</span>
         </button>
     </nav>
@@ -555,6 +558,70 @@
             if (navigator.connection) navigator.connection.addEventListener('change', updateNet);
         })();
 
+
+        // --- Audio Feedback ---
+        let audioEnabled = localStorage.getItem('audio') !== 'false';
+        let audioCtx = null;
+
+        function getCtx() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return audioCtx;
+        }
+
+        function playClick() {
+            if (!audioEnabled) return;
+            try {
+                const ctx = getCtx();
+                ctx.resume().then(() => {
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(120, now + 0.04);
+                    gain.gain.setValueAtTime(0.35, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.start(now); osc.stop(now + 0.04);
+                });
+            } catch(e) {}
+        }
+
+        function playHover() {
+            if (!audioEnabled) return;
+            try {
+                const ctx = getCtx();
+                ctx.resume().then(() => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.frequency.value = 1200;
+                    osc.type = 'sine';
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.start(); osc.stop(ctx.currentTime + 0.08);
+                });
+            } catch(e) {}
+        }
+
+        function updateAudioIcon() {
+            document.getElementById('audio-icon').className = audioEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+            document.getElementById('audio-toggle').classList.toggle('audio-on', audioEnabled);
+        }
+
+        document.getElementById('audio-toggle').addEventListener('click', () => {
+            audioEnabled = !audioEnabled;
+            localStorage.setItem('audio', audioEnabled);
+            updateAudioIcon();
+            if (audioEnabled) setTimeout(playClick, 50);
+        });
+
+        document.querySelectorAll('a, button, .discord-badge, .project-card, .tech-icon').forEach(el => {
+            el.addEventListener('click', playClick);
+            el.addEventListener('mouseenter', playHover);
+        });
+
+        updateAudioIcon();
 
         // --- LoL Stats ---
         (async function fetchLoLStats() {

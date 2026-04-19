@@ -214,6 +214,11 @@ html { scrollbar-width: thin; scrollbar-color: var(--arbyy-green) transparent; }
 @media (max-width: 600px) { .hw-monitor { bottom: 1rem; right: 1rem; min-width: 130px; } }
 
 
+/* ---------------- AUDIO TOGGLE ---------------- */
+.audio-toggle { background: none; border: 1px solid #333; color: var(--text-muted); font-size: 0.85rem; padding: 0.35rem 0.6rem; border-radius: 6px; cursor: none; transition: all 0.3s ease; flex-shrink: 0; }
+.audio-toggle:hover { border-color: var(--arbyy-green); color: var(--arbyy-green); }
+.audio-toggle.audio-on { border-color: rgba(0,255,102,0.4); color: var(--arbyy-green); }
+
 /* ---------------- CURSOR TRAIL ---------------- */
 .cursor-trail { width: 8px; height: 8px; background: var(--arbyy-green); border-radius: 50%; position: fixed; pointer-events: none; z-index: 996; transform: translate(-50%, -50%); }
 
