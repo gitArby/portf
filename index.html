@@ -4,16 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>arbyy.tech | Adam "Arbyy" Macků</title>
-    <link rel="stylesheet" href="style.css">
-    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="Tech nadšenec, hráč her a PC builder z Česka. Portfolio Adama Macků alias arbyy.">
+    <meta property="og:title" content="arbyy.tech | Adam Macků">
+    <meta property="og:description" content="Tech nadšenec, hráč her a PC builder z Česka.">
+    <meta property="og:image" content="https://arbyy.tech/image.png">
+    <meta property="og:url" content="https://arbyy.tech">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="arbyy.tech | Adam Macků">
+    <meta name="twitter:description" content="Tech nadšenec, hráč her a PC builder z Česka.">
+    <meta name="twitter:image" content="https://arbyy.tech/image.png">
+    <link rel="canonical" href="https://arbyy.tech">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Adam Macků">
+    <meta name="theme-color" content="#00ff66">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Adam Macků",
+      "alternateName": "arbyy",
+      "url": "https://arbyy.tech",
+      "email": "mackuadam37@gmail.com",
+      "sameAs": [
+        "https://github.com/gitArby",
+        "https://www.instagram.com/arbycek"
+      ]
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" as="image" href="image.png">
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+
+    <div id="scroll-progress"></div>
+
+    <nav class="main-nav" id="main-nav">
+        <a href="#" class="nav-logo">arbyy</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#about">O mně</a></li>
+            <li><a href="#skills">Dovednosti</a></li>
+            <li><a href="#lol-stats">LoL</a></li>
+            <li><a href="#projects">Projekty</a></li>
+            <li><a href="#contact">Kontakt</a></li>
+        </ul>
+    </nav>
 
     <div id="boot-screen">
         <div class="terminal-text">
@@ -33,24 +80,63 @@
     <header class="hero">
         <h1 class="mega-text" id="mega-trigger" data-text="arbyy">arbyy</h1>
         <h2 class="name">Adam "Arbyy" Macků</h2>
-        <p class="subtitle">Tech nadšenec & Hráč her</p>
+        <p class="subtitle"><span id="typewriter"></span><span class="tw-cursor">|</span></p>
         
         <div class="social-links">
             <a href="https://github.com/gitArby" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
             <a href="https://www.instagram.com/arbycek" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <div class="discord-badge" title="Můj Discord arbyy">
                 <i class="fa-brands fa-discord"></i> <span>arbyy</span>
+                <span class="status-dot" id="discord-status"></span>
             </div>
         </div>
+        <div class="now-playing" id="now-playing" style="display:none">
+            <div class="np-content" id="np-content"></div>
+        </div>
     </header>
+
+    <section class="container reveal">
+        <div class="counters-grid">
+            <div class="counter-item">
+                <div class="counter-value">
+                    <span class="counter-number" data-target="3000">0</span>
+                    <span class="counter-suffix">+</span>
+                </div>
+                <span class="counter-label">hodin v LoL</span>
+            </div>
+            <div class="counter-item">
+                <div class="counter-value">
+                    <span class="counter-number" data-target="5">0</span>
+                    <span class="counter-suffix">+</span>
+                </div>
+                <span class="counter-label">sestavených PC</span>
+            </div>
+            <div class="counter-item">
+                <div class="counter-value">
+                    <span class="counter-number" data-target="5">0</span>
+                    <span class="counter-suffix">+</span>
+                </div>
+                <span class="counter-label">roky v tech</span>
+            </div>
+            <div class="counter-item">
+                <div class="counter-value">
+                    <span class="counter-number" data-target="4">0</span>
+                </div>
+                <span class="counter-label">projektů</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
 
     <section id="about" class="container reveal">
         <h3>O mně</h3>
         <p>
-            Ahoj! Jsem Adam a věnuji se technologiím. Rád nic nedělám, 
-            a – jsem vášnivý hráč her, zejména <strong>League of Legends</strong> a dalších kompetitivních titulů, kde trénuji strategické myšlení.
+            Ahoj! Jsem Adam a věnuji se technologiím. Rád relaxuji, ale jsem také vášnivý hráč her, zejména <strong>League of Legends</strong> a dalších kompetitivních titulů, kde trénuji strategické myšlení.
         </p>
     </section>
+
+    <div class="section-divider"></div>
 
     <section id="skills" class="container reveal">
         <h3>Dovednosti & Zájmy</h3>
@@ -60,38 +146,47 @@
             Zde je přehled technologií, kterým se aktuálně věnuji:
         </p>
         
-        <div class="skills-wrapper">
-            <div class="skill">
-                <div class="skill-name"><i class="devicon-html5-plain"></i> HTML & CSS</div>
-                <div class="progress-bar"><div class="progress-fill" data-width="42%">42%</div></div>
-            </div>
-            <div class="skill">
-                <div class="skill-name"><i class="devicon-javascript-plain"></i> JavaScript</div>
-                <div class="progress-bar"><div class="progress-fill" data-width="42%">42%</div></div>
-            </div>
-            <div class="skill">
-                <div class="skill-name"><i class="devicon-python-plain"></i> Python</div>
-                <div class="progress-bar"><div class="progress-fill" data-width="67%">67%</div></div>
-            </div>
+        <h4 class="tech-title">Tech Stack</h4>
+        <div class="tech-grid">
+            <div class="tech-icon"><i class="devicon-html5-plain colored"></i><span>HTML5</span></div>
+            <div class="tech-icon"><i class="devicon-css3-plain colored"></i><span>CSS3</span></div>
+            <div class="tech-icon"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span></div>
+            <div class="tech-icon"><i class="devicon-python-plain colored"></i><span>Python</span></div>
+            <div class="tech-icon"><i class="devicon-git-plain colored"></i><span>Git</span></div>
+            <div class="tech-icon"><i class="devicon-github-original"></i><span>GitHub</span></div>
         </div>
     </section>
+
+    <div class="section-divider"></div>
+
+    <section id="lol-stats" class="container reveal">
+        <h3>League of Legends</h3>
+        <div class="lol-card" id="lol-card">
+            <div class="lol-loading"><span>Načítání stats...</span></div>
+        </div>
+        <a href="https://u.gg/lol/profile/eun1/lp%20thief%20glider-arby/overview" target="_blank" class="btn" style="margin-top: 1.5rem; display: inline-block;">Zobrazit na u.gg</a>
+    </section>
+
+    <div class="section-divider"></div>
 
     <section id="projects" class="container reveal">
         <h3>Projekty</h3>
         <p>Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:</p>
         <div class="projects-grid">
             <div class="project-card">
-                <div class="wip-badge">On progress</div>
+                <div class="wip-badge">In progress</div>
                 <h4>Funny weby pro přítelkyni</h4>
-                <p>Pracuji na vtipných webech s love nebo detective tématikou.</p>
+                <p>Pracuji na vtipných webech s love nebo detektivní tématikou.</p>
             </div>
             <div class="project-card">
-                <div class="wip-badge">On progress</div>
+                <div class="wip-badge">In progress</div>
                 <h4>??????????</h4>
                 <p>???????????</p>
             </div>
         </div>
     </section>
+
+    <div class="section-divider"></div>
 
     <section id="contact" class="container reveal">
         <h3>Kontakt</h3>
@@ -100,116 +195,281 @@
     </section>
 
     <footer>
-        <p>&copy; <span id="current-year"></span> arbyy.tech</p>
+        <div class="footer-links">
+            <a href="https://github.com/gitArby" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.instagram.com/arbycek" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://discord.com/users/938119246196666378" target="_blank" title="Discord"><i class="fa-brands fa-discord"></i></a>
+            <a href="mailto:mackuadam37@gmail.com" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+        <p class="footer-copy">&copy; <span id="current-year"></span> arbyy.tech &mdash; made with <span class="footer-heart">&#10084;</span> & caffeine</p>
     </footer>
 
     <script>
-        // --- Bootovací obrazovka arbyy_OS ---
+        // --- Boot screen ---
         window.addEventListener('load', () => {
             const bootLines = document.querySelectorAll('.terminal-text p');
             const bootScreen = document.getElementById('boot-screen');
             let delay = 300;
-            bootLines.forEach((line) => {
-                setTimeout(() => line.style.opacity = '1', delay);
-                delay += 600;
-            });
+            bootLines.forEach(line => { setTimeout(() => line.style.opacity = '1', delay); delay += 600; });
             setTimeout(() => {
                 bootScreen.classList.add('hidden');
-                setTimeout(() => bootScreen.style.display = 'none', 800);
+                setTimeout(() => {
+                    bootScreen.style.display = 'none';
+                    document.getElementById('main-nav').classList.add('visible');
+                }, 800);
             }, delay + 800);
         });
 
-        // --- Aktualizace roku ---
+        // --- Rok ---
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // --- Scroll animace a progress bary ---
+        // --- Scroll progress ---
+        const scrollProgress = document.getElementById('scroll-progress');
+        window.addEventListener('scroll', () => {
+            const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            scrollProgress.style.width = `${pct * 100}%`;
+        });
+
+        // --- Navigace ---
+        const mainNav = document.getElementById('main-nav');
+        const navToggle = document.getElementById('nav-toggle');
+        const navLinks = document.getElementById('nav-links');
+        window.addEventListener('scroll', () => mainNav.classList.toggle('scrolled', window.scrollY > 80));
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            navToggle.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+            navLinks.classList.remove('open');
+            navToggle.classList.remove('open');
+        }));
+
+        // --- Typewriter ---
+        const twEl = document.getElementById('typewriter');
+        const phrases = ['Tech nadšenec', 'hráč her', 'PC builder', 'web developer'];
+        let pIdx = 0, cIdx = 0, deleting = false;
+        function type() {
+            const phrase = phrases[pIdx];
+            twEl.textContent = deleting ? phrase.slice(0, cIdx - 1) : phrase.slice(0, cIdx + 1);
+            deleting ? cIdx-- : cIdx++;
+            let delay = deleting ? 60 : 100;
+            if (!deleting && cIdx === phrase.length) { delay = 2000; deleting = true; }
+            else if (deleting && cIdx === 0) { deleting = false; pIdx = (pIdx + 1) % phrases.length; delay = 400; }
+            setTimeout(type, delay);
+        }
+        setTimeout(type, 2800);
+
+        // --- Scroll reveal ---
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    const progressFills = entry.target.querySelectorAll('.progress-fill');
-                    progressFills.forEach(fill => fill.style.width = fill.getAttribute('data-width'));
-                }
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.2 });
-        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // --- Custom Kurzor ---
-        const cursorDot = document.querySelector(".cursor-dot");
-        const cursorOutline = document.querySelector(".cursor-outline");
-        window.addEventListener("mousemove", (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-            cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 300, fill: "forwards" });
+        // --- Animated counters ---
+        const counterObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.querySelectorAll('.counter-number').forEach(el => {
+                    const target = parseInt(el.getAttribute('data-target'));
+                    const duration = 1800;
+                    const steps = duration / 16;
+                    let current = 0;
+                    const tick = () => {
+                        current = Math.min(current + target / steps, target);
+                        el.textContent = Math.floor(current).toLocaleString('cs-CZ');
+                        if (current < target) requestAnimationFrame(tick);
+                    };
+                    tick();
+                });
+                counterObs.unobserve(entry.target);
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.counters-grid').forEach(el => counterObs.observe(el));
+
+        // --- Custom kurzor ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        window.addEventListener('mousemove', e => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 300, fill: 'forwards' });
         });
-        document.querySelectorAll('a, button, .discord-badge, #mega-trigger').forEach(link => {
-            link.addEventListener('mouseover', () => {
-                cursorDot.classList.add('active');
-                cursorOutline.classList.add('active');
-            });
-            link.addEventListener('mouseleave', () => {
-                cursorDot.classList.remove('active');
-                cursorOutline.classList.remove('active');
-            });
+        document.querySelectorAll('a, button, .discord-badge, #mega-trigger').forEach(el => {
+            el.addEventListener('mouseover', () => { cursorDot.classList.add('active'); cursorOutline.classList.add('active'); });
+            el.addEventListener('mouseleave', () => { cursorDot.classList.remove('active'); cursorOutline.classList.remove('active'); });
         });
 
-        // --- Easter Egg (LoL Matrix) ---
-        let clickCount = 0;
-        let lastClickTime = 0;
+        // --- Cursor trail ---
+        const TRAIL = 10;
+        const trailEls = Array.from({ length: TRAIL }, () => {
+            const d = document.createElement('div');
+            d.className = 'cursor-trail';
+            document.body.appendChild(d);
+            return { el: d, x: 0, y: 0 };
+        });
+        let mx = 0, my = 0;
+        window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        (function trailLoop() {
+            let x = mx, y = my;
+            trailEls.forEach((dot, i) => {
+                const px = dot.x, py = dot.y;
+                dot.x += (x - dot.x) * 0.35;
+                dot.y += (y - dot.y) * 0.35;
+                dot.el.style.left = `${dot.x}px`;
+                dot.el.style.top = `${dot.y}px`;
+                const scale = (TRAIL - i) / TRAIL;
+                dot.el.style.opacity = scale * 0.45;
+                dot.el.style.transform = `translate(-50%, -50%) scale(${scale * 0.8})`;
+                x = px; y = py;
+            });
+            requestAnimationFrame(trailLoop);
+        })();
+
+        // --- Easter egg ---
+        let clickCount = 0, lastClickTime = 0;
         const trigger = document.getElementById('mega-trigger');
         const canvas = document.getElementById('easter-egg-canvas');
         const ctx = canvas.getContext('2d');
         let animationInterval;
-
         trigger.addEventListener('click', () => {
-            const currentTime = new Date().getTime();
-            if (currentTime - lastClickTime < 500) clickCount++;
-            else clickCount = 1;
-            lastClickTime = currentTime;
+            const now = Date.now();
+            clickCount = now - lastClickTime < 500 ? clickCount + 1 : 1;
+            lastClickTime = now;
+            if (clickCount === 6) { startEasterEgg(); clickCount = 0; }
+        });
+        function startEasterEgg() {
+            canvas.style.display = 'block'; resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            const drops = Array.from({ length: Math.floor(canvas.width / 20) }, () => 1);
+            const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZPENTAKILLlol🏆";
+            animationInterval = setInterval(() => {
+                ctx.fillStyle = "rgba(10,10,10,0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#00ff66"; ctx.font = "20px var(--font-main)";
+                drops.forEach((y, i) => {
+                    ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 20, y * 20);
+                    if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                });
+            }, 35);
+            setTimeout(() => { clearInterval(animationInterval); canvas.style.display = 'none'; window.removeEventListener('resize', resizeCanvas); }, 5000);
+        }
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 
-            if (clickCount === 6) {
-                startEasterEgg();
-                clickCount = 0;
-            }
+        // --- Scroll spy ---
+        const spySections = document.querySelectorAll('section[id]');
+        const navAnchors = document.querySelectorAll('.nav-links a');
+        const spyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navAnchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${entry.target.id}`));
+                }
+            });
+        }, { threshold: 0.35, rootMargin: '-80px 0px -45% 0px' });
+        spySections.forEach(s => spyObserver.observe(s));
+
+        // --- 3D tilt na kartách ---
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const r = card.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width - 0.5;
+                const y = (e.clientY - r.top) / r.height - 0.5;
+                card.style.transition = 'box-shadow 0.3s ease, border-color 0.3s ease';
+                card.style.transform = `perspective(700px) rotateY(${x * 14}deg) rotateX(${-y * 14}deg) translateY(-5px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transition = '';
+                card.style.transform = '';
+            });
         });
 
-        function startEasterEgg() {
-            canvas.style.display = 'block';
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            
-            const columns = canvas.width / 20;
-            const drops = [];
-            for (let i = 0; i < columns; i++) drops[i] = 1;
-            const matrixChars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZPENTAKILLlol🏆";
+        // --- Lanyard (Discord status + Now Playing) ---
+        const DISCORD_ID = '938119246196666378';
+        function connectLanyard() {
+            const ws = new WebSocket('wss://api.lanyard.rest/socket');
+            let hb;
+            ws.onmessage = e => {
+                const { op, d } = JSON.parse(e.data);
+                if (op === 1) {
+                    hb = setInterval(() => ws.send(JSON.stringify({ op: 3 })), d.heartbeat_interval);
+                    ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
+                }
+                if (op === 0) updatePresence(d);
+            };
+            ws.onclose = () => { clearInterval(hb); setTimeout(connectLanyard, 5000); };
+        }
+        function updatePresence(data) {
+            const dot = document.getElementById('discord-status');
+            const colors = { online: '#43b581', idle: '#faa61a', dnd: '#f04747', offline: '#747f8d' };
+            dot.style.background = colors[data.discord_status] || colors.offline;
+            dot.setAttribute('title', data.discord_status);
 
-            function draw() {
-                ctx.fillStyle = "rgba(10, 10, 10, 0.05)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "#00ff66";
-                ctx.font = "20px var(--font-main)";
-
-                for (let i = 0; i < drops.length; i++) {
-                    const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
-                    ctx.fillText(text, i * 20, drops[i] * 20);
-                    if (drops[i] * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                    drops[i]++;
+            const npEl = document.getElementById('now-playing');
+            const npContent = document.getElementById('np-content');
+            if (data.listening_to_spotify && data.spotify) {
+                const sp = data.spotify;
+                npEl.style.display = 'flex';
+                npContent.innerHTML = `
+                    <img src="${sp.album_art_url}" alt="cover" class="np-art">
+                    <div class="np-text">
+                        <span class="np-label"><i class="fa-brands fa-spotify"></i> Teď poslouchám</span>
+                        <span class="np-song">${sp.song}</span>
+                        <span class="np-artist">${sp.artist}</span>
+                    </div>`;
+            } else {
+                const game = data.activities?.find(a => a.type === 0);
+                if (game) {
+                    npEl.style.display = 'flex';
+                    npContent.innerHTML = `
+                        <div class="np-game-icon"><i class="fa-solid fa-gamepad"></i></div>
+                        <div class="np-text">
+                            <span class="np-label">Teď hraju</span>
+                            <span class="np-song">${game.name}</span>
+                        </div>`;
+                } else {
+                    npEl.style.display = 'none';
                 }
             }
-            animationInterval = setInterval(draw, 35);
-            setTimeout(() => {
-                clearInterval(animationInterval);
-                canvas.style.display = 'none';
-                window.removeEventListener('resize', resizeCanvas);
-            }, 5000);
         }
+        connectLanyard();
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        // --- LoL Stats ---
+        (async function fetchLoLStats() {
+            const card = document.getElementById('lol-card');
+            const NAME = 'LP Thief Glider';
+            const TAG = 'ARBY';
+            const REGION = 'eune';
+            try {
+                const [sumRes, rankRes] = await Promise.all([
+                    fetch(`https://api.henrikdev.xyz/lol/v2/summoner/${REGION}/${encodeURIComponent(NAME)}/${TAG}`),
+                    fetch(`https://api.henrikdev.xyz/lol/v2/ranked/${REGION}/${encodeURIComponent(NAME)}/${TAG}`)
+                ]);
+                if (!sumRes.ok || !rankRes.ok) throw new Error();
+                const { data: sum } = await sumRes.json();
+                const { data: ranks } = await rankRes.json();
+                const solo = ranks?.find(r => r.queue_type === 'RANKED_SOLO_5x5') || null;
+                const tier = solo?.tier || 'UNRANKED';
+                const tierCap = tier[0] + tier.slice(1).toLowerCase();
+                const winrate = solo ? Math.round(solo.wins / (solo.wins + solo.losses) * 100) : null;
+                card.innerHTML = `
+                    <div class="lol-info">
+                        <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_${tierCap}.webp" alt="${tierCap}" onerror="this.style.display='none'">
+                        <div class="lol-details">
+                            <div class="lol-name">${sum.name ?? NAME} <span class="lol-level">Lvl ${sum.account_level ?? sum.summoner_level}</span></div>
+                            <div class="lol-rank">${solo ? `${tierCap} ${solo.rank} &mdash; ${solo.lp} LP` : 'Unranked'}</div>
+                            ${winrate !== null ? `<div class="lol-winrate">${solo.wins}W / ${solo.losses}L &mdash; <span class="wr-${winrate >= 50 ? 'good' : 'bad'}">${winrate}% WR</span></div>` : ''}
+                        </div>
+                    </div>`;
+            } catch {
+                card.innerHTML = `
+                    <div class="lol-info">
+                        <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_Gold.webp" alt="LoL" onerror="this.style.display='none'">
+                        <div class="lol-details">
+                            <div class="lol-name">LP Thief Glider <span class="lol-server">#ARBY</span></div>
+                            <div class="lol-rank">Podívej se na u.gg pro aktuální stats</div>
+                        </div>
+                    </div>`;
+            }
+        })();
     </script>
 </body>
 </html>

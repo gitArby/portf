@@ -99,12 +99,15 @@ strong { color: var(--text-light); font-weight: 700; }
 .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .reveal.active { opacity: 1; transform: translateY(0); }
 
-/* ---------------- DOVEDNOSTI ---------------- */
-.skills-wrapper { display: flex; flex-direction: column; gap: 1.5rem; text-align: left; margin-top: 2rem; width: 100%; }
-.skill-name { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
-.skill-name i { font-size: 1.8rem; color: var(--text-light); }
-.progress-bar { width: 100%; background-color: #222; border-radius: 8px; height: 30px; overflow: hidden; position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
-.progress-fill { width: 0; height: 100%; background-color: var(--arbyy-green); display: flex; align-items: center; justify-content: flex-end; padding-right: 15px; color: var(--bg-dark); font-weight: 900; font-size: 0.95rem; border-radius: 8px; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); font-family: var(--font-main); cursor: none;}
+/* ---------------- COUNTERS ---------------- */
+.counters-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; padding: 1rem 0; }
+.counter-item { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.5rem 1rem; border: 1px solid #222; border-radius: 12px; background: rgba(17,17,17,0.6); backdrop-filter: blur(4px); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+.counter-item:hover { border-color: var(--arbyy-green); box-shadow: 0 0 15px rgba(0,255,102,0.1); }
+.counter-value { display: flex; align-items: baseline; gap: 3px; }
+.counter-number { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 900; color: var(--arbyy-green); line-height: 1; }
+.counter-suffix { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 900; color: var(--arbyy-green); line-height: 1; }
+.counter-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 300; text-align: center; }
+@media (max-width: 600px) { .counters-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* ---------------- PROJEKTY ---------------- */
 .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
@@ -119,18 +122,98 @@ strong { color: var(--text-light); font-weight: 700; }
 .btn:hover { background-color: var(--arbyy-green); color: var(--bg-dark); box-shadow: 0 0 15px rgba(0, 255, 102, 0.4); }
 
 /* ---------------- PATIČKA ---------------- */
-footer { padding: 2rem; color: var(--text-muted); font-size: 0.9rem; margin-top: 2rem; text-align: center; font-weight: 300; }
+footer { padding: 2.5rem 2rem; color: var(--text-muted); font-size: 0.9rem; margin-top: 2rem; text-align: center; font-weight: 300; border-top: 1px solid #1a1a1a; width: 100%; }
+.footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+.footer-links a { color: var(--text-muted); font-size: 1.3rem; text-decoration: none; transition: color 0.3s ease, transform 0.3s ease; cursor: none; }
+.footer-links a:hover { color: var(--arbyy-green); transform: translateY(-3px); }
+.footer-copy { font-size: 0.85rem; }
+.footer-heart { color: var(--arbyy-green); }
 
 /* ---------------- RESPONSIVITA ---------------- */
 @media (max-width: 600px) { .container { padding: 3rem 0; } p { font-size: 1rem; } .project-card { padding: 2.5rem 1.2rem 1.2rem; } }
 
 /* ---------------- OPTIMALIZACE PRO DOTYKOVÁ ZAŘÍZENÍ (MOBILY) ---------------- */
 @media (hover: none) and (pointer: coarse) {
-    /* Vypne custom kurzor a vrátí normální chování při dotyku */
     html, .btn, .social-links a, .discord-badge, #mega-trigger, .progress-fill {
         cursor: auto !important;
     }
-    .cursor-dot, .cursor-outline {
+    .cursor-dot, .cursor-outline, .cursor-trail {
         display: none !important;
     }
 }
+
+/* ---------------- SCROLL PROGRESS ---------------- */
+#scroll-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: var(--arbyy-green); z-index: 10001; box-shadow: 0 0 8px var(--arbyy-green); transition: width 0.1s linear; }
+
+/* ---------------- NAVIGACE ---------------- */
+.main-nav { position: fixed; top: 0; left: 0; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2.5rem; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.6s ease, background 0.3s ease, padding 0.3s ease, border-color 0.3s ease; border-bottom: 1px solid transparent; }
+.main-nav.visible { opacity: 1; pointer-events: all; }
+.main-nav.scrolled { background: rgba(10, 10, 10, 0.92); backdrop-filter: blur(12px); padding: 0.8rem 2.5rem; border-bottom-color: rgba(0, 255, 102, 0.1); }
+.nav-logo { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 900; color: var(--arbyy-green); text-decoration: none; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,255,102,0.4); cursor: none; }
+.nav-links { list-style: none; display: flex; gap: 2rem; }
+.nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s ease; cursor: none; }
+.nav-links a:hover { color: var(--arbyy-green); }
+.nav-toggle { display: none; background: none; border: none; cursor: none; padding: 4px; flex-direction: column; gap: 5px; }
+.nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text-muted); transition: all 0.3s ease; }
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--arbyy-green); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--arbyy-green); }
+
+@media (max-width: 600px) {
+    .nav-toggle { display: flex; }
+    .nav-links { position: absolute; top: 100%; left: 0; width: 100%; flex-direction: column; gap: 0; background: rgba(10,10,10,0.97); backdrop-filter: blur(12px); max-height: 0; overflow: hidden; transition: max-height 0.35s ease; border-bottom: 1px solid #222; }
+    .nav-links.open { max-height: 320px; }
+    .nav-links li { padding: 0.9rem 2rem; border-bottom: 1px solid #1a1a1a; }
+    .main-nav { padding: 1rem 1.5rem; }
+    .main-nav.scrolled { padding: 0.8rem 1.5rem; }
+}
+
+/* ---------------- TYPEWRITER ---------------- */
+.tw-cursor { color: var(--arbyy-green); animation: blink 1s step-end infinite; margin-left: 1px; font-weight: 300; }
+
+/* ---------------- TECH STACK ---------------- */
+.tech-title { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; margin-top: 3rem; margin-bottom: 1.2rem; font-weight: 300; text-align: center; }
+.tech-grid { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+.tech-icon { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 1.2rem; border: 1px solid #222; border-radius: 10px; min-width: 72px; background: rgba(17,17,17,0.6); transition: all 0.3s ease; backdrop-filter: blur(4px); }
+.tech-icon:hover { border-color: var(--arbyy-green); transform: translateY(-5px); box-shadow: 0 0 15px rgba(0,255,102,0.12); }
+.tech-icon i { font-size: 2rem; }
+.tech-icon span { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ---------------- LOL STATS ---------------- */
+.lol-card { background: rgba(17,17,17,0.85); border: 1px solid #222; border-radius: 12px; padding: 2rem 2.5rem; backdrop-filter: blur(5px); min-height: 110px; display: flex; align-items: center; justify-content: center; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+.lol-card:hover { border-color: rgba(200,155,60,0.35); box-shadow: 0 0 20px rgba(200,155,60,0.08); }
+.lol-loading { color: var(--text-muted); font-size: 1rem; }
+.lol-info { display: flex; align-items: center; gap: 2rem; width: 100%; }
+.lol-emblem { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(200,155,60,0.35)); }
+.lol-details { display: flex; flex-direction: column; gap: 0.4rem; text-align: left; }
+.lol-name { font-size: 1.4rem; font-weight: 700; color: var(--text-light); }
+.lol-level, .lol-server { font-size: 0.85rem; color: var(--text-muted); font-weight: 300; margin-left: 0.5rem; }
+.lol-rank { font-size: 1.1rem; color: rgb(200, 155, 60); font-weight: 700; }
+.lol-winrate { font-size: 0.95rem; color: var(--text-muted); margin: 0; }
+.wr-good { color: var(--arbyy-green); font-weight: 700; }
+.wr-bad { color: #ff4d4d; font-weight: 700; }
+
+@media (max-width: 600px) { .lol-info { gap: 1.2rem; } .lol-emblem { width: 60px; height: 60px; } .lol-name { font-size: 1.1rem; } }
+
+/* ---------------- CURSOR TRAIL ---------------- */
+.cursor-trail { width: 8px; height: 8px; background: var(--arbyy-green); border-radius: 50%; position: fixed; pointer-events: none; z-index: 996; transform: translate(-50%, -50%); }
+
+/* ---------------- DISCORD STATUS DOT ---------------- */
+.status-dot { width: 10px; height: 10px; border-radius: 50%; background: #747f8d; display: inline-block; margin-left: 6px; flex-shrink: 0; box-shadow: 0 0 6px currentColor; transition: background 0.5s ease; }
+
+/* ---------------- NOW PLAYING ---------------- */
+.now-playing { margin-top: 1.2rem; background: rgba(17,17,17,0.85); border: 1px solid #2a2a2a; border-radius: 14px; padding: 0.8rem 1.2rem; backdrop-filter: blur(10px); max-width: 360px; animation: fadeInUp 0.4s ease forwards; }
+.np-content { display: flex; align-items: center; gap: 0.9rem; }
+.np-art { width: 46px; height: 46px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+.np-text { display: flex; flex-direction: column; gap: 0.1rem; text-align: left; min-width: 0; }
+.np-label { font-size: 0.68rem; color: #1db954; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+.np-song { font-size: 0.9rem; color: var(--text-light); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-artist { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-game-icon { font-size: 2rem; color: var(--arbyy-green); flex-shrink: 0; }
+.np-label .fa-brands { margin-right: 3px; }
+
+/* ---------------- SCROLLSPY ACTIVE LINK ---------------- */
+.nav-links a.active { color: var(--arbyy-green); }
+
+/* ---------------- SECTION DIVIDERS ---------------- */
+.section-divider { width: 90%; max-width: 800px; height: 1px; background: linear-gradient(to right, transparent, rgba(0, 255, 102, 0.25), transparent); margin: 0 auto; }
