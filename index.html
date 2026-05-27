@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,10 +41,14 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preload" as="image" href="image.png">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700;900&family=Orbitron:wght@900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="script.js" defer></script>
 </head>
+
 <body>
 
     <div id="scroll-progress"></div>
@@ -56,15 +61,25 @@
         <ul class="nav-links" id="nav-links">
             <li><a href="#about">O mně</a></li>
             <li><a href="#skills">Dovednosti</a></li>
+            <li><a href="#certificates">Certifikáty</a></li>
+            <li><a href="#calculator">Nástroje</a></li>
+            <li><a href="#experience">Praxe</a></li>
             <li><a href="#lol-stats">LoL</a></li>
             <li><a href="#projects">Projekty</a></li>
             <li><a href="#contact">Kontakt</a></li>
         </ul>
+        <div class="theme-selector" id="theme-selector">
+            <button class="theme-dot theme-green active" data-theme="green" title="Matrix Green"></button>
+            <button class="theme-dot theme-blue" data-theme="blue" title="Cisco Blue"></button>
+            <button class="theme-dot theme-amber" data-theme="amber" title="Cyberpunk Amber"></button>
+            <button class="theme-dot theme-red" data-theme="red" title="Valorant Red"></button>
+        </div>
         <button class="audio-toggle" id="audio-toggle" title="Zvuky">
             <i class="fa-solid fa-volume-xmark" id="audio-icon"></i>
         </button>
         <button class="lang-toggle" id="lang-toggle" aria-label="Přepnout jazyk">
-            <span class="lang-opt" id="opt-cs">CZ</span><span class="lang-sep">/</span><span class="lang-opt" id="opt-en">EN</span>
+            <span class="lang-opt" id="opt-cs">CZ</span><span class="lang-sep">/</span><span class="lang-opt"
+                id="opt-en">EN</span>
         </button>
     </nav>
 
@@ -83,128 +98,497 @@
 
     <canvas id="easter-egg-canvas"></canvas>
 
-    <header class="hero">
-        <h1 class="mega-text" id="mega-trigger" data-text="arbyy">arbyy</h1>
-        <h2 class="name">Adam "Arbyy" Macků</h2>
-        <p class="subtitle"><span id="typewriter"></span><span class="tw-cursor">|</span></p>
-        
-        <div class="social-links">
-            <a href="https://github.com/gitArby" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
-            <a href="https://www.instagram.com/arbycek" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <div class="discord-badge" title="Můj Discord arbyy">
-                <i class="fa-brands fa-discord"></i> <span>arbyy</span>
-                <span class="status-dot" id="discord-status"></span>
-            </div>
-        </div>
-        <div class="now-playing" id="now-playing" style="display:none">
-            <div class="np-content" id="np-content"></div>
-        </div>
-    </header>
+    <main>
+        <header class="hero">
+            <h1 class="mega-text" id="mega-trigger" data-text="arbyy">arbyy</h1>
+            <h2 class="name">Adam "Arbyy" Macků</h2>
+            <p class="subtitle"><span id="typewriter"></span><span class="tw-cursor">|</span></p>
 
-    <section class="container reveal">
-        <div class="counters-grid">
-            <div class="counter-item">
-                <div class="counter-value">
-                    <span class="counter-number" data-target="3000">0</span>
-                    <span class="counter-suffix">+</span>
+            <div class="social-links">
+                <a href="https://github.com/gitArby" target="_blank" title="GitHub"><i
+                        class="fa-brands fa-github"></i></a>
+                <a href="https://www.instagram.com/arbycek" target="_blank" title="Instagram"><i
+                        class="fa-brands fa-instagram"></i></a>
+                <div class="discord-badge" title="Můj Discord arbyy">
+                    <i class="fa-brands fa-discord"></i> <span>arbyy</span>
+                    <span class="status-dot" id="discord-status"></span>
                 </div>
-                <span class="counter-label">hodin v LoL</span>
             </div>
-            <div class="counter-item">
-                <div class="counter-value">
-                    <span class="counter-number" data-target="5">0</span>
-                    <span class="counter-suffix">+</span>
+
+            <div class="hero-actions">
+                <a href="#contact" class="btn" id="btn-hero-contact">Kontakt</a>
+                <a href="#" class="btn btn-cv" id="btn-hero-cv"><i
+                        class="fa-solid fa-file-pdf"></i> Zobrazit CV</a>
+            </div>
+
+            <div class="now-playing" id="now-playing" style="display:none">
+                <div class="np-content" id="np-content"></div>
+            </div>
+        </header>
+
+        <section class="container reveal">
+            <div class="counters-grid">
+                <div class="counter-item">
+                    <div class="counter-value">
+                        <span class="counter-number" data-target="3000">0</span>
+                        <span class="counter-suffix">+</span>
+                    </div>
+                    <span class="counter-label">hodin v LoL</span>
                 </div>
-                <span class="counter-label">sestavených PC</span>
-            </div>
-            <div class="counter-item">
-                <div class="counter-value">
-                    <span class="counter-number" data-target="5">0</span>
-                    <span class="counter-suffix">+</span>
+                <div class="counter-item">
+                    <div class="counter-value">
+                        <span class="counter-number" data-target="5">0</span>
+                        <span class="counter-suffix">+</span>
+                    </div>
+                    <span class="counter-label">sestavených PC</span>
                 </div>
-                <span class="counter-label">roky v tech</span>
-            </div>
-            <div class="counter-item">
-                <div class="counter-value">
-                    <span class="counter-number" data-target="4">0</span>
+                <div class="counter-item">
+                    <div class="counter-value">
+                        <span class="counter-number" data-target="5">0</span>
+                        <span class="counter-suffix">+</span>
+                    </div>
+                    <span class="counter-label">roky v tech</span>
                 </div>
-                <span class="counter-label">projektů</span>
+                <div class="counter-item">
+                    <div class="counter-value">
+                        <span class="counter-number" data-target="4">0</span>
+                    </div>
+                    <span class="counter-label">projektů</span>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <div class="section-divider"></div>
+        <div class="section-divider"></div>
 
-    <section id="about" class="container reveal">
-        <h3>O mně</h3>
-        <p>
-            Ahoj! Jsem Adam a věnuji se technologiím. Rád relaxuji, ale jsem také vášnivý hráč her, zejména <strong>League of Legends</strong> a dalších kompetitivních titulů, kde trénuji strategické myšlení.
-        </p>
-    </section>
-
-    <div class="section-divider"></div>
-
-    <section id="skills" class="container reveal">
-        <h3>Dovednosti & Zájmy</h3>
-        <p class="container-text">
-            Kromě softwaru a her je mým velkým koníčkem <strong>hardware</strong>. Baví mě skládat počítače,
-            rozumět tomu, jak věci fungují uvnitř, a neustále sledovat nové trendy v tech světě.
-            Zde je přehled technologií, kterým se aktuálně věnuji:
-        </p>
-        
-        <h4 class="tech-title">Tech Stack</h4>
-        <div class="tech-grid">
-            <div class="tech-icon"><i class="devicon-html5-plain colored"></i><span>HTML5</span></div>
-            <div class="tech-icon"><i class="devicon-css3-plain colored"></i><span>CSS3</span></div>
-            <div class="tech-icon"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span></div>
-            <div class="tech-icon"><i class="devicon-python-plain colored"></i><span>Python</span></div>
-            <div class="tech-icon"><i class="devicon-git-plain colored"></i><span>Git</span></div>
-            <div class="tech-icon"><i class="devicon-github-original"></i><span>GitHub</span></div>
-        </div>
-    </section>
-
-    <div class="section-divider"></div>
-
-    <section id="lol-stats" class="container reveal">
-        <h3>League of Legends</h3>
-        <div class="lol-card" id="lol-card">
-            <div class="lol-loading"><span>Načítání stats...</span></div>
-        </div>
-        <a href="https://u.gg/lol/profile/eun1/lp%20thief%20glider-arby/overview" target="_blank" class="btn" style="margin-top: 1.5rem; display: inline-block;">Zobrazit na u.gg</a>
-    </section>
-
-    <div class="section-divider"></div>
-
-    <section id="projects" class="container reveal">
-        <h3>Projekty</h3>
-        <p class="proj-text">Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:</p>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="wip-badge">In progress</div>
-                <h4>Funny weby pro přítelkyni</h4>
-                <p>Pracuji na vtipných webech s love nebo detektivní tématikou.</p>
+        <section id="about" class="container reveal">
+            <h3>O mně</h3>
+            <p>
+                Ahoj! Jsem Adam a věnuji se technologiím. Jsem čerstvý absolvent oboru Informační technologie se silným
+                technickým zázemím a hlubokým zájmem o IT, hardware a síťové technologie. Jsem proaktivní, rychle se
+                učím novým systémům a baví mě skládání PC i konfigurace sítí. Hledám příležitost, kde uplatním své
+                znalosti a budu se dále profesně rozvíjet.
+            </p>
+            <div class="about-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Lokalita:</span>
+                    <span class="meta-value">Liberec, Česká republika</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Jazyky:</span>
+                    <span class="meta-value">Čeština (rodilý mluvčí), Angličtina (B2 - C1)</span>
+                </div>
             </div>
-            <div class="project-card">
-                <div class="wip-badge">In progress</div>
-                <h4>??????????</h4>
-                <p>???????????</p>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section id="skills" class="container reveal">
+            <h3>Dovednosti & Zájmy</h3>
+            <p class="container-text">
+                Kromě softwaru a vývoje se zajímám o počítačové sítě a hardware. Zde je strukturovaný přehled mých
+                dovedností:
+            </p>
+
+            <div class="skills-categories">
+                <!-- Programování & Web -->
+                <div class="skills-category-card">
+                    <div class="category-header">
+                        <i class="fa-solid fa-code"></i>
+                        <h4 class="category-title">Vývoj & Web</h4>
+                    </div>
+                    <div class="tech-grid">
+                        <div class="tech-icon"><i class="devicon-html5-plain colored"></i><span>HTML</span></div>
+                        <div class="tech-icon"><i class="devicon-css3-plain colored"></i><span>CSS</span></div>
+                        <div class="tech-icon"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span>
+                        </div>
+                        <div class="tech-icon"><i class="devicon-python-plain colored"></i><span>Python</span></div>
+                        <div class="tech-icon"><i class="fa-solid fa-database"></i><span>SQL</span></div>
+                    </div>
+                </div>
+
+                <!-- Sítě -->
+                <div class="skills-category-card">
+                    <div class="category-header">
+                        <i class="fa-solid fa-network-wired"></i>
+                        <h4 class="category-title">Počítačové sítě</h4>
+                    </div>
+                    <div class="tech-grid">
+                        <div class="tech-icon"><i class="fa-solid fa-ethernet"></i><span>CCNA 1</span></div>
+                        <div class="tech-icon"><i class="fa-solid fa-route"></i><span>CCNA 2</span></div>
+                        <div class="tech-icon"><i class="fa-solid fa-diagram-project"></i><span>Packet Tracer</span>
+                        </div>
+                        <div class="tech-icon"><i class="fa-solid fa-globe"></i><span>TCP/IP & DNS</span></div>
+                    </div>
+                </div>
+
+                <!-- Hardware & Software -->
+                <div class="skills-category-card">
+                    <div class="category-header">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                        <h4 class="category-title">Hardware & OS</h4>
+                    </div>
+                    <div class="tech-grid">
+                        <div class="tech-icon"><i class="fa-solid fa-microchip"></i><span id="skill-diag">Diagnostika</span></div>
+                        <div class="tech-icon"><i class="fa-solid fa-server"></i><span id="skill-os">Správa OS</span></div>
+                        <div class="tech-icon"><i class="fa-solid fa-compass"></i><span id="skill-support">IT Podpora</span></div>
+                        <div class="tech-icon"><i class="fa-solid fa-file-invoice"></i><span id="skill-office">MS Office</span></div>
+                        <div class="tech-icon"><i class="fa-solid fa-palette"></i><span id="skill-photoshop">Photoshop (základy)</span></div>
+                        <div class="tech-icon"><i class="fa-brands fa-git-alt"></i><span>Git</span></div>
+                        <div class="tech-icon"><i class="fa-brands fa-github"></i><span>GitHub</span></div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <div class="section-divider"></div>
+        <div class="section-divider"></div>
 
-    <section id="contact" class="container reveal">
-        <h3>Kontakt</h3>
-        <p class="contact-text">Máš zájem o spolupráci, nebo si chceš jen zahrát? Napiš mi!</p>
-        <div class="contact-email">
-            <a href="mailto:mackuadam37@gmail.com" class="btn">mackuadam37@gmail.com</a>
-            <button class="btn-copy" id="copy-email" title="Zkopírovat">
-                <i class="fa-regular fa-copy"></i>
-            </button>
-        </div>
-        <span class="copy-toast" id="copy-toast">Zkopírováno!</span>
-    </section>
+        <section id="certificates" class="container reveal">
+            <h3>Certifikace</h3>
+            <p class="container-text">
+                Oficiální osvědčení, která potvrzují mé teoretické i praktické znalosti v oblasti síťových technologií.
+            </p>
+            <div class="certs-grid">
+                <!-- CCNA 1 -->
+                <div class="cert-card">
+                    <div class="cert-badge-wrapper">
+                        <div class="cisco-badge">
+                            <div class="cisco-inner">
+                                <i class="fa-solid fa-ethernet"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cert-info">
+                        <span class="cert-issuer">Cisco Networking Academy</span>
+                        <h4 class="cert-name">CCNA 1: Introduction to Networks</h4>
+                        <p class="cert-desc">
+                            Základy počítačových sítí, IP adresace (IPv4/IPv6), síťové protokoly, Ethernet a základní
+                            konfigurace přepínačů a směrovačů.
+                        </p>
+                        <div class="cert-status">
+                            <span class="status-label"><i class="fa-solid fa-check-double"></i> Dokončeno</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CCNA 2 -->
+                <div class="cert-card">
+                    <div class="cert-badge-wrapper">
+                        <div class="cisco-badge">
+                            <div class="cisco-inner">
+                                <i class="fa-solid fa-route"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cert-info">
+                        <span class="cert-issuer">Cisco Networking Academy</span>
+                        <h4 class="cert-name">CCNA 2: Switching, Routing, and Wireless Essentials</h4>
+                        <p class="cert-desc">
+                            Směrovací protokoly (OSPF), konfigurace VLAN, redundantní sítě (STP/EtherChannel),
+                            bezpečnost sítě (ACL/DHCP Snooping) a základy WLAN.
+                        </p>
+                        <div class="cert-status">
+                            <span class="status-label"><i class="fa-solid fa-check-double"></i> Dokončeno</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="topo-title" id="topo-title">Cisco CCNA Interaktivní Laboratoř</h4>
+            <p class="container-text topo-subtitle" id="topo-subtitle">Kliknutím na síťová zařízení v topologii spustíte simulaci IOS konzole a diagnostických logů.</p>
+            
+            <div class="topo-grid">
+                <div class="topo-map">
+                    <div class="topo-cable cable-r-s"><span class="packet"></span></div>
+                    <div class="topo-cable cable-s-pc"><span class="packet"></span></div>
+                    <div class="topo-cable cable-s-srv"><span class="packet"></span></div>
+                    
+                    <div class="topo-node router" data-device="router" id="node-router">
+                        <div class="node-icon"><i class="fa-solid fa-route"></i></div>
+                        <span class="node-label">Edge_Router</span>
+                    </div>
+                    <div class="topo-node switch" data-device="switch" id="node-switch">
+                        <div class="node-icon"><i class="fa-solid fa-network-wired"></i></div>
+                        <span class="node-label">Core_Switch</span>
+                    </div>
+                    <div class="topo-node client" data-device="pc" id="node-pc">
+                        <div class="node-icon"><i class="fa-solid fa-desktop"></i></div>
+                        <span class="node-label">Workstation</span>
+                    </div>
+                    <div class="topo-node server" data-device="server" id="node-server">
+                        <div class="node-icon"><i class="fa-solid fa-server"></i></div>
+                        <span class="node-label">Local_Server</span>
+                    </div>
+                </div>
+                
+                <div class="topo-console">
+                    <div class="console-header">
+                        <span class="console-status-dot"></span>
+                        <span id="console-header-title">CISCO_IOS_TERMINAL</span>
+                    </div>
+                    <div class="console-body" id="console-body">
+                        <div class="console-placeholder" id="console-placeholder">
+                            <p class="blink-fast">> KONEKTIVITA: SMĚROVÁNÍ AKTIVNÍ [OSPFv2]</p>
+                            <p>> Kliknutím na jakékoli zařízení na topologické mapě spustíte konzoli a vyvoláte stav konfigurace.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section id="calculator" class="container reveal">
+            <h3 id="calc-title">Nástroje & Kalkulačky</h3>
+            <p class="container-text" id="calc-subtitle">Rychlé výpočty podsítí pro síťaře a standardní/vědecká kalkulačka pro každodenní úkoly.</p>
+            
+            <div class="calc-hub">
+                <div class="calc-tabs">
+                    <button class="calc-tab-btn active" data-tab="subnet" id="tab-btn-subnet">Subnet kalkulačka</button>
+                    <button class="calc-tab-btn" data-tab="math" id="tab-btn-math">Matematická kalkulačka</button>
+                </div>
+                
+                <div class="calc-content">
+                    <!-- SUBNET CALCULATOR VIEW -->
+                    <div class="calc-view active" id="view-subnet">
+                        <div class="subnet-input-grid">
+                            <div class="input-field">
+                                <label for="subnet-ip" id="lbl-subnet-ip">IP adresa:</label>
+                                <input type="text" id="subnet-ip" value="192.168.1.1" placeholder="Např. 192.168.1.1">
+                            </div>
+                            <div class="input-field">
+                                <label for="subnet-cidr" id="lbl-subnet-cidr">Maska / CIDR: <span id="cidr-val">/24</span></label>
+                                <input type="range" id="subnet-cidr" min="0" max="32" value="24" class="slider">
+                            </div>
+                        </div>
+                        
+                        <div class="subnet-results">
+                            <div class="result-row">
+                                <span class="result-label" id="res-lbl-mask">Maska sítě:</span>
+                                <span class="result-val" id="res-val-mask">255.255.255.0</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label" id="res-lbl-net">Adresa sítě (Network):</span>
+                                <span class="result-val" id="res-val-net">192.168.1.0</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label" id="res-lbl-broadcast">Broadcast adresa:</span>
+                                <span class="result-val" id="res-val-broadcast">192.168.1.255</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label" id="res-lbl-range">Rozsah použitelných IP:</span>
+                                <span class="result-val" id="res-val-range">192.168.1.1 - 192.168.1.254</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label" id="res-lbl-hosts">Počet použitelných hostů:</span>
+                                <span class="result-val" id="res-val-hosts">254</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label" id="res-lbl-wildcard">Wildcard maska:</span>
+                                <span class="result-val" id="res-val-wildcard">0.0.0.255</span>
+                            </div>
+                        </div>
+                        
+                        <div class="subnet-binary">
+                            <div class="binary-header" id="bin-hdr">Binární vizualizace</div>
+                            <div class="binary-row">
+                                <span class="binary-label">IP:</span>
+                                <span class="binary-val" id="bin-val-ip">11000000.10101000.00000001.00000001</span>
+                            </div>
+                            <div class="binary-row">
+                                <span class="binary-label">MASK:</span>
+                                <span class="binary-val" id="bin-val-mask">11111111.11111111.11111111.00000000</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- MATH CALCULATOR VIEW -->
+                    <div class="calc-view" id="view-math">
+                        <div class="math-mode-toggle">
+                            <span id="math-mode-label">Režim:</span>
+                            <button class="mode-toggle-btn active" id="math-mode-std">Standardní</button>
+                            <button class="mode-toggle-btn" id="math-mode-sci">Vědecká</button>
+                        </div>
+                        
+                        <div class="math-screen">
+                            <div class="math-history" id="math-history"></div>
+                            <div class="math-display" id="math-display">0</div>
+                        </div>
+                        
+                        <div class="math-keypad standard" id="math-keypad">
+                            <!-- Scientific Row 1 -->
+                            <button class="calc-key scientific hidden" data-action="sin">sin</button>
+                            <button class="calc-key scientific hidden" data-action="cos">cos</button>
+                            <button class="calc-key scientific hidden" data-action="tan">tan</button>
+                            <button class="calc-key scientific hidden" data-action="log">log</button>
+                            
+                            <!-- Scientific Row 2 -->
+                            <button class="calc-key scientific hidden" data-action="ln">ln</button>
+                            <button class="calc-key scientific hidden" data-action="sqrt">√</button>
+                            <button class="calc-key scientific hidden" data-action="pow">xʸ</button>
+                            <button class="calc-key scientific hidden" data-action="pi">π</button>
+                            
+                            <!-- Scientific Row 3 -->
+                            <button class="calc-key scientific hidden" data-action="e">e</button>
+                            <button class="calc-key scientific hidden" data-action="open-paren">(</button>
+                            <button class="calc-key scientific hidden" data-action="close-paren">)</button>
+                            <button class="calc-key scientific hidden" data-action="mod">mod</button>
+
+                            <!-- Standard Buttons -->
+                            <button class="calc-key action-key" data-action="clear">C</button>
+                            <button class="calc-key action-key" data-action="backspace">⌫</button>
+                            <button class="calc-key op-key" data-action="divide">÷</button>
+                            <button class="calc-key op-key" data-action="multiply">×</button>
+                            
+                            <button class="calc-key num-key" data-val="7">7</button>
+                            <button class="calc-key num-key" data-val="8">8</button>
+                            <button class="calc-key num-key" data-val="9">9</button>
+                            <button class="calc-key op-key" data-action="subtract">-</button>
+                            
+                            <button class="calc-key num-key" data-val="4">4</button>
+                            <button class="calc-key num-key" data-val="5">5</button>
+                            <button class="calc-key num-key" data-val="6">6</button>
+                            <button class="calc-key op-key" data-action="add">+</button>
+                            
+                            <button class="calc-key num-key" data-val="1">1</button>
+                            <button class="calc-key num-key" data-val="2">2</button>
+                            <button class="calc-key num-key" data-val="3">3</button>
+                            <button class="calc-key equals-key" data-action="equals">=</button>
+                            
+                            <button class="calc-key num-key double-width" data-val="0">0</button>
+                            <button class="calc-key num-key" data-val=".">.</button>
+                        </div>
+                        
+                        <div class="math-bases scientific hidden" id="math-bases">
+                            <div class="base-row"><span class="base-lbl">DEC</span><span class="base-val" id="base-dec">0</span></div>
+                            <div class="base-row"><span class="base-lbl">HEX</span><span class="base-val" id="base-hex">0</span></div>
+                            <div class="base-row"><span class="base-lbl">BIN</span><span class="base-val" id="base-bin">0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section id="experience" class="container reveal">
+            <h3>Vzdělání & Zkušenosti</h3>
+            <p class="container-text">
+                Přehled mého studia a odborných praxí v IT oblasti.
+            </p>
+            
+            <div class="timeline-filters">
+                <button class="filter-btn active" data-filter="all">Vše</button>
+                <button class="filter-btn" data-filter="education">Vzdělání</button>
+                <button class="filter-btn" data-filter="experience">Praxe</button>
+            </div>
+
+            <div class="timeline">
+                <!-- SOŠ SPŠ Varnsdorf -->
+                <div class="timeline-item education">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2022 – 2026</span>
+                        <h4 class="timeline-title">Střední průmyslová škola a Střední odborná škola, Varnsdorf</h4>
+                        <span class="timeline-subtitle">Obor: Informační technologie</span>
+                        <p class="timeline-desc">
+                            Absolvent studia zakončeného maturitní zkouškou. Zaměření na správu systémů, základy
+                            programování, síťové technologie a hardware.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- IT Servis Turnov -->
+                <div class="timeline-item experience">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Odborná stáž (2 týdny)</span>
+                        <h4 class="timeline-title">IT servis Turnov</h4>
+                        <span class="timeline-subtitle">Servisní technik</span>
+                        <p class="timeline-desc">
+                            Diagnostika, čištění a hardware opravy stolních počítačů a notebooků. Instalace operačních
+                            systémů, softwaru a údržba IT vybavení.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Web Projects Hubička -->
+                <div class="timeline-item experience">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Odborná stáž (2 týdny)</span>
+                        <h4 class="timeline-title">Spolupráce na webových projektech (u Tomáše Hubičky)</h4>
+                        <span class="timeline-subtitle">Webový vývojář</span>
+                        <p class="timeline-desc">
+                            Praktické seznámení s vývojovým procesem, tvorba a správa webových stránek. Práce s HTML,
+                            CSS a ladění kódu na reálných projektech.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section id="lol-stats" class="container reveal">
+            <h3>League of Legends</h3>
+            <div class="lol-card" id="lol-card">
+                <div class="lol-loading"><span>Načítání stats...</span></div>
+            </div>
+            <a href="https://u.gg/lol/profile/eun1/arby-him/overview" target="_blank" class="btn"
+                style="margin-top: 1.5rem; display: inline-block;">Zobrazit na u.gg</a>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section id="projects" class="container reveal">
+            <h3>Projekty</h3>
+            <p class="proj-text">Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se
+                teprve klube na svět:</p>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="wip-badge">In progress</div>
+                    <h4>Funny weby pro přítelkyni</h4>
+                    <p>Pracuji na vtipných webech s love nebo detektivní tématikou.</p>
+                </div>
+                <a href="https://scrapscrap.app" target="_blank" class="project-card link-card">
+                    <div class="wip-badge live-badge">Live</div>
+                    <h4>ScrapScrap</h4>
+                    <p>Steampunková webová hra, kterou jsem vyvinul. Obsahuje herní obchod, žebříčky a vlastní herní
+                        mechaniky.</p>
+                    <span class="project-link-hint">Hrát ScrapScrap <i
+                            class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                </a>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section id="contact" class="container reveal">
+            <h3>Kontakt</h3>
+            <p class="contact-text">Máš zájem o spolupráci, nebo si chceš jen zahrát? Napiš mi!</p>
+            
+            <form id="contact-form" class="contact-form">
+                <div class="form-group">
+                    <input type="text" id="form-name" required placeholder="Jméno / Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" id="form-email" required placeholder="E-mail">
+                </div>
+                <div class="form-group">
+                    <textarea id="form-message" required placeholder="Zpráva / Message" rows="5"></textarea>
+                </div>
+                <button type="submit" class="btn btn-submit" id="btn-submit-form">Odeslat zprávu</button>
+            </form>
+
+            <div class="contact-email">
+                <a href="mailto:mackuadam37@gmail.com" class="btn btn-copy-email">mackuadam37@gmail.com</a>
+                <button class="btn-copy" id="copy-email" title="Zkopírovat">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+            <span class="copy-toast" id="copy-toast">Zkopírováno!</span>
+        </section>
+    </main>
 
     <div class="hw-monitor" id="hw-monitor">
         <div class="hw-header"><span class="hw-blink"></span> SYS_MONITOR</div>
@@ -216,451 +600,16 @@
     <footer>
         <div class="footer-links">
             <a href="https://github.com/gitArby" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
-            <a href="https://www.instagram.com/arbycek" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://discord.com/users/938119246196666378" target="_blank" title="Discord"><i class="fa-brands fa-discord"></i></a>
+            <a href="https://www.instagram.com/arbycek" target="_blank" title="Instagram"><i
+                    class="fa-brands fa-instagram"></i></a>
+            <a href="https://discord.com/users/938119246196666378" target="_blank" title="Discord"><i
+                    class="fa-brands fa-discord"></i></a>
             <a href="mailto:mackuadam37@gmail.com" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
         </div>
-        <p class="footer-copy">&copy; <span id="current-year"></span> arbyy.tech &mdash; made with <span class="footer-heart">&#10084;</span> & caffeine</p>
+        <p class="footer-copy">&copy; <span id="current-year"></span> arbyy.tech &mdash; made with <span
+                class="footer-heart">&#10084;</span> & caffeine</p>
     </footer>
-
-    <script>
-        // --- Boot screen ---
-        window.addEventListener('load', () => {
-            const bootLines = document.querySelectorAll('.terminal-text p');
-            const bootScreen = document.getElementById('boot-screen');
-            let delay = 300;
-            bootLines.forEach(line => { setTimeout(() => line.style.opacity = '1', delay); delay += 600; });
-            setTimeout(() => {
-                bootScreen.classList.add('hidden');
-                setTimeout(() => {
-                    bootScreen.style.display = 'none';
-                    document.getElementById('main-nav').classList.add('visible');
-                }, 800);
-            }, delay + 800);
-        });
-
-        // --- Copy email ---
-        document.getElementById('copy-email').addEventListener('click', () => {
-            navigator.clipboard.writeText('mackuadam37@gmail.com');
-            const toast = document.getElementById('copy-toast');
-            toast.classList.add('visible');
-            setTimeout(() => toast.classList.remove('visible'), 2000);
-        });
-
-        // --- Rok ---
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-
-        // --- Scroll progress ---
-        const scrollProgress = document.getElementById('scroll-progress');
-        window.addEventListener('scroll', () => {
-            const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-            scrollProgress.style.width = `${pct * 100}%`;
-        });
-
-        // --- Navigace ---
-        const mainNav = document.getElementById('main-nav');
-        const navToggle = document.getElementById('nav-toggle');
-        const navLinks = document.getElementById('nav-links');
-        window.addEventListener('scroll', () => mainNav.classList.toggle('scrolled', window.scrollY > 80));
-        navToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('open');
-            navToggle.classList.toggle('open');
-        });
-        navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-            navLinks.classList.remove('open');
-            navToggle.classList.remove('open');
-        }));
-
-        // --- Typewriter ---
-        const twEl = document.getElementById('typewriter');
-        const phrases = ['Tech nadšenec', 'hráč her', 'PC builder', 'web developer'];
-        let pIdx = 0, cIdx = 0, deleting = false;
-        function type() {
-            const phrase = phrases[pIdx];
-            twEl.textContent = deleting ? phrase.slice(0, cIdx - 1) : phrase.slice(0, cIdx + 1);
-            deleting ? cIdx-- : cIdx++;
-            let delay = deleting ? 60 : 100;
-            if (!deleting && cIdx === phrase.length) { delay = 2000; deleting = true; }
-            else if (deleting && cIdx === 0) { deleting = false; pIdx = (pIdx + 1) % phrases.length; delay = 400; }
-            setTimeout(type, delay);
-        }
-        setTimeout(type, 2800);
-
-        // --- Scroll reveal ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.2 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // --- Animated counters ---
-        const counterObs = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                entry.target.querySelectorAll('.counter-number').forEach(el => {
-                    const target = parseInt(el.getAttribute('data-target'));
-                    const duration = 1800;
-                    const steps = duration / 16;
-                    let current = 0;
-                    const tick = () => {
-                        current = Math.min(current + target / steps, target);
-                        el.textContent = Math.floor(current).toLocaleString('cs-CZ');
-                        if (current < target) requestAnimationFrame(tick);
-                    };
-                    tick();
-                });
-                counterObs.unobserve(entry.target);
-            });
-        }, { threshold: 0.5 });
-        document.querySelectorAll('.counters-grid').forEach(el => counterObs.observe(el));
-
-        // --- Custom kurzor ---
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorOutline = document.querySelector('.cursor-outline');
-        window.addEventListener('mousemove', e => {
-            cursorDot.style.left = `${e.clientX}px`;
-            cursorDot.style.top = `${e.clientY}px`;
-            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 300, fill: 'forwards' });
-        });
-        document.querySelectorAll('a, button, .discord-badge, #mega-trigger').forEach(el => {
-            el.addEventListener('mouseover', () => { cursorDot.classList.add('active'); cursorOutline.classList.add('active'); });
-            el.addEventListener('mouseleave', () => { cursorDot.classList.remove('active'); cursorOutline.classList.remove('active'); });
-        });
-
-        // --- Cursor trail ---
-        const TRAIL = 10;
-        const trailEls = Array.from({ length: TRAIL }, () => {
-            const d = document.createElement('div');
-            d.className = 'cursor-trail';
-            document.body.appendChild(d);
-            return { el: d, x: 0, y: 0 };
-        });
-        let mx = 0, my = 0;
-        window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-        (function trailLoop() {
-            let x = mx, y = my;
-            trailEls.forEach((dot, i) => {
-                const px = dot.x, py = dot.y;
-                dot.x += (x - dot.x) * 0.35;
-                dot.y += (y - dot.y) * 0.35;
-                dot.el.style.left = `${dot.x}px`;
-                dot.el.style.top = `${dot.y}px`;
-                const scale = (TRAIL - i) / TRAIL;
-                dot.el.style.opacity = scale * 0.45;
-                dot.el.style.transform = `translate(-50%, -50%) scale(${scale * 0.8})`;
-                x = px; y = py;
-            });
-            requestAnimationFrame(trailLoop);
-        })();
-
-        // --- Easter egg ---
-        let clickCount = 0, lastClickTime = 0;
-        const trigger = document.getElementById('mega-trigger');
-        const canvas = document.getElementById('easter-egg-canvas');
-        const ctx = canvas.getContext('2d');
-        let animationInterval;
-        trigger.addEventListener('click', () => {
-            const now = Date.now();
-            clickCount = now - lastClickTime < 500 ? clickCount + 1 : 1;
-            lastClickTime = now;
-            if (clickCount === 6) { startEasterEgg(); clickCount = 0; }
-        });
-        function startEasterEgg() {
-            canvas.style.display = 'block'; resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            const drops = Array.from({ length: Math.floor(canvas.width / 20) }, () => 1);
-            const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZPENTAKILLlol🏆";
-            animationInterval = setInterval(() => {
-                ctx.fillStyle = "rgba(10,10,10,0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "#00ff66"; ctx.font = "20px var(--font-main)";
-                drops.forEach((y, i) => {
-                    ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 20, y * 20);
-                    if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                    drops[i]++;
-                });
-            }, 35);
-            setTimeout(() => { clearInterval(animationInterval); canvas.style.display = 'none'; window.removeEventListener('resize', resizeCanvas); }, 5000);
-        }
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-
-        // --- Scroll spy ---
-        const spySections = document.querySelectorAll('section[id]');
-        const navAnchors = document.querySelectorAll('.nav-links a');
-        const spyObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    navAnchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${entry.target.id}`));
-                }
-            });
-        }, { threshold: 0.35, rootMargin: '-80px 0px -45% 0px' });
-        spySections.forEach(s => spyObserver.observe(s));
-
-        // --- 3D tilt na kartách ---
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const r = card.getBoundingClientRect();
-                const x = (e.clientX - r.left) / r.width - 0.5;
-                const y = (e.clientY - r.top) / r.height - 0.5;
-                card.style.transition = 'box-shadow 0.3s ease, border-color 0.3s ease';
-                card.style.transform = `perspective(700px) rotateY(${x * 14}deg) rotateX(${-y * 14}deg) translateY(-5px)`;
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transition = '';
-                card.style.transform = '';
-            });
-        });
-
-        // --- i18n ---
-        const i18n = {
-            cs: {
-                nav: ['O mně', 'Dovednosti', 'LoL', 'Projekty', 'Kontakt'],
-                subtitle: ['Tech nadšenec', 'hráč her', 'PC builder', 'web developer'],
-                about: { title: 'O mně', text: 'Ahoj! Jsem Adam a věnuji se technologiím. Rád relaxuji, ale jsem také vášnivý hráč her, zejména <strong>League of Legends</strong> a dalších kompetitivních titulů, kde trénuji strategické myšlení.' },
-                skills: { title: 'Dovednosti & Zájmy', text: 'Kromě softwaru a her je mým velkým koníčkem <strong>hardware</strong>. Baví mě skládat počítače, rozumět tomu, jak věci fungují uvnitř, a neustále sledovat nové trendy v tech světě. Zde je přehled technologií, kterým se aktuálně věnuji:', techTitle: 'Tech Stack' },
-                lol: { title: 'League of Legends', btn: 'Zobrazit na u.gg' },
-                projects: { title: 'Projekty', text: 'Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:', c1t: 'Funny weby pro přítelkyni', c1d: 'Pracuji na vtipných webech s love nebo detektivní tématikou.', c2t: '??????????', c2d: '???????????' },
-                contact: { title: 'Kontakt', text: 'Máš zájem o spolupráci, nebo si chceš jen zahrát? Napiš mi!' },
-                counters: ['hodin v LoL', 'sestavených PC', 'roky v tech', 'projektů'],
-                nowListening: 'Teď poslouchám', nowPlaying: 'Teď hraju', copyToast: 'Zkopírováno!'
-            },
-            en: {
-                nav: ['About', 'Skills', 'LoL', 'Projects', 'Contact'],
-                subtitle: ['Tech enthusiast', 'gamer', 'PC builder', 'web developer'],
-                about: { title: 'About me', text: 'Hey! I\'m Adam and I\'m passionate about tech. I love to chill, but I\'m also an avid gamer — especially <strong>League of Legends</strong> and other competitive titles where I sharpen my strategic thinking.' },
-                skills: { title: 'Skills & Interests', text: 'Besides software and gaming, my biggest hobby is <strong>hardware</strong>. I love building PCs, understanding how things work inside, and keeping up with the latest tech trends. Here\'s an overview of technologies I currently work with:', techTitle: 'Tech Stack' },
-                lol: { title: 'League of Legends', btn: 'View on u.gg' },
-                projects: { title: 'Projects', text: 'Still pushing forward. Here\'s a small preview of what I\'m currently working on and what\'s coming soon:', c1t: 'Funny websites for my girlfriend', c1d: 'Working on fun websites with love or detective themes.', c2t: '??????????', c2d: '???????????' },
-                contact: { title: 'Contact', text: 'Interested in collaboration, or just want to play? Hit me up!' },
-                counters: ['hours in LoL', 'built PCs', 'years in tech', 'projects'],
-                nowListening: 'Now listening', nowPlaying: 'Now playing', copyToast: 'Copied!'
-            }
-        };
-        let currentLang = localStorage.getItem('lang') || 'cs';
-
-        function applyLanguage(lang) {
-            const t = i18n[lang];
-            document.querySelectorAll('.nav-links a').forEach((a, i) => { if (t.nav[i]) a.textContent = t.nav[i]; });
-            phrases.length = 0; t.subtitle.forEach(p => phrases.push(p));
-            document.querySelector('#about h3').textContent = t.about.title;
-            document.querySelector('#about p').innerHTML = t.about.text;
-            document.querySelector('#skills h3').textContent = t.skills.title;
-            document.querySelector('#skills .container-text').innerHTML = t.skills.text;
-            document.querySelector('.tech-title').textContent = t.skills.techTitle;
-            document.querySelector('#lol-stats h3').textContent = t.lol.title;
-            document.querySelector('#lol-stats .btn').textContent = t.lol.btn;
-            document.querySelector('#projects h3').textContent = t.projects.title;
-            document.querySelector('#projects .proj-text').innerHTML = t.projects.text;
-            const cards = document.querySelectorAll('.project-card');
-            if (cards[0]) { cards[0].querySelector('h4').textContent = t.projects.c1t; cards[0].querySelector('p').textContent = t.projects.c1d; }
-            if (cards[1]) { cards[1].querySelector('h4').textContent = t.projects.c2t; cards[1].querySelector('p').textContent = t.projects.c2d; }
-            document.querySelector('#contact h3').textContent = t.contact.title;
-            document.querySelector('#contact .contact-text').textContent = t.contact.text;
-            document.querySelectorAll('.counter-label').forEach((el, i) => { if (t.counters[i]) el.textContent = t.counters[i]; });
-            document.getElementById('opt-cs').classList.toggle('active', lang === 'cs');
-            document.getElementById('opt-en').classList.toggle('active', lang === 'en');
-            document.documentElement.lang = lang;
-            currentLang = lang;
-            localStorage.setItem('lang', lang);
-        }
-
-        document.getElementById('lang-toggle').addEventListener('click', () => {
-            applyLanguage(currentLang === 'cs' ? 'en' : 'cs');
-        });
-
-        applyLanguage(currentLang);
-
-        // --- Lanyard (Discord status + Now Playing) ---
-        const DISCORD_ID = '938119246196666378';
-        function connectLanyard() {
-            const ws = new WebSocket('wss://api.lanyard.rest/socket');
-            let hb;
-            ws.onmessage = e => {
-                const { op, d } = JSON.parse(e.data);
-                if (op === 1) {
-                    hb = setInterval(() => ws.send(JSON.stringify({ op: 3 })), d.heartbeat_interval);
-                    ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
-                }
-                if (op === 0) updatePresence(d);
-            };
-            ws.onclose = () => { clearInterval(hb); setTimeout(connectLanyard, 5000); };
-        }
-        function updatePresence(data) {
-            const dot = document.getElementById('discord-status');
-            const colors = { online: '#43b581', idle: '#faa61a', dnd: '#f04747', offline: '#747f8d' };
-            dot.style.background = colors[data.discord_status] || colors.offline;
-            dot.setAttribute('title', data.discord_status);
-
-            const npEl = document.getElementById('now-playing');
-            const npContent = document.getElementById('np-content');
-            if (data.listening_to_spotify && data.spotify) {
-                const sp = data.spotify;
-                npEl.style.display = 'flex';
-                npContent.innerHTML = `
-                    <img src="${sp.album_art_url}" alt="cover" class="np-art">
-                    <div class="np-text">
-                        <span class="np-label"><i class="fa-brands fa-spotify"></i> Teď poslouchám</span>
-                        <span class="np-song">${sp.song}</span>
-                        <span class="np-artist">${sp.artist}</span>
-                    </div>`;
-            } else {
-                const game = data.activities?.find(a => a.type === 0);
-                if (game) {
-                    npEl.style.display = 'flex';
-                    npContent.innerHTML = `
-                        <div class="np-game-icon"><i class="fa-solid fa-gamepad"></i></div>
-                        <div class="np-text">
-                            <span class="np-label">Teď hraju</span>
-                            <span class="np-song">${game.name}</span>
-                        </div>`;
-                } else {
-                    npEl.style.display = 'none';
-                }
-            }
-        }
-        connectLanyard();
-
-        // --- Hardware Monitor ---
-        (function initMonitor() {
-            function updateTime() {
-                const n = new Date();
-                document.getElementById('hw-time').textContent =
-                    `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
-            }
-            setInterval(updateTime, 1000);
-            updateTime();
-
-            if ('getBattery' in navigator) {
-                navigator.getBattery().then(b => {
-                    const update = () => {
-                        const pct = Math.round(b.level * 100);
-                        document.getElementById('hw-battery').textContent = `${b.charging ? '⚡' : ''}${pct}%`;
-                    };
-                    update();
-                    b.addEventListener('levelchange', update);
-                    b.addEventListener('chargingchange', update);
-                });
-            } else {
-                document.getElementById('hw-battery').textContent = 'N/A';
-            }
-
-            function updateNet() {
-                const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-                if (c) {
-                    const type = (c.effectiveType || c.type || '?').toUpperCase();
-                    const dl = c.downlink ? ` ${c.downlink}Mb/s` : '';
-                    document.getElementById('hw-net').textContent = type + dl;
-                } else {
-                    document.getElementById('hw-net').textContent = navigator.onLine ? 'ONLINE' : 'OFFLINE';
-                }
-            }
-            updateNet();
-            window.addEventListener('online', updateNet);
-            window.addEventListener('offline', updateNet);
-            if (navigator.connection) navigator.connection.addEventListener('change', updateNet);
-        })();
-
-
-        // --- Audio Feedback ---
-        let audioEnabled = localStorage.getItem('audio') !== 'false';
-        let audioCtx = null;
-
-        function getCtx() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            return audioCtx;
-        }
-
-        function playClick() {
-            if (!audioEnabled) return;
-            try {
-                const ctx = getCtx();
-                ctx.resume().then(() => {
-                    const now = ctx.currentTime;
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(600, now);
-                    osc.frequency.exponentialRampToValueAtTime(120, now + 0.04);
-                    gain.gain.setValueAtTime(0.35, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(now); osc.stop(now + 0.04);
-                });
-            } catch(e) {}
-        }
-
-        function playHover() {
-            if (!audioEnabled) return;
-            try {
-                const ctx = getCtx();
-                ctx.resume().then(() => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.frequency.value = 1200;
-                    osc.type = 'sine';
-                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(); osc.stop(ctx.currentTime + 0.08);
-                });
-            } catch(e) {}
-        }
-
-        function updateAudioIcon() {
-            document.getElementById('audio-icon').className = audioEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
-            document.getElementById('audio-toggle').classList.toggle('audio-on', audioEnabled);
-        }
-
-        document.getElementById('audio-toggle').addEventListener('click', () => {
-            audioEnabled = !audioEnabled;
-            localStorage.setItem('audio', audioEnabled);
-            updateAudioIcon();
-            if (audioEnabled) setTimeout(playClick, 50);
-        });
-
-        document.querySelectorAll('a, button, .discord-badge, .project-card, .tech-icon').forEach(el => {
-            el.addEventListener('click', playClick);
-            el.addEventListener('mouseenter', playHover);
-        });
-
-        updateAudioIcon();
-
-        // --- LoL Stats ---
-        (async function fetchLoLStats() {
-            const card = document.getElementById('lol-card');
-            const NAME = 'LP Thief Glider';
-            const TAG = 'ARBY';
-            const REGION = 'eune';
-            try {
-                const [sumRes, rankRes] = await Promise.all([
-                    fetch(`https://api.henrikdev.xyz/lol/v2/summoner/${REGION}/${encodeURIComponent(NAME)}/${TAG}`),
-                    fetch(`https://api.henrikdev.xyz/lol/v2/ranked/${REGION}/${encodeURIComponent(NAME)}/${TAG}`)
-                ]);
-                if (!sumRes.ok || !rankRes.ok) throw new Error();
-                const { data: sum } = await sumRes.json();
-                const { data: ranks } = await rankRes.json();
-                const solo = ranks?.find(r => r.queue_type === 'RANKED_SOLO_5x5') || null;
-                const tier = solo?.tier || 'UNRANKED';
-                const tierCap = tier[0] + tier.slice(1).toLowerCase();
-                const winrate = solo ? Math.round(solo.wins / (solo.wins + solo.losses) * 100) : null;
-                card.innerHTML = `
-                    <div class="lol-info">
-                        <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_${tierCap}.webp" alt="${tierCap}" onerror="this.style.display='none'">
-                        <div class="lol-details">
-                            <div class="lol-name">${sum.name ?? NAME} <span class="lol-level">Lvl ${sum.account_level ?? sum.summoner_level}</span></div>
-                            <div class="lol-rank">${solo ? `${tierCap} ${solo.rank} &mdash; ${solo.lp} LP` : 'Unranked'}</div>
-                            ${winrate !== null ? `<div class="lol-winrate">${solo.wins}W / ${solo.losses}L &mdash; <span class="wr-${winrate >= 50 ? 'good' : 'bad'}">${winrate}% WR</span></div>` : ''}
-                        </div>
-                    </div>`;
-            } catch {
-                card.innerHTML = `
-                    <div class="lol-info">
-                        <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_Gold.webp" alt="LoL" onerror="this.style.display='none'">
-                        <div class="lol-details">
-                            <div class="lol-name">LP Thief Glider <span class="lol-server">#ARBY</span></div>
-                            <div class="lol-rank">Podívej se na u.gg pro aktuální stats</div>
-                        </div>
-                    </div>`;
-            }
-        })();
-    </script>
+    <div id="hud-notifier-container"></div>
 </body>
+
 </html>
