@@ -68,23 +68,24 @@
             <li><a href="#lol-stats-view"><i class="fa-solid fa-gamepad"></i> <span>LoL</span></a></li>
             <li><a href="#projects-view"><i class="fa-solid fa-laptop-code"></i> <span>Projekty</span></a></li>
             <li><a href="#contact-view"><i class="fa-solid fa-envelope"></i> <span>Kontakt</span></a></li>
+            <!-- Controls are last item in the list so they collapse with hamburger on mobile -->
+            <li class="nav-controls-footer" id="nav-controls-footer">
+                <div class="theme-selector" id="theme-selector">
+                    <button class="theme-dot theme-green active" data-theme="green" title="Matrix Green"></button>
+                    <button class="theme-dot theme-blue" data-theme="blue" title="Cisco Blue"></button>
+                    <button class="theme-dot theme-amber" data-theme="amber" title="Cyberpunk Amber"></button>
+                    <button class="theme-dot theme-red" data-theme="red" title="Valorant Red"></button>
+                </div>
+                <div class="nav-controls-row">
+                    <button class="audio-toggle" id="audio-toggle" title="Zvuky">
+                        <i class="fa-solid fa-volume-xmark" id="audio-icon"></i>
+                    </button>
+                    <button class="lang-toggle" id="lang-toggle" aria-label="Přepnout jazyk">
+                        <span class="lang-opt" id="opt-cs">CZ</span><span class="lang-sep">/</span><span class="lang-opt" id="opt-en">EN</span>
+                    </button>
+                </div>
+            </li>
         </ul>
-        <div class="nav-controls-footer">
-            <div class="theme-selector" id="theme-selector">
-                <button class="theme-dot theme-green active" data-theme="green" title="Matrix Green"></button>
-                <button class="theme-dot theme-blue" data-theme="blue" title="Cisco Blue"></button>
-                <button class="theme-dot theme-amber" data-theme="amber" title="Cyberpunk Amber"></button>
-                <button class="theme-dot theme-red" data-theme="red" title="Valorant Red"></button>
-            </div>
-            <div class="nav-controls-row">
-                <button class="audio-toggle" id="audio-toggle" title="Zvuky">
-                    <i class="fa-solid fa-volume-xmark" id="audio-icon"></i>
-                </button>
-                <button class="lang-toggle" id="lang-toggle" aria-label="Přepnout jazyk">
-                    <span class="lang-opt" id="opt-cs">CZ</span><span class="lang-sep">/</span><span class="lang-opt" id="opt-en">EN</span>
-                </button>
-            </div>
-        </div>
     </nav>
 
     <div id="boot-screen">
