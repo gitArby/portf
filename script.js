@@ -66,26 +66,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.getElementById('nav-links');
     const mainContentEl = document.getElementById('main-content');
 
-    if (mainContentEl && (scrollProgress || mainNav)) {
-        let scrollTicker = false;
-        mainContentEl.addEventListener('scroll', () => {
-            if (!scrollTicker) {
-                scrollTicker = true;
-                requestAnimationFrame(() => {
-                    const scrollY = mainContentEl.scrollTop;
-                    if (scrollProgress) {
-                        const maxScroll = mainContentEl.scrollHeight - mainContentEl.clientHeight;
-                        const pct = maxScroll > 0 ? scrollY / maxScroll : 0;
-                        scrollProgress.style.width = `${pct * 100}%`;
-                    }
-                    if (mainNav) {
-                        mainNav.classList.toggle('scrolled', scrollY > 80);
-                    }
-                    scrollTicker = false;
-                });
-            }
-        }, { passive: true });
-    }
+    // Desktop: main-content div scrolls (overflow-y:auto, height:100vh)
+    // Mobile:  window scrolls natively (min-height, overflow:visible)
+    const isDesktop = () => window.innerWidth > 900;
+
+    const onScroll = () => {
+        const scrollY = isDesktop() && mainContentEl
+            ? mainContentEl.scrollTop
+            : window.scrollY;
+
+        if (scrollProgress) {
+            const scrollable = isDesktop() && mainContentEl
+                ? mainContentEl
+                : document.documentElement;
+            const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
+            const pct = maxScroll > 0 ? scrollY / maxScroll : 0;
+            scrollProgress.style.width = `${pct * 100}%`;
+        }
+        if (mainNav) {
+            mainNav.classList.toggle('scrolled', scrollY > 80);
+        }
+    };
+
+    let scrollTicker = false;
+    const tickedScroll = () => {
+        if (!scrollTicker) {
+            scrollTicker = true;
+            requestAnimationFrame(() => { onScroll(); scrollTicker = false; });
+        }
+    };
+
+    if (mainContentEl) mainContentEl.addEventListener('scroll', tickedScroll, { passive: true });
+    window.addEventListener('scroll', tickedScroll, { passive: true });
 
     if (navToggle && navLinks) {
         navToggle.addEventListener('click', () => {
@@ -346,9 +358,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show target view
         targetView.classList.add('active');
 
-        // Scroll back to top
-        if (mainContentEl) {
+        // Scroll back to top — desktop uses div scroll, mobile uses window scroll
+        if (mainContentEl && window.innerWidth > 900) {
             mainContentEl.scrollTop = 0;
+        } else {
+            window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         // Update active class on nav links

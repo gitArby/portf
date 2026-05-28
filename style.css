@@ -58,6 +58,7 @@ html {
     scrollbar-width: thin;
     scrollbar-color: var(--arbyy-green) transparent;
     cursor: none;
+    height: 100%;
 }
 
 body {
@@ -69,6 +70,9 @@ body {
     align-items: center;
     overflow-x: hidden;
     background-color: var(--bg-dark);
+    /* Ensure body always fills full viewport — prevents black strip */
+    min-height: 100vh;
+    min-height: 100dvh; /* dynamic viewport for mobile browsers with URL bars */
 }
 
 body::before {
@@ -168,12 +172,16 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.2rem 2.5rem;
-    z-index: 1000;
+    padding: 0 2.5rem;
+    height: 60px;
+    z-index: 2000;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.6s ease, background 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
-    border-bottom: 1px solid transparent;
+    /* Always dark background so content doesn't show through on mobile */
+    background: rgba(8, 8, 8, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: opacity 0.6s ease, background 0.3s ease, border-color 0.3s ease;
     cursor: none;
 }
 
@@ -183,9 +191,8 @@ main {
 }
 
 .main-nav.scrolled {
-    background: rgba(10, 10, 10, 0.92);
-    backdrop-filter: blur(12px);
-    padding: 0.8rem 2.5rem;
+    background: rgba(5, 5, 5, 0.98);
+    backdrop-filter: blur(16px);
     border-bottom-color: rgba(0, 255, 102, 0.1);
 }
 
@@ -323,14 +330,16 @@ main {
    HERO SECTION & ACTION BUTTONS
    ========================================================================== */
 .hero {
-    height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 0 1rem;
+    padding: 4rem 1.5rem 3rem;
+    /* Min-height ensures hero fills viewport but isn't locked to exact 100vh */
+    min-height: 90vh;
+    box-sizing: border-box;
 }
 
 .mega-text {
@@ -3266,17 +3275,17 @@ html[data-theme="red"] .discord-card-banner { background: linear-gradient(135deg
         display: none !important;
     }
 
-    /* Transform main nav into a sidebar */
+    /* Transform main nav into a sidebar — overrides mobile base styles */
     .main-nav {
         position: fixed;
         top: 0;
         left: 0;
         width: 260px;
-        height: 100vh;
+        height: 100vh;      /* override mobile 60px */
         background: rgba(10, 10, 10, 0.96);
         backdrop-filter: blur(16px);
         border-right: 1px solid var(--accent-color-glow);
-        border-bottom: none;
+        border-bottom: none;  /* no bottom border on sidebar */
         display: flex;
         flex-direction: column;
         align-items: stretch;
@@ -3491,15 +3500,21 @@ html[data-theme="red"] .discord-card-banner { background: linear-gradient(135deg
         margin-right: 0;
     }
 
-    /* Content Area under fixed header */
+    /* Content area on mobile — natural native scroll */
     .main-content {
-        margin-top: 64px;
-        height: calc(100vh - 64px);
-        overflow-y: auto;
+        /* padding-top instead of margin-top avoids collapsing */
+        padding-top: 60px;
+        width: 100%;
+        /* Let content grow naturally, window handles scroll */
+        overflow-x: hidden;
     }
 
     .dashboard-view {
-        padding-top: 1rem;
+        padding-bottom: 2rem;
+    }
+
+    .dashboard-view.active {
+        display: block;
     }
 }
 
@@ -3543,23 +3558,20 @@ html[data-theme="red"] .discord-card-banner { background: linear-gradient(135deg
     }
 }
 
-/* Hero Section Height optimizations to prevent scrolling/clipping on landing page */
+/* Hero Section sizing on desktop */
 @media (min-width: 901px) {
     .hero {
-        height: auto;
-        min-height: calc(100vh - 220px);
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        box-sizing: border-box;
+        min-height: calc(100vh - 4rem);
+        padding-top: 3rem;
+        padding-bottom: 3rem;
     }
 }
 
+/* Hero on mobile — compact, fits under the top nav */
 @media (max-width: 900px) {
     .hero {
-        height: auto;
-        min-height: calc(100vh - 120px);
+        min-height: calc(100svh - 80px);
         padding-top: 2rem;
         padding-bottom: 2rem;
-        box-sizing: border-box;
     }
 }
