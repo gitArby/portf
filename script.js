@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
         currentLang = 'cs';
     }
 
+    // Hoisted to prevent Temporal Dead Zone (TDZ) ReferenceErrors
+    let spotifyInterval = null;
+    let lastPresenceData = null;
+    let audioEnabled = localStorage.getItem('audio') !== 'false';
+    let audioCtx = null;
+
     // Add glitch-hover class to all h3 headers
     document.querySelectorAll('h3').forEach(h3 => {
         h3.classList.add('glitch-hover');
@@ -53,24 +59,32 @@ document.addEventListener('DOMContentLoaded', () => {
         yearEl.textContent = new Date().getFullYear();
     }
 
-    // --- Scroll progress ---
+    // --- Scroll progress & Navigation scrolled ---
     const scrollProgress = document.getElementById('scroll-progress');
-    if (scrollProgress) {
-        window.addEventListener('scroll', () => {
-            const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-            scrollProgress.style.width = `${pct * 100}%`;
-        });
-    }
-
-    // --- Navigation ---
     const mainNav = document.getElementById('main-nav');
     const navToggle = document.getElementById('nav-toggle');
     const navLinks = document.getElementById('nav-links');
+    const mainContentEl = document.getElementById('main-content');
 
-    if (mainNav) {
-        window.addEventListener('scroll', () => {
-            mainNav.classList.toggle('scrolled', window.scrollY > 80);
-        });
+    if (mainContentEl && (scrollProgress || mainNav)) {
+        let scrollTicker = false;
+        mainContentEl.addEventListener('scroll', () => {
+            if (!scrollTicker) {
+                scrollTicker = true;
+                requestAnimationFrame(() => {
+                    const scrollY = mainContentEl.scrollTop;
+                    if (scrollProgress) {
+                        const maxScroll = mainContentEl.scrollHeight - mainContentEl.clientHeight;
+                        const pct = maxScroll > 0 ? scrollY / maxScroll : 0;
+                        scrollProgress.style.width = `${pct * 100}%`;
+                    }
+                    if (mainNav) {
+                        mainNav.classList.toggle('scrolled', scrollY > 80);
+                    }
+                    scrollTicker = false;
+                });
+            }
+        }, { passive: true });
     }
 
     if (navToggle && navLinks) {
@@ -116,46 +130,119 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
+                observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.2 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
     // --- Animated counters ---
-    const counterObs = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            entry.target.querySelectorAll('.counter-number').forEach(el => {
-                const target = parseInt(el.getAttribute('data-target'));
-                const duration = 1800;
-                const steps = duration / 16;
-                let current = 0;
-                const tick = () => {
-                    current = Math.min(current + target / steps, target);
-                    el.textContent = Math.floor(current).toLocaleString(currentLang === 'cs' ? 'cs-CZ' : 'en-US');
-                    if (current < target) {
-                        requestAnimationFrame(tick);
-                    }
-                };
-                tick();
-            });
-            counterObs.unobserve(entry.target);
+    let countersRun = false;
+    function triggerCounters() {
+        if (countersRun) return;
+        const grid = document.querySelector('.counters-grid');
+        if (!grid) return;
+        
+        grid.querySelectorAll('.counter-number').forEach(el => {
+            const target = parseInt(el.getAttribute('data-target'));
+            const duration = 1800;
+            const steps = duration / 16;
+            let current = 0;
+            const tick = () => {
+                current = Math.min(current + target / steps, target);
+                el.textContent = Math.floor(current).toLocaleString(currentLang === 'cs' ? 'cs-CZ' : 'en-US');
+                if (current < target) {
+                    requestAnimationFrame(tick);
+                }
+            };
+            tick();
         });
-    }, { threshold: 0.5 });
-    document.querySelectorAll('.counters-grid').forEach(el => counterObs.observe(el));
+        countersRun = true;
+    }
 
-    // --- Custom cursor ---
+    // --- Custom cursor & trail ---
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
-
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
     if (cursorDot && cursorOutline) {
+        let mx = 0, my = 0; // Mouse targets
+        let dotX = 0, dotY = 0; // Dot positions
+        let outlineX = 0, outlineY = 0; // Outline positions
+        let hasMoved = false;
+        let showCustomCursor = true;
+
+        const disableCustomCursor = () => {
+            if (showCustomCursor) {
+                showCustomCursor = false;
+                document.documentElement.classList.add('show-system-cursor');
+            }
+        };
+
+        const enableCustomCursor = () => {
+            if (!showCustomCursor && !isMobile) {
+                showCustomCursor = true;
+                document.documentElement.classList.remove('show-system-cursor');
+                // Snap outline immediately to avoid lag glide from the scrollbar/outside position
+                outlineX = mx;
+                outlineY = my;
+                dotX = mx;
+                dotY = my;
+            }
+        };
+
+        // Cache scrollEl right-edge so mousemove never triggers layout reflow
+        const scrollEl = document.getElementById('main-content');
+        let cachedScrollElRight = scrollEl ? scrollEl.getBoundingClientRect().right : window.innerWidth;
+
+        // Update cache only on resize (cheap) instead of every mousemove (expensive)
+        const edgeObserver = new ResizeObserver(() => {
+            cachedScrollElRight = scrollEl
+                ? scrollEl.getBoundingClientRect().right
+                : window.innerWidth;
+        });
+        if (scrollEl) edgeObserver.observe(scrollEl);
+        window.addEventListener('resize', () => {
+            cachedScrollElRight = scrollEl
+                ? scrollEl.getBoundingClientRect().right
+                : window.innerWidth;
+        }, { passive: true });
+
         window.addEventListener('mousemove', e => {
-            cursorDot.style.left = `${e.clientX}px`;
-            cursorDot.style.top = `${e.clientY}px`;
-            cursorOutline.animate({
-                left: `${e.clientX}px`,
-                top: `${e.clientY}px`
-            }, { duration: 300, fill: 'forwards' });
+            mx = e.clientX;
+            my = e.clientY;
+
+            // Pure math check, zero DOM reads - no layout reflow
+            const nearScrollbar = e.clientX >= cachedScrollElRight - 17;
+
+            if (nearScrollbar) {
+                disableCustomCursor();
+            } else {
+                enableCustomCursor();
+            }
+
+            if (!hasMoved) {
+                dotX = mx;
+                dotY = my;
+                outlineX = mx;
+                outlineY = my;
+                hasMoved = true;
+                // Snap cursor to real position BEFORE making it visible to avoid ghost at wrong position
+                cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+                cursorOutline.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0) translate(-50%, -50%)`;
+                // Add cursor-active on next frame - position is painted first, then we fade in
+                requestAnimationFrame(() => {
+                    document.documentElement.classList.add('cursor-active');
+                });
+            }
+        }, { passive: true });
+
+        // Restore system cursor when mouse leaves the document window (e.g. over scrollbars or browser UI)
+        document.addEventListener('mouseleave', () => {
+            disableCustomCursor();
+        });
+
+        document.addEventListener('mouseenter', () => {
+            enableCustomCursor();
         });
 
         document.querySelectorAll('a, button, .discord-badge, #mega-trigger, .topo-node').forEach(el => {
@@ -168,41 +255,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 cursorOutline.classList.remove('active');
             });
         });
-    }
 
-    // --- Cursor trail ---
-    const TRAIL = 10;
-    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+        const trailEls = [];
 
-    if (!isMobile) {
-        const trailEls = Array.from({ length: TRAIL }, () => {
-            const d = document.createElement('div');
-            d.className = 'cursor-trail';
-            document.body.appendChild(d);
-            return { el: d, x: 0, y: 0 };
-        });
+        (function animLoop() {
+            if (hasMoved) {
+                // Dot tracks mouse immediately
+                dotX = mx;
+                dotY = my;
 
-        let mx = 0, my = 0;
-        window.addEventListener('mousemove', e => {
-            mx = e.clientX;
-            my = e.clientY;
-        });
+                // Outline interpolates smoothly behind the dot
+                outlineX += (mx - outlineX) * 0.15;
+                outlineY += (my - outlineY) * 0.15;
 
-        (function trailLoop() {
-            let x = mx, y = my;
-            trailEls.forEach((dot, i) => {
-                const px = dot.x, py = dot.y;
-                dot.x += (x - dot.x) * 0.35;
-                dot.y += (y - dot.y) * 0.35;
-                dot.el.style.left = `${dot.x}px`;
-                dot.el.style.top = `${dot.y}px`;
-                const scale = (TRAIL - i) / TRAIL;
-                dot.el.style.opacity = scale * 0.45;
-                dot.el.style.transform = `translate(-50%, -50%) scale(${scale * 0.8})`;
-                x = px;
-                y = py;
-            });
-            requestAnimationFrame(trailLoop);
+                cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+                cursorOutline.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0) translate(-50%, -50%)`;
+            }
+            requestAnimationFrame(animLoop);
         })();
     }
 
@@ -259,42 +328,114 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Scroll spy ---
-    const spySections = document.querySelectorAll('section[id]');
-    const navAnchors = document.querySelectorAll('.nav-links a');
+    // --- OS Dashboard Navigation & View Toggling ---
+    const allViews = document.querySelectorAll('.dashboard-view');
+    const allNavLinks = document.querySelectorAll('.nav-links a, .nav-logo');
 
-    if (spySections.length > 0 && navAnchors.length > 0) {
-        const spyObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    navAnchors.forEach(a => {
-                        a.classList.toggle('active', a.getAttribute('href') === `#${entry.target.id}`);
-                    });
-                }
-            });
-        }, { threshold: 0.35, rootMargin: '-80px 0px -45% 0px' });
-        spySections.forEach(s => spyObserver.observe(s));
+    function switchView(targetId) {
+        const targetView = document.getElementById(targetId);
+        if (!targetView) return;
+
+        localStorage.setItem('activeTab', targetId);
+
+        // Hide all views
+        allViews.forEach(view => {
+            view.classList.remove('active');
+        });
+
+        // Show target view
+        targetView.classList.add('active');
+
+        // Scroll back to top
+        if (mainContentEl) {
+            mainContentEl.scrollTop = 0;
+        }
+
+        // Update active class on nav links
+        allNavLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            link.classList.toggle('active', href === `#${targetId}` || (targetId === 'home-view' && link.classList.contains('nav-logo')));
+        });
+
+        // Instantly trigger reveal animations in the selected view
+        targetView.querySelectorAll('.reveal, .reveal-card, .reveal-stagger').forEach(el => {
+            el.classList.add('active');
+        });
+
+        // Trigger counters if home view
+        if (targetId === 'home-view') {
+            triggerCounters();
+        }
     }
 
-    // --- 3D tilt na kartách ---
-    document.querySelectorAll('.project-card, .cert-card').forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const r = card.getBoundingClientRect();
-            const x = (e.clientX - r.left) / r.width - 0.5;
-            const y = (e.clientY - r.top) / r.height - 0.5;
-            card.style.transition = 'box-shadow 0.3s ease, border-color 0.3s ease';
-            card.style.transform = `perspective(700px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg) translateY(-5px)`;
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transition = '';
-            card.style.transform = '';
-        });
+    // Event delegation to capture all view switcher links
+    document.body.addEventListener('click', e => {
+        const link = e.target.closest('a');
+        if (!link) return;
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#') && href.endsWith('-view')) {
+            e.preventDefault();
+            const targetId = href.substring(1);
+            switchView(targetId);
+
+            // On mobile, collapse hamburger drawer
+            if (navLinks && navLinks.classList.contains('open')) {
+                navLinks.classList.remove('open');
+                if (navToggle) navToggle.classList.remove('open');
+            }
+        }
     });
 
-    // --- i18n ---
+    // Initialize tab from storage or default to home-view
+    const savedTab = localStorage.getItem('activeTab') || 'home-view';
+    switchView(savedTab);
+
+    // --- Favorite Champions Data & Renderer ---
+    const FAVORITE_CHAMPIONS = [
+        { name: 'Draven', roleKey: 'ADC', points: 500000 },
+        { name: 'Vladimir', roleKey: 'Mid', points: 500000 },
+        { name: 'Viego', roleKey: 'Jungle', points: 200000 }
+    ];
+
+    function renderFavoriteChampions(lang) {
+        const container = document.getElementById('lol-champs-container');
+        if (!container) return;
+
+        const t = i18n[lang]?.lol;
+        if (!t) return;
+
+        const headerText = t.favChamps || 'Nejoblíbenější šampioni';
+        const roleLabels = t.roles || {};
+
+        let cardsHtml = '';
+        FAVORITE_CHAMPIONS.forEach((champ, idx) => {
+            const formattedPoints = champ.points.toLocaleString(lang === 'cs' ? 'cs-CZ' : 'en-US');
+            const roleName = roleLabels[champ.roleKey] || champ.roleKey;
+            
+            cardsHtml += `
+                <div class="champion-card reveal-card" style="--stagger-delay: ${idx + 3}">
+                    <div class="champion-bg" style="background-image: url('https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champ.name}_0.jpg')"></div>
+                    <div class="champion-overlay"></div>
+                    <div class="champion-info">
+                        <span class="champion-role">${roleName}</span>
+                        <span class="champion-name">${champ.name}</span>
+                        <span class="champion-mastery">
+                            <i class="fa-solid fa-fire"></i> ${formattedPoints} pts
+                        </span>
+                    </div>
+                </div>`;
+        });
+
+        container.innerHTML = `
+            <h4 class="lol-champs-header reveal-stagger" style="--stagger-delay: 2.5">${headerText}</h4>
+            <div class="lol-champs-grid">
+                ${cardsHtml}
+            </div>`;
+    }
+
     const i18n = {
         cs: {
-            nav: ['O mně', 'Dovednosti', 'Certifikáty', 'Nástroje', 'Praxe', 'LoL', 'Projekty', 'Kontakt'],
+            nav: ['Domů', 'O mně', 'Dovednosti', 'Certifikáty', 'Nástroje', 'Praxe', 'LoL', 'Projekty', 'Kontakt'],
             subtitle: ['Tech nadšenec', 'hráč her', 'PC builder', 'web developer'],
             hero: {
                 contactBtn: 'Kontakt',
@@ -372,7 +513,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     desc: 'Praktické seznámení s vývojovým procesem, tvorba a správa webových stránek. Práce s HTML, CSS a ladění kódu na reálných projektech.'
                 }
             },
-            lol: { title: 'League of Legends', btn: 'Zobrazit na u.gg' },
+            lol: {
+                title: 'League of Legends',
+                btn: 'Zobrazit na u.gg',
+                favChamps: 'Nejoblíbenější šampioni',
+                roles: { ADC: 'ADC / Bot laner', Support: 'Support', Mid: 'Mid laner', Jungle: 'Jungler', Top: 'Top laner' }
+            },
             projects: {
                 title: 'Projekty',
                 text: 'Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:',
@@ -469,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         en: {
-            nav: ['About', 'Skills', 'Certificates', 'Tools', 'Experience', 'LoL', 'Projects', 'Contact'],
+            nav: ['Home', 'About', 'Skills', 'Certificates', 'Tools', 'Experience', 'LoL', 'Projects', 'Contact'],
             subtitle: ['Tech enthusiast', 'gamer', 'PC builder', 'web developer'],
             hero: {
                 contactBtn: 'Contact',
@@ -547,7 +693,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     desc: 'Practical hands-on experience with web development workflows, creating and managing websites. Writing HTML, CSS, and debugging code on real-world projects.'
                 }
             },
-            lol: { title: 'League of Legends', btn: 'View on u.gg' },
+            lol: {
+                title: 'League of Legends',
+                btn: 'View on u.gg',
+                favChamps: 'Favorite Champions',
+                roles: { ADC: 'ADC / Bot laner', Support: 'Support', Mid: 'Mid laner', Jungle: 'Jungler', Top: 'Top laner' }
+            },
             projects: {
                 title: 'Projects',
                 text: 'Still pushing forward. Here\'s a small preview of what I\'m currently working on and what\'s coming soon:',
@@ -651,7 +802,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!t) return;
 
         document.querySelectorAll('.nav-links a').forEach((a, i) => {
-            if (t.nav[i]) a.textContent = t.nav[i];
+            const span = a.querySelector('span');
+            if (span && t.nav[i]) span.textContent = t.nav[i];
         });
 
         phrases.length = 0;
@@ -787,6 +939,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const lolBtn = document.querySelector('#lol-stats .btn');
         if (lolBtn) lolBtn.textContent = t.lol.btn;
 
+        renderFavoriteChampions(lang);
+        if (typeof updatePresence === 'function' && lastPresenceData) {
+            updatePresence(lastPresenceData);
+        }
+
         // Projects
         const projH3 = document.querySelector('#projects h3');
         if (projH3) projH3.textContent = t.projects.title;
@@ -912,8 +1069,6 @@ document.addEventListener('DOMContentLoaded', () => {
             applyLanguage(currentLang === 'cs' ? 'en' : 'cs');
         });
     }
-
-    applyLanguage(currentLang);
 
     // --- CV Dynamic Generator & Printer ---
     // --- HUD System Notifier ---
@@ -1568,10 +1723,11 @@ document.addEventListener('DOMContentLoaded', () => {
         cvWindow.document.close();
     }
 
-    applyLanguage(currentLang);
-
     // --- Lanyard (Discord status + Now Playing) ---
     const DISCORD_ID = '938119246196666378';
+    spotifyInterval = null;
+    lastPresenceData = null;
+
     function connectLanyard() {
         const ws = new WebSocket('wss://api.lanyard.rest/socket');
         let hb;
@@ -1589,7 +1745,18 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    function getDiscordAssetUrl(appId, assetId) {
+        if (!assetId) return '';
+        if (assetId.startsWith('mp:external/')) {
+            return `https://media.discordapp.net/external/${assetId.replace('mp:external/', '')}`;
+        }
+        return `https://cdn.discordapp.com/app-assets/${appId}/${assetId}.png`;
+    }
+
     function updatePresence(data) {
+        lastPresenceData = data;
+        
+        // Update the header small status dot
         const dot = document.getElementById('discord-status');
         if (dot) {
             const colors = { online: '#43b581', idle: '#faa61a', dnd: '#f04747', offline: '#747f8d' };
@@ -1597,90 +1764,230 @@ document.addEventListener('DOMContentLoaded', () => {
             dot.setAttribute('title', data.discord_status);
         }
 
-        const npEl = document.getElementById('now-playing');
-        const npContent = document.getElementById('np-content');
-        if (npEl && npContent) {
-            if (data.listening_to_spotify && data.spotify) {
-                const sp = data.spotify;
-                npEl.style.display = 'flex';
-                npContent.innerHTML = `
-                    <img src="${sp.album_art_url}" alt="cover" class="np-art">
-                    <div class="np-text">
-                        <span class="np-label"><i class="fa-brands fa-spotify"></i> Teď poslouchám</span>
-                        <span class="np-song">${sp.song}</span>
-                        <span class="np-artist">${sp.artist}</span>
-                    </div>`;
-            } else {
-                const game = data.activities?.find(a => a.type === 0);
-                if (game) {
-                    npEl.style.display = 'flex';
-                    npContent.innerHTML = `
-                        <div class="np-game-icon"><i class="fa-solid fa-gamepad"></i></div>
+        const profileCard = document.getElementById('discord-profile-card');
+        if (!profileCard) return;
+
+        if (spotifyInterval) {
+            clearInterval(spotifyInterval);
+            spotifyInterval = null;
+        }
+
+        const user = data.discord_user;
+        if (!user) return;
+
+        // Resolve status details
+        const statusColors = { online: 'online', idle: 'idle', dnd: 'dnd', offline: 'offline' };
+        const statusClass = statusColors[data.discord_status] || 'offline';
+        const statusTitle = data.discord_status ? data.discord_status.toUpperCase() : 'OFFLINE';
+
+        // Resolve avatar
+        const isAnimated = user.avatar && user.avatar.startsWith('a_');
+        const ext = isAnimated ? 'gif' : 'png';
+        const avatarUrl = user.avatar 
+            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=128` 
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+        // Resolve custom status (type 4)
+        const customStatusAct = data.activities?.find(a => a.type === 4);
+        const customStatusText = customStatusAct ? customStatusAct.state : '';
+        const customStatusEmojiUrl = customStatusAct?.emoji?.id 
+            ? `https://cdn.discordapp.com/emojis/${customStatusAct.emoji.id}.${customStatusAct.emoji.animated ? 'gif' : 'png'}` 
+            : '';
+        const customStatusEmojiName = customStatusAct?.emoji?.name || '';
+
+        let customStatusHtml = '';
+        if (customStatusText || customStatusEmojiUrl || customStatusEmojiName) {
+            const emojiImg = customStatusEmojiUrl 
+                ? `<img src="${customStatusEmojiUrl}" alt="${customStatusEmojiName}" class="discord-custom-status-emoji">` 
+                : (customStatusEmojiName ? `<span>${customStatusEmojiName}</span>` : '');
+            
+            customStatusHtml = `
+                <div class="discord-custom-status">
+                    ${emojiImg}
+                    <span>${customStatusText || ''}</span>
+                </div>`;
+        }
+
+        // About me texts
+        const aboutMeTitle = currentLang === 'cs' ? 'O mně' : 'About Me';
+        const aboutMeText = currentLang === 'cs'
+            ? `portfolio - <a href="https://arbyy.tech/">https://arbyy.tech/</a>\n<a href="https://scrapscrap.app/" target="_blank">https://scrapscrap.app/</a> - Zahraj si moji hru.`
+            : `portfolio - <a href="https://arbyy.tech/">https://arbyy.tech/</a>\n<a href="https://scrapscrap.app/" target="_blank">https://scrapscrap.app/</a> - Play my game.`;
+
+        // Resolve activity sub-card
+        let activityHtml = '';
+        if (data.listening_to_spotify && data.spotify) {
+            const sp = data.spotify;
+            const labelSpotify = currentLang === 'cs' ? 'Teď poslouchám' : 'Now Listening';
+            
+            activityHtml = `
+                <div class="discord-activity-box spotify-active">
+                    <div class="discord-activity-header">
+                        <span class="discord-activity-title"><i class="fa-brands fa-spotify"></i> ${labelSpotify}</span>
+                        <div class="np-equalizer">
+                            <span class="eq-bar bar1"></span>
+                            <span class="eq-bar bar2"></span>
+                            <span class="eq-bar bar3"></span>
+                        </div>
+                    </div>
+                    <div class="np-content">
+                        <img src="${sp.album_art_url}" alt="cover" class="np-art">
                         <div class="np-text">
-                            <span class="np-label">Teď hraju</span>
-                            <span class="np-song">${game.name}</span>
+                            <span class="np-song">${sp.song}</span>
+                            <span class="np-artist">${sp.artist}</span>
+                            <div class="np-spotify-progress-container">
+                                <div class="np-spotify-progress-bar" id="spotify-progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+            const updateProgressBar = () => {
+                const progressBar = document.getElementById('spotify-progress-bar');
+                if (!progressBar) return;
+                const start = sp.timestamps.start;
+                const end = sp.timestamps.end;
+                const now = Date.now();
+                const total = end - start;
+                const current = now - start;
+                const progress = Math.max(0, Math.min(100, (current / total) * 100));
+                progressBar.style.width = `${progress}%`;
+            };
+
+            setTimeout(() => {
+                updateProgressBar();
+                spotifyInterval = setInterval(updateProgressBar, 1000);
+            }, 50);
+
+        } else {
+            const game = data.activities?.find(a => a.type === 0);
+            if (game) {
+                const labelGame = currentLang === 'cs' ? 'Teď hraju' : 'Now Playing';
+                const appId = game.application_id;
+                const largeImg = game.assets?.large_image ? getDiscordAssetUrl(appId, game.assets.large_image) : '';
+                const smallImg = game.assets?.small_image ? getDiscordAssetUrl(appId, game.assets.small_image) : '';
+                
+                let imageBlock = '';
+                if (largeImg) {
+                    imageBlock = `
+                        <div class="np-art-wrapper">
+                            <img src="${largeImg}" alt="${game.assets?.large_text || 'Application icon'}" class="np-art">
+                            ${smallImg ? `<img src="${smallImg}" alt="${game.assets?.small_text || ''}" class="np-art-small">` : ''}
                         </div>`;
                 } else {
-                    npEl.style.display = 'none';
+                    imageBlock = `
+                        <div class="np-art-wrapper fallback">
+                            <div class="np-game-icon"><i class="fa-solid fa-gamepad"></i></div>
+                        </div>`;
+                }
+
+                const detailsStr = game.details ? `<span class="np-game-details">${game.details}</span>` : '';
+                const stateStr = game.state ? `<span class="np-game-state">${game.state}</span>` : '';
+                
+                let timerStr = '';
+                if (game.timestamps?.start) {
+                    timerStr = `<span class="np-game-timer" id="game-timer">00:00 elapsed</span>`;
+                }
+
+                activityHtml = `
+                    <div class="discord-activity-box">
+                        <div class="discord-activity-header">
+                            <span class="discord-activity-title"><i class="fa-solid fa-gamepad"></i> ${labelGame}</span>
+                            <span class="discord-activity-dot"></span>
+                        </div>
+                        <div class="np-content">
+                            ${imageBlock}
+                            <div class="np-text">
+                                <span class="np-song">${game.name}</span>
+                                ${detailsStr}
+                                ${stateStr}
+                                ${timerStr}
+                            </div>
+                        </div>
+                    </div>`;
+
+                if (game.timestamps?.start) {
+                    const start = game.timestamps.start;
+                    const updateTimer = () => {
+                        const timerEl = document.getElementById('game-timer');
+                        if (!timerEl) return;
+                        const diff = Date.now() - start;
+                        const secs = Math.floor((diff / 1000) % 60);
+                        const mins = Math.floor((diff / (1000 * 60)) % 60);
+                        const hours = Math.floor(diff / (1000 * 60 * 60));
+                        
+                        let timeStr = '';
+                        if (hours > 0) {
+                            timeStr += `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                        } else {
+                            timeStr += `${mins}:${secs.toString().padStart(2, '0')}`;
+                        }
+                        timerEl.textContent = `${timeStr} elapsed`;
+                    };
+                    setTimeout(() => {
+                        updateTimer();
+                        spotifyInterval = setInterval(updateTimer, 1000);
+                    }, 50);
                 }
             }
         }
+
+        // Render the entire profile card
+        profileCard.innerHTML = `
+            <div class="discord-card-banner"></div>
+            <div class="discord-avatar-area">
+                <div class="discord-avatar-wrapper">
+                    <img src="${avatarUrl}" alt="Avatar" class="discord-avatar">
+                    <div class="discord-status-badge ${statusClass}" title="${statusTitle}"></div>
+                </div>
+                <div class="discord-badges-container">
+                    <i class="fa-solid fa-shield-halved" style="color: #23a55a;" title="HypeSquad Balance"></i>
+                    <i class="fa-solid fa-code" style="color: #5865f2;" title="Active Developer"></i>
+                    <i class="fa-solid fa-gem" style="color: #f47fff;" title="Server Booster"></i>
+                    <i class="fa-solid fa-bolt" style="color: #ffaa04;" title="Nitro Subscriber"></i>
+                </div>
+            </div>
+            
+            <div class="discord-card-body">
+                <div class="discord-names">
+                    <span class="discord-global-name">${user.global_name || user.username}</span>
+                    <div class="discord-username-row">
+                        <span class="discord-username">${user.username}</span>
+                        <span class="discord-pronouns">He/Him</span>
+                    </div>
+                </div>
+                
+                ${customStatusHtml}
+                
+                <div class="discord-divider"></div>
+                
+                <div>
+                    <div class="discord-section-title">${aboutMeTitle}</div>
+                    <div class="discord-about-me">${aboutMeText}</div>
+                </div>
+                
+                ${activityHtml ? `<div class="discord-divider"></div> ${activityHtml}` : ''}
+            </div>`;
     }
+
+    // Render initial placeholder card to avoid layout shift
+    updatePresence({
+        discord_status: 'offline',
+        discord_user: {
+            id: '938119246196666378',
+            username: 'arbyy',
+            global_name: 'arbyy',
+            avatar: null
+        },
+        activities: []
+    });
     connectLanyard();
 
-    // --- Hardware Monitor ---
-    (function initMonitor() {
-        const timeEl = document.getElementById('hw-time');
-        const batteryEl = document.getElementById('hw-battery');
-        const netEl = document.getElementById('hw-net');
 
-        function updateTime() {
-            if (!timeEl) return;
-            const n = new Date();
-            timeEl.textContent = `${String(n.getHours()).padStart(2, '0')}:${String(n.getMinutes()).padStart(2, '0')}:${String(n.getSeconds()).padStart(2, '0')}`;
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-
-        if (batteryEl) {
-            if ('getBattery' in navigator) {
-                navigator.getBattery().then(b => {
-                    const update = () => {
-                        const pct = Math.round(b.level * 100);
-                        batteryEl.textContent = `${b.charging ? '⚡' : ''}${pct}%`;
-                    };
-                    update();
-                    b.addEventListener('levelchange', update);
-                    b.addEventListener('chargingchange', update);
-                });
-            } else {
-                batteryEl.textContent = 'N/A';
-            }
-        }
-
-        if (netEl) {
-            function updateNet() {
-                const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-                if (c) {
-                    const type = (c.effectiveType || c.type || '?').toUpperCase();
-                    const dl = c.downlink ? ` ${c.downlink}Mb/s` : '';
-                    netEl.textContent = type + dl;
-                } else {
-                    netEl.textContent = navigator.onLine ? 'ONLINE' : 'OFFLINE';
-                }
-            }
-            updateNet();
-            window.addEventListener('online', updateNet);
-            window.addEventListener('offline', updateNet);
-            if (navigator.connection) {
-                navigator.connection.addEventListener('change', updateNet);
-            }
-        }
-    })();
 
     // --- Audio Feedback ---
-    let audioEnabled = localStorage.getItem('audio') !== 'false';
-    let audioCtx = null;
+    audioEnabled = localStorage.getItem('audio') !== 'false';
+    audioCtx = null;
 
     function getCtx() {
         if (!audioCtx) {
@@ -1750,24 +2057,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Connect sound elements dynamically to all hoverable elements, including new ones
-    function bindAudioFeedback() {
-        document.querySelectorAll('a, button, .discord-badge, .project-card, .tech-icon, .cert-card, .timeline-item, .topo-node').forEach(el => {
-            // Remove existing to avoid double bindings
-            el.removeEventListener('click', playClick);
-            el.removeEventListener('mouseenter', playHover);
+    // Connect sound elements using event delegation to support dynamic elements efficiently without DOM mutation observers
+    const audioSelector = 'a, button, .discord-badge, .project-card, .tech-icon, .cert-card, .timeline-item, .topo-node';
+    
+    document.body.addEventListener('click', e => {
+        if (e.target.closest(audioSelector)) {
+            playClick();
+        }
+    });
 
-            el.addEventListener('click', playClick);
-            el.addEventListener('mouseenter', playHover);
-        });
-    }
-
-    // Initial binding
-    bindAudioFeedback();
-
-    // Bind after dynamic changes if any
-    const observerAudio = new MutationObserver(bindAudioFeedback);
-    observerAudio.observe(document.body, { childList: true, subtree: true });
+    document.body.addEventListener('mouseover', e => {
+        const target = e.target.closest(audioSelector);
+        if (target) {
+            // Avoid triggering playHover multiple times when moving cursor within the same target element's children
+            if (e.relatedTarget && e.relatedTarget.closest(audioSelector) === target) {
+                return;
+            }
+            playHover();
+        }
+    });
 
     updateAudioIcon();
 
@@ -2267,4 +2575,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hexEl) hexEl.textContent = 'N/A';
         if (binEl) binEl.textContent = 'N/A';
     }
+
+    applyLanguage(currentLang);
 });
