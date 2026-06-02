@@ -66,6 +66,7 @@
             <li><a href="#calculator-view"><i class="fa-solid fa-sliders"></i> <span>Nástroje</span></a></li>
             <li><a href="#experience-view"><i class="fa-solid fa-briefcase"></i> <span>Praxe</span></a></li>
             <li><a href="#lol-stats-view"><i class="fa-solid fa-gamepad"></i> <span>LoL</span></a></li>
+            <li><a href="#games-view" id="nav-link-games"><i class="fa-solid fa-ghost"></i> <span>Minihry</span></a></li>
             <li><a href="#projects-view"><i class="fa-solid fa-laptop-code"></i> <span>Projekty</span></a></li>
             <li><a href="#contact-view"><i class="fa-solid fa-envelope"></i> <span>Kontakt</span></a></li>
             <!-- Controls are last item in the list so they collapse with hamburger on mobile -->
@@ -365,6 +366,9 @@
                 <div class="calc-hub reveal-card" style="--stagger-delay: 3">
                     <div class="calc-tabs">
                         <button class="calc-tab-btn active" data-tab="subnet" id="tab-btn-subnet">Subnet kalkulačka</button>
+                        <button class="calc-tab-btn" data-tab="raid" id="tab-btn-raid">RAID kalkulačka</button>
+                        <button class="calc-tab-btn" data-tab="psu" id="tab-btn-psu">PC Zdroj (PSU)</button>
+                        <button class="calc-tab-btn" data-tab="password" id="tab-btn-password">Generátor hesel</button>
                         <button class="calc-tab-btn" data-tab="math" id="tab-btn-math">Matematická kalkulačka</button>
                     </div>
                     
@@ -418,6 +422,174 @@
                                 <div class="binary-row">
                                     <span class="binary-label">MASK:</span>
                                     <span class="binary-val" id="bin-val-mask">11111111.11111111.11111111.00000000</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- RAID CALCULATOR VIEW -->
+                        <div class="calc-view" id="view-raid">
+                            <div class="subnet-input-grid">
+                                <div class="input-field">
+                                    <label for="raid-level" id="lbl-raid-level">RAID Level:</label>
+                                    <select id="raid-level">
+                                        <option value="0">RAID 0 (Striping)</option>
+                                        <option value="1">RAID 1 (Mirroring)</option>
+                                        <option value="5">RAID 5 (Parity)</option>
+                                        <option value="6">RAID 6 (Double Parity)</option>
+                                        <option value="10">RAID 10 (Stripe of Mirrors)</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label for="raid-disks" id="lbl-raid-disks">Počet disků:</label>
+                                    <input type="number" id="raid-disks" min="2" max="32" value="4">
+                                </div>
+                                <div class="input-field">
+                                    <label for="raid-capacity" id="lbl-raid-capacity">Kapacita disku:</label>
+                                    <div class="capacity-input-wrapper">
+                                        <input type="number" id="raid-capacity" min="1" max="100000" value="1000">
+                                        <select id="raid-unit">
+                                            <option value="GB">GB</option>
+                                            <option value="TB">TB</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="raid-error hidden" id="raid-error-msg">Neplatná konfigurace!</div>
+
+                            <div class="subnet-results">
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-usable">Využitelná kapacita:</span>
+                                    <span class="result-val" id="res-val-raid-usable">0 GB</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-lost">Ztracená kapacita:</span>
+                                    <span class="result-val" id="res-val-raid-lost">0 GB</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-fault">Odolnost proti chybám:</span>
+                                    <span class="result-val" id="res-val-raid-fault">0 disků</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-read">Rychlost čtení (multiplikátor):</span>
+                                    <span class="result-val" id="res-val-raid-read">1x</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-write">Rychlost zápisu (multiplikátor):</span>
+                                    <span class="result-val" id="res-val-raid-write">1x</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PSU CALCULATOR VIEW -->
+                        <div class="calc-view" id="view-psu">
+                            <div class="subnet-input-grid">
+                                <div class="input-field">
+                                    <label for="psu-cpu" id="lbl-psu-cpu">Procesor (CPU):</label>
+                                    <select id="psu-cpu">
+                                        <option value="65">Kancelářský / Úsporný (65W)</option>
+                                        <option value="125" selected>Střední třída / Herní (125W)</option>
+                                        <option value="250">High-end / Taktovaný (250W)</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label for="psu-gpu" id="lbl-psu-gpu">Grafická karta (GPU):</label>
+                                    <select id="psu-gpu">
+                                        <option value="0">Integrovaná / Žádná (0W)</option>
+                                        <option value="75">Základní (75W)</option>
+                                        <option value="200" selected>Střední třída (200W)</option>
+                                        <option value="350">High-end (350W)</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label for="psu-ram" id="lbl-psu-ram">Počet pamětí RAM:</label>
+                                    <select id="psu-ram">
+                                        <option value="1">1 modul</option>
+                                        <option value="2" selected>2 moduly</option>
+                                        <option value="4">4 moduly</option>
+                                        <option value="8">8 modulů</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label for="psu-drives" id="lbl-psu-drives">Počet disků (SSD/HDD):</label>
+                                    <input type="number" id="psu-drives" min="1" max="20" value="2">
+                                </div>
+                                <div class="input-field">
+                                    <label for="psu-fans" id="lbl-psu-fans">Počet ventilátorů:</label>
+                                    <input type="number" id="psu-fans" min="1" max="30" value="4">
+                                </div>
+                                <div class="input-field checkbox-field-wrapper">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="psu-oc">
+                                        <label for="psu-oc" id="lbl-psu-oc">Taktování (OC +15%)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="subnet-results">
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-psu-est">Odhadovaný špičkový příkon:</span>
+                                    <span class="result-val" id="res-val-psu-est">0 W</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-psu-rec">Doporučený výkon zdroje:</span>
+                                    <span class="result-val" id="res-val-psu-rec" style="color: var(--accent-color); font-weight: 900;">0 W</span>
+                                </div>
+                                <div class="result-row psu-eff-row">
+                                    <span class="result-label" id="res-lbl-psu-eff">Doporučená certifikace:</span>
+                                    <span class="result-val" id="res-val-psu-eff">80 Plus Gold</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PASSWORD GENERATOR VIEW -->
+                        <div class="calc-view" id="view-password">
+                            <div class="subnet-input-grid">
+                                <div class="input-field span-2">
+                                    <label for="pwd-length" id="lbl-pwd-length">Délka hesla: <span id="pwd-len-val">16</span></label>
+                                    <input type="range" id="pwd-length" min="6" max="64" value="16" class="slider">
+                                </div>
+                                
+                                <div class="input-field span-2 checkboxes-grid">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="pwd-lower" checked>
+                                        <label for="pwd-lower" id="lbl-pwd-lower">Malá písmena (a-z)</label>
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="pwd-upper" checked>
+                                        <label for="pwd-upper" id="lbl-pwd-upper">Velká písmena (A-Z)</label>
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="pwd-digits" checked>
+                                        <label for="pwd-digits" id="lbl-pwd-digits">Číslice (0-9)</label>
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="pwd-symbols" checked>
+                                        <label for="pwd-symbols" id="lbl-pwd-symbols">Symboly (!@#$...)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="password-output-field">
+                                <input type="text" id="pwd-output" readonly placeholder="Klikněte na Generovat">
+                                <button class="btn btn-action" id="btn-pwd-copy" title="Zkopírovat heslo"><i class="fa-regular fa-copy"></i></button>
+                                <button class="btn btn-action" id="btn-pwd-generate">Generovat</button>
+                            </div>
+
+                            <div class="result-row password-strength-row">
+                                <span class="result-label" id="res-lbl-pwd-strength">Síla hesla / Entropie:</span>
+                                <span class="result-val" id="res-val-pwd-strength">---</span>
+                            </div>
+
+                            <!-- SHA-256 HASH GENERATOR -->
+                            <div class="binary-header" id="hash-hdr">SHA-256 Hasher</div>
+                            <div class="hash-section-wrapper">
+                                <div class="input-field">
+                                    <input type="text" id="hash-input" placeholder="Zadejte text pro SHA-256 hash...">
+                                </div>
+                                <div class="result-row hash-output-row">
+                                    <span class="result-val" id="res-val-hash">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</span>
+                                    <button class="btn-copy" id="btn-hash-copy" title="Zkopírovat hash"><i class="fa-regular fa-copy"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -562,6 +734,107 @@
 
                 <a href="https://u.gg/lol/profile/eun1/arby-him/overview" target="_blank" class="btn reveal-stagger"
                     style="margin-top: 2rem; display: inline-block; --stagger-delay: 6">Zobrazit na u.gg</a>
+            </section>
+        </div>
+
+        <!-- Games View -->
+        <div id="games-view" class="dashboard-view">
+            <section id="games" class="container reveal">
+                <h3 id="games-title" class="reveal-stagger" style="--stagger-delay: 1">Minihry & Zábava</h3>
+                <p class="container-text reveal-stagger" id="games-subtitle" style="--stagger-delay: 2">Klasický kyber-had na odreagování a hacker hledání min pro trénink síťového myšlení.</p>
+                
+                <div class="calc-hub reveal-card" style="--stagger-delay: 3; max-width: 650px;">
+                    <div class="calc-tabs">
+                        <button class="game-tab-btn active" data-game-tab="snake" id="tab-btn-snake">Kybernetický had</button>
+                        <button class="game-tab-btn" data-game-tab="mines" id="tab-btn-mines">Hacker Hledání min</button>
+                        <button class="game-tab-btn" data-game-tab="type" id="tab-btn-type">Obrana firewallu</button>
+                    </div>
+                    
+                    <div class="calc-content">
+                        <!-- CYBER SNAKE GAME -->
+                        <div class="game-view active" id="view-game-snake">
+                            <div class="game-scoreboard">
+                                <div class="score-box"><span id="lbl-snake-score">Skóre:</span> <strong id="snake-score">0</strong></div>
+                                <div class="score-box"><span id="lbl-snake-highscore">Nejlepší:</span> <strong id="snake-highscore">0</strong></div>
+                                <div class="score-box">
+                                    <label for="snake-speed" id="lbl-snake-difficulty" style="display:inline; margin-right: 0.5rem; text-transform:uppercase; font-size:0.75rem; font-weight:700; color:var(--text-muted);">Obtížnost:</label>
+                                    <select id="snake-speed" style="width: auto; padding: 0.2rem 0.5rem; display: inline-block;">
+                                        <option value="120">Easy</option>
+                                        <option value="80" selected>Medium</option>
+                                        <option value="50">Hard</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="canvas-wrapper">
+                                <canvas id="snake-canvas" width="400" height="400"></canvas>
+                                <div class="game-overlay" id="snake-overlay">
+                                    <div class="overlay-text" id="snake-overlay-text">Stiskněte START pro spuštění</div>
+                                    <button class="btn" id="btn-snake-start" style="margin-top: 1rem; padding: 0.6rem 1.8rem; font-size: 0.8rem;">START</button>
+                                </div>
+                            </div>
+                            
+                            <!-- MOBILE D-PAD -->
+                            <div class="mobile-dpad">
+                                <div class="dpad-row"><button class="dpad-btn" id="dpad-up"><i class="fa-solid fa-caret-up"></i></button></div>
+                                <div class="dpad-row">
+                                    <button class="dpad-btn" id="dpad-left"><i class="fa-solid fa-caret-left"></i></button>
+                                    <div class="dpad-center"></div>
+                                    <button class="dpad-btn" id="dpad-right"><i class="fa-solid fa-caret-right"></i></button>
+                                </div>
+                                <div class="dpad-row"><button class="dpad-btn" id="dpad-down"><i class="fa-solid fa-caret-down"></i></button></div>
+                            </div>
+                        </div>
+                        
+                        <!-- HACKER MINESWEEPER GAME -->
+                        <div class="game-view" id="view-game-mines">
+                            <div class="game-scoreboard">
+                                <div class="score-box"><span id="lbl-mines-nodes">Uzly:</span> <strong id="mines-count">100</strong></div>
+                                <div class="score-box"><span id="lbl-mines-flags">Štíty:</span> <strong id="mines-flags">15</strong></div>
+                                <div class="score-box"><span id="lbl-mines-time">Čas:</span> <strong id="mines-time">0</strong>s</div>
+                            </div>
+                            
+                            <div class="mines-control-row">
+                                <button class="btn btn-action" id="btn-mines-reset" style="padding: 0.5rem 1.2rem; font-size: 0.75rem;">RESTART</button>
+                                <button class="btn btn-action" id="btn-mines-mode" style="padding: 0.5rem 1.2rem; font-size: 0.75rem; border-color: var(--accent-color); color: var(--accent-color);">
+                                    <i class="fa-solid fa-shield-halved"></i> <span id="btn-mines-mode-text">Režim: Odkrýt</span>
+                                </button>
+                            </div>
+
+                            <div class="mines-grid-wrapper">
+                                <div id="mines-board" class="mines-board"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- DEFEND THE FIREWALL TYPING GAME -->
+                        <div class="game-view" id="view-game-type">
+                            <div class="game-scoreboard">
+                                <div class="score-box"><span id="lbl-type-score">Skóre:</span> <strong id="type-score">0</strong></div>
+                                <div class="score-box"><span id="lbl-type-highscore">Nejlepší:</span> <strong id="type-highscore">0</strong></div>
+                                <div class="score-box" style="flex-grow: 1; max-width: 250px; justify-content: flex-end;">
+                                    <span id="lbl-type-integrity">Integrita:</span>
+                                    <div class="integrity-bar-container" style="flex-grow: 1; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; max-width: 120px; margin-left: 0.5rem; margin-right: 0.5rem;">
+                                        <div id="type-integrity-fill" style="width: 100%; height: 100%; background: var(--accent-color); transition: width 0.3s ease, background-color 0.3s ease;"></div>
+                                    </div>
+                                    <strong id="type-integrity-text" style="font-size: 0.8rem; min-width: 32px; text-align: right;">100%</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="type-screen-wrapper">
+                                <div id="type-terminal-screen"></div>
+                                <div class="game-overlay" id="type-overlay">
+                                    <div class="overlay-text" id="type-overlay-text">Stiskněte START pro spuštění</div>
+                                    <button class="btn" id="btn-type-start" style="margin-top: 1rem; padding: 0.6rem 1.8rem; font-size: 0.8rem;">START</button>
+                                </div>
+                            </div>
+
+                            <div class="type-input-row" style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center; width: 100%;">
+                                <input type="text" id="type-input" autocomplete="off" placeholder="Zadejte příkaz..." style="text-align: center; text-transform: uppercase; font-family: var(--font-mono); font-weight: bold; width: 100%; max-width: 300px; padding: 0.75rem 1rem;" disabled>
+                                <button class="btn btn-action" id="btn-type-reset" style="padding: 0.5rem 1.2rem; font-size: 0.75rem;">RESTART</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
 

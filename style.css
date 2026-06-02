@@ -1895,6 +1895,7 @@ footer {
 
 .calc-tabs {
     display: flex;
+    flex-wrap: wrap;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     margin-bottom: 1.8rem;
     gap: 0.5rem;
@@ -3667,8 +3668,617 @@ html[data-theme="red"] .discord-card-banner { background: linear-gradient(135deg
 /* Hero on mobile — compact, fits under the top nav */
 @media (max-width: 900px) {
     .hero {
-        min-height: calc(100svh - 80px);
         padding-top: 2rem;
         padding-bottom: 2rem;
     }
 }
+
+/* ==========================================================================
+   NEW TOOL CALCULATORS STYLING (RAID, PSU, Password Gen)
+   ========================================================================== */
+.calc-view select,
+.calc-view input[type="number"],
+.calc-view input[type="text"] {
+    background: rgba(8, 8, 8, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    color: var(--text-light);
+    font-family: var(--font-main);
+    font-size: 0.88rem;
+    padding: 0.65rem 0.85rem;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.calc-view select:focus,
+.calc-view input[type="number"]:focus,
+.calc-view input[type="text"]:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color-glow);
+}
+
+.calc-view select {
+    cursor: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    background-size: 1rem;
+    padding-right: 2.2rem;
+}
+
+.capacity-input-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.capacity-input-wrapper input[type="number"] {
+    flex-grow: 1;
+}
+
+.capacity-input-wrapper select {
+    width: auto;
+    min-width: 75px;
+    flex-shrink: 0;
+}
+
+.raid-error {
+    background: rgba(255, 77, 77, 0.08);
+    border: 1px solid #ff4d4d;
+    color: #ff4d4d;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 5px rgba(255, 77, 77, 0.3);
+    text-align: center;
+}
+
+.raid-error.hidden {
+    display: none;
+}
+
+.checkbox-field-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 48px;
+    padding-top: 1rem;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    cursor: none;
+    user-select: none;
+}
+
+.checkbox-container input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background: rgba(10, 10, 10, 0.8);
+    cursor: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin: 0;
+    outline: none;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-color-glow);
+}
+
+.checkbox-container input[type="checkbox"]:checked::after {
+    content: '\2714';
+    font-size: 0.7rem;
+    color: var(--bg-dark);
+    font-weight: bold;
+}
+
+.checkbox-container label {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    cursor: none;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    font-weight: normal;
+    margin-bottom: 0;
+}
+
+.psu-eff-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+}
+
+.psu-eff-row .result-val {
+    color: var(--text-light);
+    text-align: left;
+    font-family: var(--font-main);
+    font-weight: normal;
+    font-size: 0.85rem;
+}
+
+.subnet-input-grid .span-2 {
+    grid-column: span 2;
+}
+
+@media (max-width: 540px) {
+    .subnet-input-grid .span-2 {
+        grid-column: span 1;
+    }
+}
+
+.checkboxes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    padding: 0.4rem 0;
+}
+
+.password-output-field {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.password-output-field input[type="text"] {
+    flex-grow: 1;
+    font-family: var(--font-mono);
+    text-align: center;
+    font-weight: bold;
+    background: rgba(5, 5, 5, 0.7);
+    letter-spacing: 1px;
+}
+
+.password-output-field .btn-action {
+    padding: 0.8rem 1.2rem;
+    min-width: auto;
+    flex-shrink: 0;
+}
+
+#btn-pwd-generate {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    font-size: 0.82rem;
+}
+
+#btn-pwd-generate:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-dark);
+    box-shadow: 0 0 15px var(--accent-color-glow);
+}
+
+.result-val.strength-weak {
+    color: #ff4d4d !important;
+}
+
+.result-val.strength-medium {
+    color: #ffb703 !important;
+}
+
+.result-val.strength-strong {
+    color: #00ff66 !important;
+}
+
+.hash-section-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+    width: 100%;
+}
+
+.hash-output-row {
+    background: rgba(6, 6, 6, 0.4);
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.hash-output-row .result-val {
+    color: var(--accent-color);
+    font-size: 0.72rem;
+    word-break: break-all;
+    flex-grow: 1;
+    text-align: left;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 6px var(--accent-color-glow);
+}
+
+.hash-output-row .btn-copy {
+    padding: 0.5rem 0.8rem;
+    border-color: rgba(255, 255, 255, 0.15);
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   MINIGAMES SECTION STYLING (SNAKE & MINESWEEPER)
+   ========================================================================== */
+
+.game-tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    padding: 0.75rem 1.25rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: none;
+    transition: all 0.3s ease;
+}
+
+.game-tab-btn:hover {
+    color: var(--text-light);
+}
+
+.game-tab-btn.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+    text-shadow: 0 0 10px var(--accent-color-glow);
+}
+
+.game-view {
+    display: none;
+}
+
+.game-view.active {
+    display: block;
+    animation: calcFadeIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.game-scoreboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(6, 6, 6, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.82rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.score-box {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--text-muted);
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.score-box strong {
+    color: var(--accent-color);
+    font-family: var(--font-mono);
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-shadow: 0 0 8px var(--accent-color-glow);
+}
+
+.score-box select {
+    background: rgba(8, 8, 8, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    color: var(--text-light);
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    cursor: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.4rem center;
+    background-size: 0.7rem;
+    padding: 0.2rem 1.4rem 0.2rem 0.5rem;
+    outline: none;
+    transition: all 0.3s ease;
+    width: auto;
+}
+
+.score-box select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-color-glow);
+}
+
+.canvas-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 1;
+    margin: 0 auto 1.5rem;
+    background: #050505;
+    border: 2px solid var(--accent-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 20px var(--accent-color-glow), inset 0 0 20px rgba(0, 0, 0, 0.9);
+}
+
+#snake-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 5, 5, 0.88);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.overlay-text {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-light);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.4;
+}
+
+/* Mobile D-pad Console */
+.mobile-dpad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-top: 1.5rem;
+}
+
+.dpad-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    align-items: center;
+}
+
+.dpad-btn {
+    width: 54px;
+    height: 54px;
+    background: rgba(18, 18, 18, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    font-size: 1.4rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dpad-btn:active {
+    transform: scale(0.92);
+    background: var(--accent-color);
+    color: var(--bg-dark);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 12px var(--accent-color-glow);
+}
+
+.dpad-center {
+    width: 54px;
+    height: 54px;
+    background: rgba(10, 10, 10, 0.4);
+    border-radius: 8px;
+}
+
+/* Hide D-pad on desktop devices */
+@media (hover: hover) and (pointer: fine) {
+    .mobile-dpad {
+        display: none !important;
+    }
+}
+
+/* Hacker Minesweeper */
+.mines-control-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    width: 100%;
+}
+
+.mines-control-row .btn-action {
+    cursor: none;
+    border-radius: 6px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+#btn-mines-mode.flag-mode-active {
+    background-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+    box-shadow: 0 0 15px var(--accent-color-glow);
+}
+
+.mines-grid-wrapper {
+    background: #050505;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 1rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+.mines-board {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 4px;
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+.mines-cell {
+    background: rgba(20, 20, 20, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    cursor: none;
+    outline: none;
+    padding: 0;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.mines-cell:hover:not(.revealed) {
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: 0 0 8px var(--accent-color-glow);
+}
+
+.mines-cell.revealed {
+    background: rgba(8, 8, 8, 0.98);
+    border-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-light);
+}
+
+.mines-cell.flagged {
+    color: var(--accent-color);
+    text-shadow: 0 0 6px var(--accent-color-glow);
+}
+
+.mines-cell.mine {
+    background: rgba(255, 77, 77, 0.15);
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+    text-shadow: 0 0 8px rgba(255, 77, 77, 0.5);
+}
+
+.mines-cell.wrong-flag {
+    border-color: #ffb703;
+    color: #ffb703;
+    text-shadow: 0 0 6px rgba(255, 183, 3, 0.4);
+}
+
+/* Mines cell count color mappings */
+.mines-cell.count-1 { color: #00ff66 !important; }
+.mines-cell.count-2 { color: #00b4d8 !important; }
+.mines-cell.count-3 { color: #ffb703 !important; }
+.mines-cell.count-4 { color: #ff4d4d !important; }
+.mines-cell.count-5,
+.mines-cell.count-6,
+.mines-cell.count-7,
+.mines-cell.count-8 { color: #d00000 !important; }
+
+/* Defend the Firewall Typing Game */
+.type-screen-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 320px;
+    margin: 0 auto 1.5rem;
+    background: #020202;
+    border: 2px solid var(--accent-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 20px var(--accent-color-glow), inset 0 0 30px rgba(0, 0, 0, 0.95);
+}
+
+#type-terminal-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 4px, 4px 100%;
+}
+
+.type-falling-word {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    font-weight: bold;
+    color: var(--text-light);
+    background: rgba(22, 22, 22, 0.9);
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    text-shadow: 0 0 6px var(--accent-color-glow);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 5px var(--accent-color-glow);
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translateX(-50%);
+}
+
+/* Dynamic theme modifications for falling words */
+html[data-theme="blue"] .type-falling-word { border-color: var(--cisco-blue); text-shadow: 0 0 6px var(--cisco-blue-glow); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 5px var(--cisco-blue-glow); }
+html[data-theme="amber"] .type-falling-word { border-color: var(--accent-color); text-shadow: 0 0 6px var(--accent-color-glow); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 5px var(--accent-color-glow); }
+html[data-theme="red"] .type-falling-word { border-color: var(--accent-color); text-shadow: 0 0 6px var(--accent-color-glow); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 5px var(--accent-color-glow); }
+
+.type-input-row input[type="text"] {
+    background: rgba(8, 8, 8, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    color: var(--text-light);
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.type-input-row input[type="text"]:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color-glow);
+}
+
+.type-input-row .btn-action {
+    cursor: none;
+    border-radius: 6px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+
+

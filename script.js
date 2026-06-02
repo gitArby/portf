@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             enableCustomCursor();
         });
 
-        document.querySelectorAll('a, button, summary, .discord-badge, #mega-trigger, .topo-node').forEach(el => {
+        document.querySelectorAll('a, button, summary, .discord-badge, #mega-trigger, .topo-node, select, input, label').forEach(el => {
             el.addEventListener('mouseover', () => {
                 cursorDot.classList.add('active');
                 cursorOutline.classList.add('active');
@@ -380,6 +380,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetId === 'home-view') {
             triggerCounters();
         }
+
+        // Trigger game draw/init if games view
+        if (targetId === 'games-view') {
+            if (typeof drawSnakeGame === 'function') drawSnakeGame();
+            if (typeof initMinesGame === 'function') initMinesGame();
+            if (typeof initTypeGame === 'function') initTypeGame();
+        }
     }
 
     // Event delegation to capture all view switcher links
@@ -449,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const i18n = {
         cs: {
-            nav: ['Domů', 'O mně', 'Dovednosti', 'Certifikáty', 'Nástroje', 'Praxe', 'LoL', 'Projekty', 'Kontakt'],
+            nav: ['Domů', 'O mně', 'Dovednosti', 'Certifikáty', 'Nástroje', 'Praxe', 'LoL', 'Minihry', 'Projekty', 'Kontakt'],
             subtitle: ['Tech nadšenec', 'hráč her', 'PC builder', 'web developer'],
             hero: {
                 contactBtn: 'Kontakt',
@@ -495,6 +502,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 subtitle: 'Rychlé výpočty podsítí pro síťaře a standardní/vědecká kalkulačka pro každodenní úkoly.',
                 tabSubnet: 'Subnet kalkulačka',
                 tabMath: 'Matematická kalkulačka',
+                tabRaid: 'RAID kalkulačka',
+                tabPsu: 'PC Zdroj (PSU)',
+                tabPassword: 'Generátor hesel',
                 subnetIp: 'IP adresa:',
                 subnetCidr: 'Maska / CIDR:',
                 resMask: 'Maska sítě:',
@@ -506,7 +516,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 binHdr: 'Binární vizualizace',
                 mathMode: 'Režim:',
                 mathModeStd: 'Standardní',
-                mathModeSci: 'Vědecká'
+                mathModeSci: 'Vědecká',
+                raidDisks: 'Počet disků:',
+                raidCapacity: 'Kapacita disku:',
+                raidUsable: 'Využitelná kapacita:',
+                raidLost: 'Ztracená kapacita:',
+                raidFault: 'Odolnost proti chybám:',
+                raidRead: 'Rychlost čtení:',
+                raidWrite: 'Rychlost zápisu:',
+                raidErrorMin: 'Chyba: RAID {level} vyžaduje alespoň {min} disků.',
+                raidErrorEven: 'Chyba: RAID 10 vyžaduje sudý počet disků (minimálně 4).',
+                raidLevels: [
+                    'RAID 0 (Prokládání - Rychlost)',
+                    'RAID 1 (Zrcadlení - Bezpečnost)',
+                    'RAID 5 (Parita - Efektivita)',
+                    'RAID 6 (Dvojitá parita - Vysoká bezpečnost)',
+                    'RAID 10 (Zrcadlené prokládané sady)'
+                ],
+                psuCpu: 'Procesor (CPU):',
+                psuGpu: 'Grafická karta (GPU):',
+                psuRam: 'Počet pamětí RAM:',
+                psuDrives: 'Počet disků (SSD/HDD):',
+                psuFans: 'Počet ventilátorů:',
+                psuOc: 'Taktování (OC +15%)',
+                psuEst: 'Odhadovaný špičkový příkon:',
+                psuRec: 'Doporučený výkon zdroje:',
+                psuEff: 'Doporučená certifikace:',
+                psuCpuOpts: [
+                    'Kancelářský / Úsporný (65W)',
+                    'Střední třída / Herní (125W)',
+                    'High-end / Taktovaný (250W)'
+                ],
+                psuGpuOpts: [
+                    'Integrovaná / Žádná (0W)',
+                    'Základní (např. GTX 1650, 75W)',
+                    'Střední třída (např. RTX 4060/4070, 200W)',
+                    'High-end (např. RTX 4080/4090, 350W)'
+                ],
+                psuRamOpts: ['1 modul', '2 moduly', '4 moduly', '8 modulů'],
+                pwdLength: 'Délka hesla:',
+                pwdLower: 'Malá písmena (a-z)',
+                pwdUpper: 'Velká písmena (A-Z)',
+                pwdDigits: 'Číslice (0-9)',
+                pwdSymbols: 'Symboly (!@#$... )',
+                pwdStrength: 'Síla hesla / Entropie:',
+                pwdGenerate: 'Generovat',
+                pwdPlaceholder: 'Klikněte na Generovat',
+                pwdStrengthWeak: 'Slabé ({entropy} bitů) - Snadno prolomitelné',
+                pwdStrengthMedium: 'Střední ({entropy} bitů) - Dobré pro běžné účty',
+                pwdStrengthStrong: 'Silné ({entropy} bitů) - Velmi bezpečné',
+                hashHdr: 'SHA-256 Hasher',
+                hashPlaceholder: 'Zadejte text pro SHA-256 hash...',
+                hashCopied: 'Hash zkopírován!',
+                pwdCopied: 'Heslo zkopírováno!'
             },
             timeline: {
                 title: 'Vzdělání & Zkušenosti',
@@ -645,10 +707,37 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Local_Server:\u007e$ _'
                     ]
                 }
+            },
+            games: {
+                title: 'Minihry & Zábava',
+                subtitle: 'Klasický kyber-had na odreagování a hacker hledání min pro trénink síťového myšlení.',
+                tabSnake: 'Kybernetický had',
+                tabMines: 'Hacker Hledání min',
+                tabType: 'Obrana firewallu',
+                snakeScore: 'Skóre:',
+                snakeHigh: 'Nejlepší:',
+                snakeDiff: 'Obtížnost:',
+                snakeStartMsg: 'Stiskněte START pro spuštění',
+                snakeGameOver: 'KONEC HRY! Skóre: {score}',
+                snakeWin: 'VÍTĚZSTVÍ! Skvělá práce!',
+                minesNodes: 'Uzly:',
+                minesShields: 'Štíty:',
+                minesTime: 'Čas:',
+                minesReset: 'RESTART',
+                minesModeReveal: 'Režim: Odkrýt',
+                minesModeFlag: 'Režim: Štít',
+                minesGameOver: 'SYSTÉMOVÁ CHYBA: Detekován Firewall!',
+                minesWin: 'PŘÍSTUP POVOLEN: Všechny uzly zabezpečeny!',
+                typeScore: 'Skóre:',
+                typeHigh: 'Nejlepší:',
+                typeIntegrity: 'Integrita:',
+                typeStartMsg: 'Stiskněte START pro spuštění',
+                typePlaceholder: 'Zadejte příkaz...',
+                typeGameOver: 'SYSTÉM NABOURÁN! Firewall selhal.'
             }
         },
         en: {
-            nav: ['Home', 'About', 'Skills', 'Certificates', 'Tools', 'Experience', 'LoL', 'Projects', 'Contact'],
+            nav: ['Home', 'About', 'Skills', 'Certificates', 'Tools', 'Experience', 'LoL', 'Minigames', 'Projects', 'Contact'],
             subtitle: ['Tech enthusiast', 'gamer', 'PC builder', 'web developer'],
             hero: {
                 contactBtn: 'Contact',
@@ -694,6 +783,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 subtitle: 'Quick subnet calculations for networkers and standard/scientific calculator for daily tasks.',
                 tabSubnet: 'Subnet Calculator',
                 tabMath: 'Math Calculator',
+                tabRaid: 'RAID Calculator',
+                tabPsu: 'PC PSU Calculator',
+                tabPassword: 'Password Gen',
                 subnetIp: 'IP Address:',
                 subnetCidr: 'Mask / CIDR:',
                 resMask: 'Subnet Mask:',
@@ -705,7 +797,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 binHdr: 'Binary Visualization',
                 mathMode: 'Mode:',
                 mathModeStd: 'Standard',
-                mathModeSci: 'Scientific'
+                mathModeSci: 'Scientific',
+                raidDisks: 'Number of Disks:',
+                raidCapacity: 'Disk Capacity:',
+                raidUsable: 'Usable Capacity:',
+                raidLost: 'Lost Capacity:',
+                raidFault: 'Fault Tolerance:',
+                raidRead: 'Read Speed:',
+                raidWrite: 'Write Speed:',
+                raidErrorMin: 'Error: RAID {level} requires at least {min} disks.',
+                raidErrorEven: 'Error: RAID 10 requires an even number of disks (min 4).',
+                raidLevels: [
+                    'RAID 0 (Striping - Speed)',
+                    'RAID 1 (Mirroring - Safety)',
+                    'RAID 5 (Parity - Efficiency)',
+                    'RAID 6 (Double Parity - High Safety)',
+                    'RAID 10 (Stripe of Mirrors)'
+                ],
+                psuCpu: 'Processor (CPU):',
+                psuGpu: 'Graphics Card (GPU):',
+                psuRam: 'RAM Modules Count:',
+                psuDrives: 'Drives (SSD/HDD):',
+                psuFans: 'Fans Count:',
+                psuOc: 'Overclocking (OC +15%)',
+                psuEst: 'Estimated Peak Power:',
+                psuRec: 'Recommended PSU Wattage:',
+                psuEff: 'Recommended Certification:',
+                psuCpuOpts: [
+                    'Office / Budget (65W)',
+                    'Mid-range / Gaming (125W)',
+                    'High-end / Overclocked (250W)'
+                ],
+                psuGpuOpts: [
+                    'Integrated / None (0W)',
+                    'Budget (e.g. GTX 1650, 75W)',
+                    'Mid-range (e.g. RTX 4060/4070, 200W)',
+                    'High-end (e.g. RTX 4080/4090, 350W)'
+                ],
+                psuRamOpts: ['1 module', '2 modules', '4 modules', '8 modules'],
+                pwdLength: 'Password Length:',
+                pwdLower: 'Lowercase (a-z)',
+                pwdUpper: 'Uppercase (A-Z)',
+                pwdDigits: 'Digits (0-9)',
+                pwdSymbols: 'Symbols (!@#$... )',
+                pwdStrength: 'Password Strength / Entropy:',
+                pwdGenerate: 'Generate',
+                pwdPlaceholder: 'Click Generate',
+                pwdStrengthWeak: 'Weak ({entropy} bits) - Easily cracked',
+                pwdStrengthMedium: 'Medium ({entropy} bits) - Good for normal use',
+                pwdStrengthStrong: 'Strong ({entropy} bits) - Highly secure',
+                hashHdr: 'SHA-256 Hasher',
+                hashPlaceholder: 'Type text for SHA-256 hash...',
+                hashCopied: 'Hash copied!',
+                pwdCopied: 'Password copied!'
             },
             timeline: {
                 title: 'Education & Experience',
@@ -845,6 +989,33 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Local_Server:\u007e$ _'
                     ]
                 }
+            },
+            games: {
+                title: 'Minigames & Fun',
+                subtitle: 'Classic cyber snake to relax and hacker minesweeper to train network thinking.',
+                tabSnake: 'Cyber Snake',
+                tabMines: 'Hacker Minesweeper',
+                tabType: 'Firewall Defender',
+                snakeScore: 'Score:',
+                snakeHigh: 'High Score:',
+                snakeDiff: 'Difficulty:',
+                snakeStartMsg: 'Press START to play',
+                snakeGameOver: 'GAME OVER! Score: {score}',
+                snakeWin: 'VICTORY! Amazing job!',
+                minesNodes: 'Nodes:',
+                minesShields: 'Shields:',
+                minesTime: 'Time:',
+                minesReset: 'RESTART',
+                minesModeReveal: 'Mode: Scan',
+                minesModeFlag: 'Mode: Shield',
+                minesGameOver: 'SYSTEM ERROR: Firewall Detected!',
+                minesWin: 'ACCESS GRANTED: All nodes secured!',
+                typeScore: 'Score:',
+                typeHigh: 'High Score:',
+                typeIntegrity: 'Integrity:',
+                typeStartMsg: 'Press START to play',
+                typePlaceholder: 'Type command...',
+                typeGameOver: 'SYSTEM COMPROMISED! Firewall failed.'
             }
         }
     };
@@ -1092,10 +1263,20 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const tabSub = document.getElementById('tab-btn-subnet');
         if (tabSub) tabSub.textContent = t.calculator.tabSubnet;
+
+        const tabRaid = document.getElementById('tab-btn-raid');
+        if (tabRaid) tabRaid.textContent = t.calculator.tabRaid;
+
+        const tabPsu = document.getElementById('tab-btn-psu');
+        if (tabPsu) tabPsu.textContent = t.calculator.tabPsu;
+
+        const tabPwd = document.getElementById('tab-btn-password');
+        if (tabPwd) tabPwd.textContent = t.calculator.tabPassword;
         
         const tabMath = document.getElementById('tab-btn-math');
         if (tabMath) tabMath.textContent = t.calculator.tabMath;
         
+        // Subnet Calculator
         const lblIp = document.getElementById('lbl-subnet-ip');
         if (lblIp) lblIp.textContent = t.calculator.subnetIp;
         
@@ -1126,7 +1307,125 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const binHdr = document.getElementById('bin-hdr');
         if (binHdr) binHdr.textContent = t.calculator.binHdr;
+
+        // RAID Calculator
+        const lblRaidLvl = document.getElementById('lbl-raid-level');
+        if (lblRaidLvl) lblRaidLvl.textContent = t.calculator.raidRead.includes('čtení') ? 'Úroveň RAID:' : 'RAID Level:';
         
+        const selectRaidLvl = document.getElementById('raid-level');
+        if (selectRaidLvl && t.calculator.raidLevels) {
+            Array.from(selectRaidLvl.options).forEach((opt, idx) => {
+                if (t.calculator.raidLevels[idx]) opt.textContent = t.calculator.raidLevels[idx];
+            });
+        }
+        
+        const lblRaidDisks = document.getElementById('lbl-raid-disks');
+        if (lblRaidDisks) lblRaidDisks.textContent = t.calculator.raidDisks;
+
+        const lblRaidCap = document.getElementById('lbl-raid-capacity');
+        if (lblRaidCap) lblRaidCap.textContent = t.calculator.raidCapacity;
+
+        const resRaidUsable = document.getElementById('res-lbl-raid-usable');
+        if (resRaidUsable) resRaidUsable.textContent = t.calculator.raidUsable;
+
+        const resRaidLost = document.getElementById('res-lbl-raid-lost');
+        if (resRaidLost) resRaidLost.textContent = t.calculator.raidLost;
+
+        const resRaidFault = document.getElementById('res-lbl-raid-fault');
+        if (resRaidFault) resRaidFault.textContent = t.calculator.raidFault;
+
+        const resRaidRead = document.getElementById('res-lbl-raid-read');
+        if (resRaidRead) resRaidRead.textContent = t.calculator.raidRead;
+
+        const resRaidWrite = document.getElementById('res-lbl-raid-write');
+        if (resRaidWrite) resRaidWrite.textContent = t.calculator.raidWrite;
+
+        // PSU Calculator
+        const lblPsuCpu = document.getElementById('lbl-psu-cpu');
+        if (lblPsuCpu) lblPsuCpu.textContent = t.calculator.psuCpu;
+
+        const selectPsuCpu = document.getElementById('psu-cpu');
+        if (selectPsuCpu && t.calculator.psuCpuOpts) {
+            Array.from(selectPsuCpu.options).forEach((opt, idx) => {
+                if (t.calculator.psuCpuOpts[idx]) opt.textContent = t.calculator.psuCpuOpts[idx];
+            });
+        }
+
+        const lblPsuGpu = document.getElementById('lbl-psu-gpu');
+        if (lblPsuGpu) lblPsuGpu.textContent = t.calculator.psuGpu;
+
+        const selectPsuGpu = document.getElementById('psu-gpu');
+        if (selectPsuGpu && t.calculator.psuGpuOpts) {
+            Array.from(selectPsuGpu.options).forEach((opt, idx) => {
+                if (t.calculator.psuGpuOpts[idx]) opt.textContent = t.calculator.psuGpuOpts[idx];
+            });
+        }
+
+        const lblPsuRam = document.getElementById('lbl-psu-ram');
+        if (lblPsuRam) lblPsuRam.textContent = t.calculator.psuRam;
+
+        const selectPsuRam = document.getElementById('psu-ram');
+        if (selectPsuRam && t.calculator.psuRamOpts) {
+            Array.from(selectPsuRam.options).forEach((opt, idx) => {
+                if (t.calculator.psuRamOpts[idx]) opt.textContent = t.calculator.psuRamOpts[idx];
+            });
+        }
+
+        const lblPsuDrives = document.getElementById('lbl-psu-drives');
+        if (lblPsuDrives) lblPsuDrives.textContent = t.calculator.psuDrives;
+
+        const lblPsuFans = document.getElementById('lbl-psu-fans');
+        if (lblPsuFans) lblPsuFans.textContent = t.calculator.psuFans;
+
+        const lblPsuOc = document.getElementById('lbl-psu-oc');
+        if (lblPsuOc) lblPsuOc.textContent = t.calculator.psuOc;
+
+        const resPsuEst = document.getElementById('res-lbl-psu-est');
+        if (resPsuEst) resPsuEst.textContent = t.calculator.psuEst;
+
+        const resPsuRec = document.getElementById('res-lbl-psu-rec');
+        if (resPsuRec) resPsuRec.textContent = t.calculator.psuRec;
+
+        const resPsuEff = document.getElementById('res-lbl-psu-eff');
+        if (resPsuEff) resPsuEff.textContent = t.calculator.psuEff;
+
+        // Password Generator
+        const lblPwdLen = document.getElementById('lbl-pwd-length');
+        if (lblPwdLen) {
+            const span = lblPwdLen.querySelector('span');
+            lblPwdLen.innerHTML = `${t.calculator.pwdLength} `;
+            if (span) lblPwdLen.appendChild(span);
+        }
+
+        const lblPwdLower = document.getElementById('lbl-pwd-lower');
+        if (lblPwdLower) lblPwdLower.textContent = t.calculator.pwdLower;
+
+        const lblPwdUpper = document.getElementById('lbl-pwd-upper');
+        if (lblPwdUpper) lblPwdUpper.textContent = t.calculator.pwdUpper;
+
+        const lblPwdDigits = document.getElementById('lbl-pwd-digits');
+        if (lblPwdDigits) lblPwdDigits.textContent = t.calculator.pwdDigits;
+
+        const lblPwdSymbols = document.getElementById('lbl-pwd-symbols');
+        if (lblPwdSymbols) lblPwdSymbols.textContent = t.calculator.pwdSymbols;
+
+        const pwdOutput = document.getElementById('pwd-output');
+        if (pwdOutput) pwdOutput.placeholder = t.calculator.pwdPlaceholder;
+
+        const btnPwdGenerate = document.getElementById('btn-pwd-generate');
+        if (btnPwdGenerate) btnPwdGenerate.textContent = t.calculator.pwdGenerate;
+
+        const resPwdStrength = document.getElementById('res-lbl-pwd-strength');
+        if (resPwdStrength) resPwdStrength.textContent = t.calculator.pwdStrength;
+
+        // Hasher
+        const hashHdr = document.getElementById('hash-hdr');
+        if (hashHdr) hashHdr.textContent = t.calculator.hashHdr;
+
+        const hashInput = document.getElementById('hash-input');
+        if (hashInput) hashInput.placeholder = t.calculator.hashPlaceholder;
+
+        // Math Mode & bases
         const mMode = document.getElementById('math-mode-label');
         if (mMode) mMode.textContent = t.calculator.mathMode;
         
@@ -1135,6 +1434,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const mModeSci = document.getElementById('math-mode-sci');
         if (mModeSci) mModeSci.textContent = t.calculator.mathModeSci;
+
+        // Trigger updates if logic functions exist
+        if (typeof calculateRaid === 'function') calculateRaid();
+        if (typeof calculatePsu === 'function') calculatePsu();
+        if (typeof calculatePassword === 'function') calculatePassword();
 
         // Contact Form localization
         const formName = document.getElementById('form-name');
@@ -1148,6 +1452,70 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const formSub = document.getElementById('btn-submit-form');
         if (formSub) formSub.textContent = t.contact.submit;
+
+        // Minigames localization
+        const gamesTitle = document.getElementById('games-title');
+        if (gamesTitle) gamesTitle.textContent = t.games.title;
+
+        const gamesSub = document.getElementById('games-subtitle');
+        if (gamesSub) gamesSub.textContent = t.games.subtitle;
+
+        const tabSnake = document.getElementById('tab-btn-snake');
+        if (tabSnake) tabSnake.textContent = t.games.tabSnake;
+
+        const tabMines = document.getElementById('tab-btn-mines');
+        if (tabMines) tabMines.textContent = t.games.tabMines;
+
+        const tabType = document.getElementById('tab-btn-type');
+        if (tabType) tabType.textContent = t.games.tabType;
+
+        const lblSnakeScore = document.getElementById('lbl-snake-score');
+        if (lblSnakeScore) lblSnakeScore.textContent = t.games.snakeScore;
+
+        const lblSnakeHigh = document.getElementById('lbl-snake-highscore');
+        if (lblSnakeHigh) lblSnakeHigh.textContent = t.games.snakeHigh;
+
+        const lblSnakeDiff = document.getElementById('lbl-snake-difficulty');
+        if (lblSnakeDiff) lblSnakeDiff.textContent = t.games.snakeDiff;
+
+        const lblMinesNodes = document.getElementById('lbl-mines-nodes');
+        if (lblMinesNodes) lblMinesNodes.textContent = t.games.minesNodes;
+
+        const lblMinesShields = document.getElementById('lbl-mines-flags');
+        if (lblMinesShields) lblMinesShields.textContent = t.games.minesShields;
+
+        const lblMinesTime = document.getElementById('lbl-mines-time');
+        if (lblMinesTime) lblMinesTime.textContent = t.games.minesTime;
+
+        const btnMinesReset = document.getElementById('btn-mines-reset');
+        if (btnMinesReset) btnMinesReset.textContent = t.games.minesReset;
+
+        const snakeOverlayText = document.getElementById('snake-overlay-text');
+        if (snakeOverlayText && (typeof snakeGameInterval === 'undefined' || !snakeGameInterval)) {
+            snakeOverlayText.textContent = t.games.snakeStartMsg;
+        }
+
+        const btnMinesMode = document.getElementById('btn-mines-mode-text');
+        if (btnMinesMode && typeof minesFlagMode !== 'undefined') {
+            btnMinesMode.textContent = (minesFlagMode) ? t.games.minesModeFlag : t.games.minesModeReveal;
+        }
+
+        const lblTypeScore = document.getElementById('lbl-type-score');
+        if (lblTypeScore) lblTypeScore.textContent = t.games.typeScore;
+
+        const lblTypeHigh = document.getElementById('lbl-type-highscore');
+        if (lblTypeHigh) lblTypeHigh.textContent = t.games.typeHigh;
+
+        const lblTypeIntegrity = document.getElementById('lbl-type-integrity');
+        if (lblTypeIntegrity) lblTypeIntegrity.textContent = t.games.typeIntegrity;
+
+        const typeInput = document.getElementById('type-input');
+        if (typeInput) typeInput.placeholder = t.games.typePlaceholder;
+
+        const typeOverlayText = document.getElementById('type-overlay-text');
+        if (typeOverlayText && (typeof typeGameInterval === 'undefined' || !typeGameInterval)) {
+            typeOverlayText.textContent = t.games.typeStartMsg;
+        }
 
         // Update data-text attributes for glitch hover effects
         document.querySelectorAll('.glitch-hover').forEach(el => {
@@ -2671,6 +3039,1176 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hexEl) hexEl.textContent = 'N/A';
         if (binEl) binEl.textContent = 'N/A';
     }
+
+    // ==========================================================================
+    // NEW CALCULATORS LOGIC (RAID, PSU, Password Gen)
+    // ==========================================================================
+
+    // --- RAID Calculator ---
+    const raidLevelSelect = document.getElementById('raid-level');
+    const raidDisksInput = document.getElementById('raid-disks');
+    const raidCapacityInput = document.getElementById('raid-capacity');
+    const raidUnitSelect = document.getElementById('raid-unit');
+    const raidErrorMsg = document.getElementById('raid-error-msg');
+
+    function formatDisksCount(count, lang) {
+        if (lang === 'cs') {
+            if (count === 1) return '1 disk';
+            if (count >= 2 && count <= 4) return `${count} disky`;
+            return `${count} disků`;
+        } else {
+            if (count === 1) return '1 disk';
+            return `${count} disks`;
+        }
+    }
+
+    function calculateRaid() {
+        if (!raidLevelSelect || !raidDisksInput || !raidCapacityInput || !raidUnitSelect) return;
+        
+        const lvl = raidLevelSelect.value;
+        const disks = parseInt(raidDisksInput.value, 10) || 0;
+        const cap = parseFloat(raidCapacityInput.value) || 0;
+        const unit = raidUnitSelect.value;
+        const lang = currentLang;
+        const t = i18n[lang].calculator;
+
+        let isValid = true;
+        let errorText = '';
+        let minDisks = 2;
+
+        // Validation rules
+        if (lvl === '0') {
+            minDisks = 2;
+            if (disks < minDisks) {
+                isValid = false;
+                errorText = t.raidErrorMin.replace('{level}', '0').replace('{min}', minDisks);
+            }
+        } else if (lvl === '1') {
+            minDisks = 2;
+            if (disks < minDisks) {
+                isValid = false;
+                errorText = t.raidErrorMin.replace('{level}', '1').replace('{min}', minDisks);
+            }
+        } else if (lvl === '5') {
+            minDisks = 3;
+            if (disks < minDisks) {
+                isValid = false;
+                errorText = t.raidErrorMin.replace('{level}', '5').replace('{min}', minDisks);
+            }
+        } else if (lvl === '6') {
+            minDisks = 4;
+            if (disks < minDisks) {
+                isValid = false;
+                errorText = t.raidErrorMin.replace('{level}', '6').replace('{min}', minDisks);
+            }
+        } else if (lvl === '10') {
+            minDisks = 4;
+            if (disks < minDisks) {
+                isValid = false;
+                errorText = t.raidErrorMin.replace('{level}', '10').replace('{min}', minDisks);
+            } else if (disks % 2 !== 0) {
+                isValid = false;
+                errorText = t.raidErrorEven;
+            }
+        }
+
+        if (!isValid) {
+            if (raidErrorMsg) {
+                raidErrorMsg.textContent = errorText;
+                raidErrorMsg.classList.remove('hidden');
+            }
+            document.getElementById('res-val-raid-usable').textContent = 'N/A';
+            document.getElementById('res-val-raid-lost').textContent = 'N/A';
+            document.getElementById('res-val-raid-fault').textContent = 'N/A';
+            document.getElementById('res-val-raid-read').textContent = 'N/A';
+            document.getElementById('res-val-raid-write').textContent = 'N/A';
+            return;
+        }
+
+        if (raidErrorMsg) {
+            raidErrorMsg.classList.add('hidden');
+        }
+
+        let usable = 0;
+        let lost = 0;
+        let faultTolerance = 0;
+        let readSpeed = '1x';
+        let writeSpeed = '1x';
+
+        switch (lvl) {
+            case '0':
+                usable = disks * cap;
+                lost = 0;
+                faultTolerance = 0;
+                readSpeed = `${disks}x`;
+                writeSpeed = `${disks}x`;
+                break;
+            case '1':
+                usable = cap;
+                lost = (disks - 1) * cap;
+                faultTolerance = disks - 1;
+                readSpeed = `${disks}x`;
+                writeSpeed = '1x';
+                break;
+            case '5':
+                usable = (disks - 1) * cap;
+                lost = cap;
+                faultTolerance = 1;
+                readSpeed = `${disks - 1}x`;
+                writeSpeed = `${(disks / 4).toFixed(2).replace(/\.00$/, '')}x (est.)`;
+                break;
+            case '6':
+                usable = (disks - 2) * cap;
+                lost = 2 * cap;
+                faultTolerance = 2;
+                readSpeed = `${disks - 2}x`;
+                writeSpeed = `${(disks / 6).toFixed(2).replace(/\.00$/, '')}x (est.)`;
+                break;
+            case '10':
+                usable = (disks / 2) * cap;
+                lost = (disks / 2) * cap;
+                faultTolerance = 1;
+                readSpeed = `${disks}x`;
+                writeSpeed = `${(disks / 2).toFixed(1).replace(/\.0$/, '')}x`;
+                break;
+        }
+
+        document.getElementById('res-val-raid-usable').textContent = `${usable.toLocaleString(lang === 'cs' ? 'cs-CZ' : 'en-US')} ${unit}`;
+        document.getElementById('res-val-raid-lost').textContent = `${lost.toLocaleString(lang === 'cs' ? 'cs-CZ' : 'en-US')} ${unit}`;
+        document.getElementById('res-val-raid-fault').textContent = formatDisksCount(faultTolerance, lang);
+        document.getElementById('res-val-raid-read').textContent = readSpeed;
+        document.getElementById('res-val-raid-write').textContent = writeSpeed;
+    }
+
+    if (raidLevelSelect && raidDisksInput && raidCapacityInput && raidUnitSelect) {
+        raidLevelSelect.addEventListener('change', calculateRaid);
+        raidDisksInput.addEventListener('input', calculateRaid);
+        raidCapacityInput.addEventListener('input', calculateRaid);
+        raidUnitSelect.addEventListener('change', calculateRaid);
+    }
+
+    // --- PSU Calculator ---
+    const psuCpuSelect = document.getElementById('psu-cpu');
+    const psuGpuSelect = document.getElementById('psu-gpu');
+    const psuRamSelect = document.getElementById('psu-ram');
+    const psuDrivesInput = document.getElementById('psu-drives');
+    const psuFansInput = document.getElementById('psu-fans');
+    const psuOcCheckbox = document.getElementById('psu-oc');
+
+    function calculatePsu() {
+        if (!psuCpuSelect || !psuGpuSelect || !psuRamSelect || !psuDrivesInput || !psuFansInput) return;
+
+        const cpuTdp = parseInt(psuCpuSelect.value, 10) || 0;
+        const gpuTdp = parseInt(psuGpuSelect.value, 10) || 0;
+        const ramCount = parseInt(psuRamSelect.value, 10) || 0;
+        const drivesCount = parseInt(psuDrivesInput.value, 10) || 0;
+        const fansCount = parseInt(psuFansInput.value, 10) || 0;
+        const isOc = psuOcCheckbox ? psuOcCheckbox.checked : false;
+
+        const baseDraw = 50;
+
+        let total = cpuTdp + gpuTdp + (ramCount * 5) + (drivesCount * 7) + (fansCount * 3) + baseDraw;
+        if (isOc) {
+            total = total * 1.15;
+        }
+
+        const estPeak = Math.round(total);
+        let recommended = Math.ceil((estPeak * 1.30) / 50) * 50;
+        if (recommended < 350) recommended = 350;
+
+        let efficiency = '80 Plus Bronze';
+        if (recommended >= 400 && recommended < 650) {
+            efficiency = '80 Plus Gold';
+        } else if (recommended >= 650) {
+            efficiency = '80 Plus Platinum / Titanium';
+        }
+
+        document.getElementById('res-val-psu-est').textContent = `${estPeak} W`;
+        document.getElementById('res-val-psu-rec').textContent = `${recommended} W`;
+        document.getElementById('res-val-psu-eff').textContent = efficiency;
+    }
+
+    if (psuCpuSelect && psuGpuSelect && psuRamSelect && psuDrivesInput && psuFansInput) {
+        psuCpuSelect.addEventListener('change', calculatePsu);
+        psuGpuSelect.addEventListener('change', calculatePsu);
+        psuRamSelect.addEventListener('change', calculatePsu);
+        psuDrivesInput.addEventListener('input', calculatePsu);
+        psuFansInput.addEventListener('input', calculatePsu);
+        if (psuOcCheckbox) psuOcCheckbox.addEventListener('change', calculatePsu);
+    }
+
+    // --- Password Generator ---
+    const pwdLengthInput = document.getElementById('pwd-length');
+    const pwdLowerCheckbox = document.getElementById('pwd-lower');
+    const pwdUpperCheckbox = document.getElementById('pwd-upper');
+    const pwdDigitsCheckbox = document.getElementById('pwd-digits');
+    const pwdSymbolsCheckbox = document.getElementById('pwd-symbols');
+    const pwdOutputField = document.getElementById('pwd-output');
+    const btnPwdGenerate = document.getElementById('btn-pwd-generate');
+    const btnPwdCopy = document.getElementById('btn-pwd-copy');
+    const hashInput = document.getElementById('hash-input');
+    const btnHashCopy = document.getElementById('btn-hash-copy');
+
+    function calculatePassword() {
+        if (!pwdLengthInput || !pwdOutputField) return;
+
+        const len = parseInt(pwdLengthInput.value, 10);
+        const useLower = pwdLowerCheckbox ? pwdLowerCheckbox.checked : false;
+        const useUpper = pwdUpperCheckbox ? pwdUpperCheckbox.checked : false;
+        const useDigits = pwdDigitsCheckbox ? pwdDigitsCheckbox.checked : false;
+        const useSymbols = pwdSymbolsCheckbox ? pwdSymbolsCheckbox.checked : false;
+
+        const lenValEl = document.getElementById('pwd-len-val');
+        if (lenValEl) lenValEl.textContent = len;
+
+        let charset = '';
+        let requiredChars = [];
+
+        if (useLower) {
+            charset += 'abcdefghijklmnopqrstuvwxyz';
+            requiredChars.push('abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)]);
+        }
+        if (useUpper) {
+            charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            requiredChars.push('ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)]);
+        }
+        if (useDigits) {
+            charset += '0123456789';
+            requiredChars.push('0123456789'[Math.floor(Math.random() * 10)]);
+        }
+        if (useSymbols) {
+            const symbolsList = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            charset += symbolsList;
+            requiredChars.push(symbolsList[Math.floor(Math.random() * symbolsList.length)]);
+        }
+
+        if (!charset) {
+            pwdOutputField.value = '';
+            updatePasswordStrength(0, 0);
+            return;
+        }
+
+        let result = '';
+        const randomValues = new Uint32Array(len);
+        window.crypto.getRandomValues(randomValues);
+
+        for (let i = 0; i < len; i++) {
+            result += charset[randomValues[i] % charset.length];
+        }
+
+        const resultArray = result.split('');
+        for (let i = 0; i < requiredChars.length && i < len; i++) {
+            resultArray[i] = requiredChars[i];
+        }
+
+        for (let i = resultArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = resultArray[i];
+            resultArray[i] = resultArray[j];
+            resultArray[j] = temp;
+        }
+
+        const finalPassword = resultArray.join('');
+        pwdOutputField.value = finalPassword;
+
+        let poolSize = 0;
+        if (useLower) poolSize += 26;
+        if (useUpper) poolSize += 26;
+        if (useDigits) poolSize += 10;
+        if (useSymbols) poolSize += 26;
+
+        const entropy = Math.round(len * Math.log2(poolSize));
+        updatePasswordStrength(entropy, poolSize);
+        calculateHashFor(finalPassword);
+    }
+
+    function updatePasswordStrength(entropy, poolSize) {
+        const strengthEl = document.getElementById('res-val-pwd-strength');
+        if (!strengthEl) return;
+
+        if (poolSize === 0 || entropy === 0) {
+            strengthEl.textContent = '---';
+            strengthEl.className = 'result-val';
+            return;
+        }
+
+        const lang = currentLang;
+        const t = i18n[lang].calculator;
+        let label = '';
+        let ratingClass = '';
+
+        if (entropy < 50) {
+            label = t.pwdStrengthWeak.replace('{entropy}', entropy);
+            ratingClass = 'strength-weak';
+        } else if (entropy >= 50 && entropy < 80) {
+            label = t.pwdStrengthMedium.replace('{entropy}', entropy);
+            ratingClass = 'strength-medium';
+        } else {
+            label = t.pwdStrengthStrong.replace('{entropy}', entropy);
+            ratingClass = 'strength-strong';
+        }
+
+        strengthEl.textContent = label;
+        strengthEl.className = `result-val ${ratingClass}`;
+    }
+
+    async function calculateHashFor(text) {
+        const outputEl = document.getElementById('res-val-hash');
+        if (!outputEl) return;
+
+        if (text === '') {
+            outputEl.textContent = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+            return;
+        }
+
+        try {
+            const msgBuffer = new TextEncoder().encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            outputEl.textContent = hashHex;
+        } catch (e) {
+            outputEl.textContent = 'N/A';
+        }
+    }
+
+    if (pwdLengthInput) {
+        pwdLengthInput.addEventListener('input', calculatePassword);
+    }
+    [pwdLowerCheckbox, pwdUpperCheckbox, pwdDigitsCheckbox, pwdSymbolsCheckbox].forEach(cb => {
+        if (cb) cb.addEventListener('change', calculatePassword);
+    });
+
+    if (btnPwdGenerate) {
+        btnPwdGenerate.addEventListener('click', calculatePassword);
+    }
+
+    if (btnPwdCopy) {
+        btnPwdCopy.addEventListener('click', () => {
+            const pwd = pwdOutputField.value;
+            if (!pwd) return;
+            navigator.clipboard.writeText(pwd);
+            showHUDNotification(i18n[currentLang].calculator.pwdCopied, 'success');
+        });
+    }
+
+    if (hashInput) {
+        hashInput.addEventListener('input', (e) => {
+            calculateHashFor(e.target.value);
+        });
+    }
+
+    if (btnHashCopy) {
+        btnHashCopy.addEventListener('click', () => {
+            const hash = document.getElementById('res-val-hash').textContent;
+            if (!hash) return;
+            navigator.clipboard.writeText(hash);
+            showHUDNotification(i18n[currentLang].calculator.hashCopied, 'success');
+        });
+    }
+
+    // ==========================================================================
+    // MINIGAMES HUB LOGIC (SNAKE & MINESWEEPER)
+    // ==========================================================================
+    
+    // Game tab switching
+    const gameTabBtns = document.querySelectorAll('.game-tab-btn');
+    const gameViews = document.querySelectorAll('.game-view');
+    if (gameTabBtns.length > 0 && gameViews.length > 0) {
+        gameTabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                gameTabBtns.forEach(b => b.classList.remove('active'));
+                gameViews.forEach(v => v.classList.remove('active'));
+                
+                btn.classList.add('active');
+                const viewId = `view-game-${btn.getAttribute('data-game-tab')}`;
+                const activeView = document.getElementById(viewId);
+                if (activeView) activeView.classList.add('active');
+                
+                // Stop snake game if tab changes
+                if (btn.getAttribute('data-game-tab') !== 'snake') {
+                    stopSnakeGame();
+                } else {
+                    drawSnakeGame();
+                }
+                
+                // Stop typing game if tab changes
+                if (btn.getAttribute('data-game-tab') !== 'type') {
+                    stopTypeGame();
+                } else {
+                    initTypeGame();
+                }
+            });
+        });
+    }
+
+    // --- Cyber Snake ---
+    let snakeGameInterval = null;
+    let snake = [];
+    let snakeDir = 'right';
+    let nextSnakeDir = 'right';
+    let snakeFood = { x: 5, y: 5 };
+    let snakeScoreValue = 0;
+    let snakeHighScoreValue = parseInt(localStorage.getItem('snake_highscore') || '0', 10);
+
+    const snakeCanvas = document.getElementById('snake-canvas');
+    const snakeScoreEl = document.getElementById('snake-score');
+    const snakeHighScoreEl = document.getElementById('snake-highscore');
+    const btnSnakeStart = document.getElementById('btn-snake-start');
+    const snakeOverlay = document.getElementById('snake-overlay');
+    const snakeOverlayText = document.getElementById('snake-overlay-text');
+    const snakeSpeedSelect = document.getElementById('snake-speed');
+
+    if (snakeHighScoreEl) {
+        snakeHighScoreEl.textContent = snakeHighScoreValue;
+    }
+
+    function initSnakeGame() {
+        snake = [
+            { x: 10, y: 10 },
+            { x: 9, y: 10 },
+            { x: 8, y: 10 }
+        ];
+        snakeDir = 'right';
+        nextSnakeDir = 'right';
+        snakeScoreValue = 0;
+        if (snakeScoreEl) snakeScoreEl.textContent = '0';
+        spawnSnakeFood();
+    }
+
+    function spawnSnakeFood() {
+        let proposed;
+        let onSnake;
+        do {
+            proposed = {
+                x: Math.floor(Math.random() * 20),
+                y: Math.floor(Math.random() * 20)
+            };
+            onSnake = snake.some(part => part.x === proposed.x && part.y === proposed.y);
+        } while (onSnake);
+        snakeFood = proposed;
+    }
+
+    function startSnakeGame() {
+        initSnakeGame();
+        if (snakeOverlay) snakeOverlay.style.display = 'none';
+        
+        let speed = 80;
+        if (snakeSpeedSelect) {
+            speed = parseInt(snakeSpeedSelect.value, 10);
+        }
+
+        if (snakeGameInterval) clearInterval(snakeGameInterval);
+        snakeGameInterval = setInterval(snakeGameTick, speed);
+        playClick();
+    }
+
+    function stopSnakeGame() {
+        if (snakeGameInterval) {
+            clearInterval(snakeGameInterval);
+            snakeGameInterval = null;
+        }
+        if (snakeOverlay) {
+            snakeOverlay.style.display = 'flex';
+        }
+    }
+
+    function snakeGameTick() {
+        snakeDir = nextSnakeDir;
+        const head = { ...snake[0] };
+
+        switch (snakeDir) {
+            case 'up': head.y--; break;
+            case 'down': head.y++; break;
+            case 'left': head.x--; break;
+            case 'right': head.x++; break;
+        }
+
+        // Collision Check (Walls)
+        if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
+            endSnakeGame();
+            return;
+        }
+
+        // Collision Check (Self)
+        if (snake.some(part => part.x === head.x && part.y === head.y)) {
+            endSnakeGame();
+            return;
+        }
+
+        snake.unshift(head);
+
+        // Check if food eaten
+        if (head.x === snakeFood.x && head.y === snakeFood.y) {
+            snakeScoreValue += 10;
+            if (snakeScoreEl) snakeScoreEl.textContent = snakeScoreValue;
+            
+            if (snakeScoreValue > snakeHighScoreValue) {
+                snakeHighScoreValue = snakeScoreValue;
+                localStorage.setItem('snake_highscore', snakeHighScoreValue);
+                if (snakeHighScoreEl) snakeHighScoreEl.textContent = snakeHighScoreValue;
+            }
+            
+            spawnSnakeFood();
+            playNotificationSound('success');
+        } else {
+            snake.pop();
+        }
+
+        drawSnakeGame();
+    }
+
+    function endSnakeGame() {
+        stopSnakeGame();
+        playNotificationSound('error');
+        if (snakeOverlayText) {
+            const lang = currentLang;
+            const t = i18n[lang].games;
+            snakeOverlayText.textContent = t.snakeGameOver.replace('{score}', snakeScoreValue);
+        }
+    }
+
+    function drawSnakeGame() {
+        if (!snakeCanvas) return;
+        const ctx = snakeCanvas.getContext('2d');
+        const size = 20;
+        
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, 400, 400);
+
+        // Draw grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.015)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 20; i++) {
+            ctx.beginPath();
+            ctx.moveTo(i * size, 0);
+            ctx.lineTo(i * size, 400);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(0, i * size);
+            ctx.lineTo(400, i * size);
+            ctx.stroke();
+        }
+
+        // Theme colors matching
+        let activeColor = '#00ff66';
+        let glowColor = 'rgba(0, 255, 102, 0.4)';
+        const activeTheme = localStorage.getItem('theme') || 'green';
+        if (activeTheme === 'blue') {
+            activeColor = '#00b4d8';
+            glowColor = 'rgba(0, 180, 216, 0.4)';
+        } else if (activeTheme === 'amber') {
+            activeColor = '#ffb703';
+            glowColor = 'rgba(255, 183, 3, 0.4)';
+        } else if (activeTheme === 'red') {
+            activeColor = '#ff4d4d';
+            glowColor = 'rgba(255, 77, 77, 0.4)';
+        }
+
+        // Draw food (glowing red dot)
+        ctx.save();
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#ff4d4d';
+        ctx.fillStyle = '#ff4d4d';
+        ctx.beginPath();
+        ctx.arc(snakeFood.x * size + size / 2, snakeFood.y * size + size / 2, size / 2 - 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Draw snake segments
+        snake.forEach((part, idx) => {
+            ctx.save();
+            ctx.shadowBlur = idx === 0 ? 10 : 4;
+            ctx.shadowColor = idx === 0 ? activeColor : glowColor;
+
+            if (idx === 0) {
+                ctx.fillStyle = activeColor;
+            } else {
+                const alpha = Math.max(0.2, 1 - (idx / snake.length));
+                if (activeTheme === 'green') ctx.fillStyle = `rgba(0, 255, 102, ${alpha})`;
+                else if (activeTheme === 'blue') ctx.fillStyle = `rgba(0, 180, 216, ${alpha})`;
+                else if (activeTheme === 'amber') ctx.fillStyle = `rgba(255, 183, 3, ${alpha})`;
+                else if (activeTheme === 'red') ctx.fillStyle = `rgba(255, 77, 77, ${alpha})`;
+            }
+
+            ctx.fillRect(part.x * size + 1, part.y * size + 1, size - 2, size - 2);
+            ctx.restore();
+        });
+    }
+
+    function setSnakeDir(dir) {
+        if (dir === 'up' && snakeDir !== 'down') nextSnakeDir = 'up';
+        if (dir === 'down' && snakeDir !== 'up') nextSnakeDir = 'down';
+        if (dir === 'left' && snakeDir !== 'right') nextSnakeDir = 'left';
+        if (dir === 'right' && snakeDir !== 'left') nextSnakeDir = 'right';
+    }
+
+    document.addEventListener('keydown', (e) => {
+        const activeTab = localStorage.getItem('activeTab');
+        if (activeTab !== 'games-view') return;
+
+        const snakeTab = document.getElementById('tab-btn-snake');
+        if (!snakeTab || !snakeTab.classList.contains('active')) return;
+
+        switch (e.key) {
+            case 'ArrowUp':
+            case 'w':
+            case 'W':
+                setSnakeDir('up');
+                e.preventDefault();
+                break;
+            case 'ArrowDown':
+            case 's':
+            case 'S':
+                setSnakeDir('down');
+                e.preventDefault();
+                break;
+            case 'ArrowLeft':
+            case 'a':
+            case 'A':
+                setSnakeDir('left');
+                e.preventDefault();
+                break;
+            case 'ArrowRight':
+            case 'd':
+            case 'D':
+                setSnakeDir('right');
+                e.preventDefault();
+                break;
+        }
+    });
+
+    const dpadUp = document.getElementById('dpad-up');
+    const dpadDown = document.getElementById('dpad-down');
+    const dpadLeft = document.getElementById('dpad-left');
+    const dpadRight = document.getElementById('dpad-right');
+
+    if (dpadUp) dpadUp.addEventListener('click', () => setSnakeDir('up'));
+    if (dpadDown) dpadDown.addEventListener('click', () => setSnakeDir('down'));
+    if (dpadLeft) dpadLeft.addEventListener('click', () => setSnakeDir('left'));
+    if (dpadRight) dpadRight.addEventListener('click', () => setSnakeDir('right'));
+
+    if (btnSnakeStart) {
+        btnSnakeStart.addEventListener('click', startSnakeGame);
+    }
+
+    // --- Hacker Minesweeper ---
+    let minesRows = 10;
+    let minesCols = 10;
+    let minesCountValue = 15;
+    let minesBoard = [];
+    let minesTimerInterval = null;
+    let minesTimeElapsed = 0;
+    let minesFlagMode = false;
+    let minesGameOverState = false;
+    let minesGameWonState = false;
+    let minesFirstClick = true;
+
+    const minesBoardEl = document.getElementById('mines-board');
+    const minesCountEl = document.getElementById('mines-count');
+    const minesFlagsEl = document.getElementById('mines-flags');
+    const minesTimeEl = document.getElementById('mines-time');
+    const btnMinesReset = document.getElementById('btn-mines-reset');
+    const btnMinesMode = document.getElementById('btn-mines-mode');
+    const btnMinesModeText = document.getElementById('btn-mines-mode-text');
+
+    function initMinesGame() {
+        if (minesTimerInterval) {
+            clearInterval(minesTimerInterval);
+            minesTimerInterval = null;
+        }
+        minesTimeElapsed = 0;
+        if (minesTimeEl) minesTimeEl.textContent = '0';
+        if (minesFlagsEl) minesFlagsEl.textContent = '15';
+        if (minesCountEl) minesCountEl.textContent = '85';
+        minesFirstClick = true;
+        minesGameOverState = false;
+        minesGameWonState = false;
+        
+        minesFlagMode = false;
+        updateMinesModeButton();
+
+        minesBoard = [];
+        for (let r = 0; r < minesRows; r++) {
+            const row = [];
+            for (let c = 0; c < minesCols; c++) {
+                row.push({
+                    row: r,
+                    col: c,
+                    isMine: false,
+                    isRevealed: false,
+                    isFlagged: false,
+                    neighborMines: 0
+                });
+            }
+            minesBoard.push(row);
+        }
+
+        renderMinesBoardHTML();
+    }
+
+    function renderMinesBoardHTML() {
+        if (!minesBoardEl) return;
+        minesBoardEl.innerHTML = '';
+
+        for (let r = 0; r < minesRows; r++) {
+            for (let c = 0; c < minesCols; c++) {
+                const cellBtn = document.createElement('button');
+                cellBtn.className = 'mines-cell';
+                cellBtn.setAttribute('data-row', r);
+                cellBtn.setAttribute('data-col', c);
+                
+                cellBtn.addEventListener('click', (e) => {
+                    handleMinesCellClick(r, c);
+                });
+
+                cellBtn.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    handleMinesCellRightClick(r, c);
+                });
+
+                // Custom cursor hover binding for dynamic cells
+                cellBtn.addEventListener('mouseover', () => {
+                    const dot = document.querySelector('.cursor-dot');
+                    const outline = document.querySelector('.cursor-outline');
+                    if (dot) dot.classList.add('active');
+                    if (outline) outline.classList.add('active');
+                });
+                cellBtn.addEventListener('mouseleave', () => {
+                    const dot = document.querySelector('.cursor-dot');
+                    const outline = document.querySelector('.cursor-outline');
+                    if (dot) dot.classList.remove('active');
+                    if (outline) outline.classList.remove('active');
+                });
+
+                minesBoardEl.appendChild(cellBtn);
+            }
+        }
+    }
+
+    function generateMinesBoard(safeRow, safeCol) {
+        let minesPlaced = 0;
+        while (minesPlaced < minesCountValue) {
+            const r = Math.floor(Math.random() * minesRows);
+            const c = Math.floor(Math.random() * minesCols);
+
+            if ((r === safeRow && c === safeCol) || minesBoard[r][c].isMine) {
+                continue;
+            }
+
+            minesBoard[r][c].isMine = true;
+            minesPlaced++;
+        }
+
+        for (let r = 0; r < minesRows; r++) {
+            for (let c = 0; c < minesCols; c++) {
+                if (minesBoard[r][c].isMine) continue;
+                
+                let count = 0;
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        const nr = r + dr;
+                        const nc = c + dc;
+                        if (nr >= 0 && nr < minesRows && nc >= 0 && nc < minesCols) {
+                            if (minesBoard[nr][nc].isMine) count++;
+                        }
+                    }
+                }
+                minesBoard[r][c].neighborMines = count;
+            }
+        }
+    }
+
+    function handleMinesCellClick(r, c) {
+        if (minesGameOverState || minesGameWonState) return;
+
+        if (minesFlagMode) {
+            toggleFlag(r, c);
+        } else {
+            revealCell(r, c);
+        }
+    }
+
+    function handleMinesCellRightClick(r, c) {
+        if (minesGameOverState || minesGameWonState) return;
+        toggleFlag(r, c);
+    }
+
+    function toggleFlag(r, c) {
+        const cell = minesBoard[r][c];
+        if (cell.isRevealed) return;
+
+        cell.isFlagged = !cell.isFlagged;
+        const cellBtn = getMinesCellBtn(r, c);
+
+        if (cellBtn) {
+            if (cell.isFlagged) {
+                cellBtn.classList.add('flagged');
+                cellBtn.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+                playClick();
+            } else {
+                cellBtn.classList.remove('flagged');
+                cellBtn.innerHTML = '';
+                playClick();
+            }
+        }
+
+        const totalFlagged = minesBoard.flat().filter(cell => cell.isFlagged).length;
+        if (minesFlagsEl) {
+            minesFlagsEl.textContent = Math.max(0, minesCountValue - totalFlagged);
+        }
+    }
+
+    function revealCell(r, c) {
+        const cell = minesBoard[r][c];
+        if (cell.isRevealed || cell.isFlagged) return;
+
+        if (minesFirstClick) {
+            minesFirstClick = false;
+            generateMinesBoard(r, c);
+            startMinesTimer();
+        }
+
+        cell.isRevealed = true;
+        const cellBtn = getMinesCellBtn(r, c);
+
+        if (cellBtn) {
+            cellBtn.classList.add('revealed');
+            
+            if (cell.isMine) {
+                cellBtn.classList.add('mine');
+                cellBtn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                triggerMinesGameOver();
+                return;
+            }
+
+            if (cell.neighborMines > 0) {
+                cellBtn.textContent = cell.neighborMines;
+                cellBtn.classList.add(`count-${cell.neighborMines}`);
+            } else {
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        const nr = r + dr;
+                        const nc = c + dc;
+                        if (nr >= 0 && nr < minesRows && nc >= 0 && nc < minesCols) {
+                            revealCell(nr, nc);
+                        }
+                    }
+                }
+            }
+            playClick();
+        }
+
+        checkMinesWin();
+    }
+
+    function triggerMinesGameOver() {
+        minesGameOverState = true;
+        if (minesTimerInterval) {
+            clearInterval(minesTimerInterval);
+        }
+
+        playNotificationSound('error');
+        showHUDNotification(i18n[currentLang].games.minesGameOver, 'error');
+
+        for (let r = 0; r < minesRows; r++) {
+            for (let c = 0; c < minesCols; c++) {
+                const cell = minesBoard[r][c];
+                const cellBtn = getMinesCellBtn(r, c);
+                if (cellBtn) {
+                    if (cell.isMine) {
+                        cellBtn.classList.add('revealed', 'mine');
+                        cellBtn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                    } else if (cell.isFlagged) {
+                        cellBtn.classList.add('wrong-flag');
+                    }
+                }
+            }
+        }
+    }
+
+    function checkMinesWin() {
+        const totalSafeRevealed = minesBoard.flat().filter(cell => !cell.isMine && cell.isRevealed).length;
+        const totalSafeCells = (minesRows * minesCols) - minesCountValue;
+
+        if (minesCountEl) {
+            minesCountEl.textContent = totalSafeCells - totalSafeRevealed;
+        }
+
+        if (totalSafeRevealed === totalSafeCells) {
+            minesGameWonState = true;
+            if (minesTimerInterval) {
+                clearInterval(minesTimerInterval);
+            }
+
+            playNotificationSound('success');
+            showHUDNotification(i18n[currentLang].games.minesWin, 'success');
+
+            for (let r = 0; r < minesRows; r++) {
+                for (let c = 0; c < minesCols; c++) {
+                    const cell = minesBoard[r][c];
+                    if (cell.isMine && !cell.isFlagged) {
+                        cell.isFlagged = true;
+                        const cellBtn = getMinesCellBtn(r, c);
+                        if (cellBtn) {
+                            cellBtn.classList.add('flagged');
+                            cellBtn.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+                        }
+                    }
+                }
+            }
+            if (minesFlagsEl) minesFlagsEl.textContent = '0';
+        }
+    }
+
+    function startMinesTimer() {
+        minesTimeElapsed = 0;
+        if (minesTimeEl) minesTimeEl.textContent = '0';
+        minesTimerInterval = setInterval(() => {
+            minesTimeElapsed++;
+            if (minesTimeEl) minesTimeEl.textContent = minesTimeElapsed;
+        }, 1000);
+    }
+
+    function getMinesCellBtn(r, c) {
+        if (!minesBoardEl) return null;
+        return minesBoardEl.querySelector(`.mines-cell[data-row="${r}"][data-col="${c}"]`);
+    }
+
+    function updateMinesModeButton() {
+        if (!btnMinesModeText) return;
+        const t = i18n[currentLang].games;
+        btnMinesModeText.textContent = minesFlagMode ? t.minesModeFlag : t.minesModeReveal;
+        if (btnMinesMode) {
+            if (minesFlagMode) {
+                btnMinesMode.classList.add('flag-mode-active');
+            } else {
+                btnMinesMode.classList.remove('flag-mode-active');
+            }
+        }
+    }
+
+    if (btnMinesReset) {
+        btnMinesReset.addEventListener('click', initMinesGame);
+    }
+
+    if (btnMinesMode) {
+        btnMinesMode.addEventListener('click', () => {
+            minesFlagMode = !minesFlagMode;
+            updateMinesModeButton();
+            playClick();
+        });
+    }
+
+    // --- Defend the Firewall Typing Game ---
+    const dictCS = ['sit', 'smerovac', 'prepinac', 'brana', 'paket', 'adresa', 'uzel', 'pripojeni', 'databaze', 'heslo', 'sifrovani', 'klic', 'uzivatel', 'kabel', 'protokol', 'vlakno', 'server', 'klient', 'pamet', 'jadro', 'procesor', 'hlavicka', 'maska', 'rozsah', 'vypocet', 'analyza', 'hrozba', 'filtr', 'konzole', 'vstup', 'vystup', 'spojeni', 'trida', 'odkaz', 'chyba'];
+    const dictEN = ['network', 'router', 'switch', 'gateway', 'packet', 'address', 'node', 'connection', 'database', 'password', 'encryption', 'key', 'user', 'cable', 'protocol', 'fiber', 'server', 'client', 'memory', 'kernel', 'processor', 'header', 'mask', 'range', 'compute', 'analysis', 'threat', 'filter', 'console', 'input', 'output', 'link', 'class', 'error', 'session', 'firewall', 'security'];
+
+    let typeGameInterval = null;
+    let typeWords = [];
+    let typeScoreValue = 0;
+    let typeHighScoreValue = parseInt(localStorage.getItem('type_highscore') || '0', 10);
+    let typeIntegrity = 100;
+    let typeWordSpawnTimer = 0;
+    let typeBaseSpeed = 1.0;
+
+    const typeTerminalScreen = document.getElementById('type-terminal-screen');
+    const typeScoreEl = document.getElementById('type-score');
+    const typeHighScoreEl = document.getElementById('type-highscore');
+    const typeIntegrityFill = document.getElementById('type-integrity-fill');
+    const typeIntegrityText = document.getElementById('type-integrity-text');
+    const typeInput = document.getElementById('type-input');
+    const btnTypeStart = document.getElementById('btn-type-start');
+    const btnTypeReset = document.getElementById('btn-type-reset');
+    const typeOverlay = document.getElementById('type-overlay');
+    const typeOverlayText = document.getElementById('type-overlay-text');
+
+    if (typeHighScoreEl) {
+        typeHighScoreEl.textContent = typeHighScoreValue;
+    }
+
+    function initTypeGame() {
+        stopTypeGame();
+        typeScoreValue = 0;
+        typeIntegrity = 100;
+        typeWords = [];
+        typeWordSpawnTimer = 0;
+        typeBaseSpeed = 1.0;
+
+        if (typeScoreEl) typeScoreEl.textContent = '0';
+        if (typeIntegrityText) typeIntegrityText.textContent = '100%';
+        if (typeIntegrityFill) {
+            typeIntegrityFill.style.width = '100%';
+            typeIntegrityFill.style.backgroundColor = 'var(--accent-color)';
+        }
+        if (typeInput) {
+            typeInput.value = '';
+            typeInput.disabled = true;
+        }
+        if (typeTerminalScreen) {
+            typeTerminalScreen.innerHTML = '';
+        }
+        if (typeOverlay) {
+            typeOverlay.style.display = 'flex';
+        }
+        const t = i18n[currentLang].games;
+        if (typeOverlayText) {
+            typeOverlayText.textContent = t.typeStartMsg;
+        }
+    }
+
+    function startTypeGame() {
+        initTypeGame();
+        if (typeOverlay) typeOverlay.style.display = 'none';
+        if (typeInput) {
+            typeInput.disabled = false;
+            typeInput.focus();
+        }
+        playClick();
+
+        if (typeGameInterval) clearInterval(typeGameInterval);
+        typeGameInterval = setInterval(typeGameTick, 20);
+    }
+
+    function stopTypeGame() {
+        if (typeGameInterval) {
+            clearInterval(typeGameInterval);
+            typeGameInterval = null;
+        }
+        if (typeInput) {
+            typeInput.value = '';
+            typeInput.disabled = true;
+        }
+    }
+
+    function spawnTypeWord() {
+        const dict = currentLang === 'cs' ? dictCS : dictEN;
+        const randomWord = dict[Math.floor(Math.random() * dict.length)];
+        
+        const leftPercent = 5 + Math.random() * 75;
+
+        const wordEl = document.createElement('div');
+        wordEl.className = 'type-falling-word';
+        wordEl.textContent = randomWord;
+        wordEl.style.left = `${leftPercent}%`;
+        wordEl.style.top = '0px';
+
+        if (typeTerminalScreen) {
+            typeTerminalScreen.appendChild(wordEl);
+        }
+
+        typeWords.push({
+            word: randomWord,
+            el: wordEl,
+            top: 0,
+            left: leftPercent
+        });
+    }
+
+    function typeGameTick() {
+        typeWordSpawnTimer += 20;
+
+        const spawnRate = Math.max(800, 2000 - typeScoreValue * 15);
+        if (typeWordSpawnTimer >= spawnRate) {
+            spawnTypeWord();
+            typeWordSpawnTimer = 0;
+        }
+
+        const speed = (1.0 + (typeScoreValue / 150)) * 0.9;
+        const screenHeight = typeTerminalScreen ? typeTerminalScreen.clientHeight : 320;
+
+        for (let i = typeWords.length - 1; i >= 0; i--) {
+            const wordObj = typeWords[i];
+            wordObj.top += speed;
+            wordObj.el.style.top = `${wordObj.top}px`;
+
+            if (wordObj.top >= screenHeight - 24) {
+                wordObj.el.remove();
+                typeWords.splice(i, 1);
+
+                typeIntegrity = Math.max(0, typeIntegrity - 20);
+                updateIntegrityUI();
+                playNotificationSound('error');
+
+                if (typeIntegrity <= 0) {
+                    endTypeGame();
+                    return;
+                }
+            }
+        }
+    }
+
+    function updateIntegrityUI() {
+        if (typeIntegrityText) typeIntegrityText.textContent = `${typeIntegrity}%`;
+        if (typeIntegrityFill) {
+            typeIntegrityFill.style.width = `${typeIntegrity}%`;
+
+            if (typeIntegrity > 50) {
+                typeIntegrityFill.style.backgroundColor = 'var(--accent-color)';
+            } else if (typeIntegrity > 20) {
+                typeIntegrityFill.style.backgroundColor = '#ffb703';
+            } else {
+                typeIntegrityFill.style.backgroundColor = '#ff4d4d';
+            }
+        }
+    }
+
+    function endTypeGame() {
+        stopTypeGame();
+        if (typeOverlay) typeOverlay.style.display = 'flex';
+        if (typeOverlayText) {
+            typeOverlayText.textContent = i18n[currentLang].games.typeGameOver;
+        }
+    }
+
+    if (typeInput) {
+        typeInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim().toLowerCase();
+            
+            for (let i = 0; i < typeWords.length; i++) {
+                if (typeWords[i].word.toLowerCase() === val) {
+                    typeWords[i].el.remove();
+                    typeWords.splice(i, 1);
+
+                    e.target.value = '';
+                    typeScoreValue += 10;
+                    if (typeScoreEl) typeScoreEl.textContent = typeScoreValue;
+
+                    if (typeScoreValue > typeHighScoreValue) {
+                        typeHighScoreValue = typeScoreValue;
+                        localStorage.setItem('type_highscore', typeHighScoreValue);
+                        if (typeHighScoreEl) typeHighScoreEl.textContent = typeHighScoreValue;
+                    }
+
+                    playNotificationSound('success');
+                    break;
+                }
+            }
+        });
+    }
+
+    if (btnTypeStart) {
+        btnTypeStart.addEventListener('click', startTypeGame);
+    }
+
+    if (btnTypeReset) {
+        btnTypeReset.addEventListener('click', initTypeGame);
+    }
+
+    // Tab triggering hook
+    document.body.addEventListener('click', e => {
+        const link = e.target.closest('a');
+        if (!link) return;
+        const href = link.getAttribute('href');
+        if (href === '#games-view') {
+            setTimeout(() => {
+                drawSnakeGame();
+                initMinesGame();
+                initTypeGame();
+            }, 100);
+        }
+    });
 
     applyLanguage(currentLang);
 });
