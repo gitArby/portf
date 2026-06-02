@@ -176,7 +176,8 @@
                         <p class="reveal-stagger" style="--stagger-delay: 2">
                             Ahoj! Jsem Adam a věnuji se technologiím. Jsem čerstvý absolvent oboru Informační technologie se silným
                             technickým zázemím a hlubokým zájmem o IT, hardware a síťové technologie. Jsem proaktivní, rychle se
-                            učím novým systémům a baví mě skládání PC i konfigurace sítí. Hledám příležitost, kde uplatním své
+                            učím novým systémům a baví mě skládání PC, konfigurace sítí i tvorba s využitím AI (používám Claude a Gemini).
+                            Mimo technologie ve svém volném čase čtu mangu a jsem velkým fanouškem anime. Hledám příležitost, kde uplatním své
                             znalosti a budu se dále profesně rozvíjet.
                         </p>
                         <div class="about-meta reveal-stagger" style="--stagger-delay: 3">
@@ -216,10 +217,11 @@
                         <div class="tech-grid">
                             <div class="tech-icon"><i class="devicon-html5-plain colored"></i><span>HTML</span></div>
                             <div class="tech-icon"><i class="devicon-css3-plain colored"></i><span>CSS</span></div>
-                            <div class="tech-icon"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span>
-                            </div>
+                            <div class="tech-icon"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span></div>
+                            <div class="tech-icon"><i class="devicon-php-plain colored"></i><span id="skill-php">PHP (základy)</span></div>
                             <div class="tech-icon"><i class="devicon-python-plain colored"></i><span>Python</span></div>
                             <div class="tech-icon"><i class="fa-solid fa-database"></i><span>SQL</span></div>
+                            <div class="tech-icon"><i class="fa-solid fa-robot"></i><span id="skill-ai">AI Tvorba (Claude/Gemini)</span></div>
                         </div>
                     </div>
 
@@ -571,9 +573,13 @@
                     teprve klube na svět:</p>
                 <div class="projects-grid">
                     <div class="project-card reveal-card" style="--stagger-delay: 3">
-                        <div class="wip-badge">In progress</div>
+                        <div class="wip-badge live-badge">Live</div>
                         <h4>Funny weby pro přítelkyni</h4>
-                        <p>Pracuji na vtipných webech s love nebo detektivní tématikou.</p>
+                        <p>Dva propojené zábavné weby s detektivní a zamilovanou tématikou vytvořené pro mou přítelkyni Týnku.</p>
+                        <div class="project-links-row">
+                            <span class="project-link-hint hint-det"><a href="https://gitarby.github.io/det/" target="_blank">Detektivní web <i class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
+                            <span class="project-link-hint hint-gf"><a href="https://gitarby.github.io/gf/" target="_blank">Zamilovaný web <i class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
+                        </div>
                     </div>
                     <a href="https://scrapscrap.app" target="_blank" class="project-card link-card reveal-card" style="--stagger-delay: 4">
                         <div class="wip-badge live-badge">Live</div>
@@ -582,6 +588,36 @@
                             mechaniky.</p>
                         <span class="project-link-hint">Hrát ScrapScrap <i
                                 class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                    </a>
+                    <a href="https://gitarby.github.io/kasar-bonus-project/" target="_blank" class="project-card link-card reveal-card" style="--stagger-delay: 5">
+                        <div class="wip-badge live-badge">Live</div>
+                        <h4>Kasař</h4>
+                        <p>Open-source webová aplikace pro správu financí. Umožňuje přehledně sledovat příjmy, výdaje a plánovat rozpočet.</p>
+                        <span class="project-link-hint">Spustit Kasař <i
+                                class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                    </a>
+                    <div class="project-card reveal-card" style="--stagger-delay: 6">
+                        <div class="wip-badge">Python</div>
+                        <h4>Výherní automaty</h4>
+                        <p>Jednoduchá hra typu výherní automat vytvořená v Pythonu s využitím knihovny Pygame.</p>
+                        <details class="project-details">
+                            <summary class="details-summary">Návod ke spuštění</summary>
+                            <div class="details-content">
+                                <ol>
+                                    <li class="step-1">Stáhněte nebo klonujte repozitář z <a href="https://github.com/gitArby/mamradautomaty" target="_blank">GitHubu</a>.</li>
+                                    <li class="step-2">Rozbalte staženou složku hry.</li>
+                                    <li class="step-3">Spusťte soubor <code>gamble.exe</code>.</li>
+                                </ol>
+                                <p class="details-controls"><strong>Ovládání:</strong> ESC pro ukončení, tlačítko QUIT vpravo nahoře, kliknutí myší pro nastavení sázky a roztočení (SPIN).</p>
+                            </div>
+                        </details>
+                        <span class="project-link-hint"><a href="https://github.com/gitArby/mamradautomaty" target="_blank">Zobrazit GitHub <i class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
+                    </div>
+                </div>
+                <div class="projects-more reveal-stagger" style="--stagger-delay: 7; margin-top: 3.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                    <p class="projects-more-text" id="projects-more-text" style="margin-bottom: 0.5rem; font-weight: 300;">Všechny mé ostatní projekty a zdrojové kódy najdete na mém GitHubu.</p>
+                    <a href="https://github.com/gitArby?tab=repositories" target="_blank" class="btn" id="btn-projects-github">
+                        <i class="fa-brands fa-github"></i> Zobrazit další repozitáře
                     </a>
                 </div>
             </section>

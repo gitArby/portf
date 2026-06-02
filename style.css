@@ -1141,6 +1141,90 @@ a.project-card {
     transform: translate(3px, -3px);
 }
 
+.project-link-hint a {
+    color: inherit;
+    text-decoration: none;
+    cursor: none;
+}
+
+.project-links-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.2rem;
+}
+
+.project-links-row .project-link-hint {
+    margin-top: 0;
+}
+
+/* Project Details dropdown inside cards */
+.project-details {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 0.8rem;
+}
+
+.details-summary {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    cursor: none;
+    user-select: none;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.details-summary::before {
+    content: "▶";
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.project-details[open] .details-summary::before {
+    transform: rotate(90deg);
+}
+
+.details-summary::-webkit-details-marker {
+    display: none;
+}
+
+.details-content {
+    margin-top: 0.8rem;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.details-content ol {
+    padding-left: 1.2rem;
+    margin-bottom: 0.8rem;
+}
+
+.details-content li {
+    margin-bottom: 0.4rem;
+}
+
+.details-content code {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+}
+
+.details-controls {
+    font-size: 0.8rem;
+    margin-top: 0.6rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.05);
+    padding-top: 0.6rem;
+}
+
 /* ==========================================================================
    CONTACT SECTION
    ========================================================================== */
@@ -1599,58 +1683,6 @@ footer {
     /* Footer mobile padding */
     .site-footer {
         padding: 2rem 1.2rem 1.5rem;
-    }
-
-    .nav-toggle {
-        display: flex;
-    }
-
-    /* Nav must clip at 60px — nothing can overflow it */
-    .main-nav {
-        overflow: hidden;
-        padding: 0 1.2rem;
-    }
-    .main-nav.scrolled {
-        /* scrolled only changes border/bg, not padding on mobile */
-        padding: 0 1.2rem;
-    }
-
-    /* Hide controls from the nav bar itself on mobile */
-    /* They will appear inside the hamburger dropdown instead */
-    .nav-controls-footer {
-        display: none;
-    }
-
-    .nav-links {
-        position: absolute;
-        top: 60px; /* exactly nav height */
-        left: 0;
-        width: 100%;
-        flex-direction: column;
-        gap: 0;
-        background: rgba(8, 8, 8, 0.98);
-        backdrop-filter: blur(16px);
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.4s ease;
-        border-bottom: 1px solid rgba(0, 255, 102, 0.1);
-        z-index: 1999;
-    }
-    .nav-links.open {
-        max-height: 620px;
-    }
-    /* Show controls inside the dropdown when open */
-    .nav-links.open + .nav-controls-footer,
-    .nav-links.open ~ .nav-controls-footer {
-        display: flex;
-    }
-    .nav-links li {
-        padding: 0.9rem 1.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-    .nav-links a {
-        font-size: 0.85rem;
-        letter-spacing: 1px;
     }
 }
 
@@ -3482,13 +3514,47 @@ html[data-theme="red"] .discord-card-banner { background: linear-gradient(135deg
 
 /* Mobile modifications */
 @media (max-width: 900px) {
-    /* Style control panel docked in navigation hamburger list */
+    .nav-toggle {
+        display: flex;
+    }
+
+    /* Nav must NOT clip dropdown on mobile */
     .main-nav {
+        overflow: visible;
+        padding: 0 1.2rem;
         border-bottom-color: rgba(0, 255, 102, 0.1);
     }
     
+    .main-nav.scrolled {
+        padding: 0 1.2rem;
+    }
+
     .nav-links {
-        padding: 1.5rem 0 1rem;
+        position: absolute;
+        top: 60px; /* exactly nav height */
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(8, 8, 8, 0.98);
+        backdrop-filter: blur(16px);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+        border-bottom: 1px solid rgba(0, 255, 102, 0.1);
+        z-index: 1999;
+        padding: 0; /* no padding when closed to allow full collapse */
+    }
+    
+    .nav-links.open {
+        max-height: 620px;
+        padding: 1.5rem 0 1rem; /* padding applied only when open */
+    }
+    
+    .nav-links li {
+        padding: 0.9rem 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        width: 100%;
     }
     
     .nav-links a {
@@ -3497,6 +3563,9 @@ html[data-theme="red"] .discord-card-banner { background: linear-gradient(135deg
         gap: 0.8rem;
         padding: 0.6rem 2rem;
         color: var(--text-muted);
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
     }
     
     .nav-links a i {

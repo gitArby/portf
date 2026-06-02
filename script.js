@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             enableCustomCursor();
         });
 
-        document.querySelectorAll('a, button, .discord-badge, #mega-trigger, .topo-node').forEach(el => {
+        document.querySelectorAll('a, button, summary, .discord-badge, #mega-trigger, .topo-node').forEach(el => {
             el.addEventListener('mouseover', () => {
                 cursorDot.classList.add('active');
                 cursorOutline.classList.add('active');
@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             about: {
                 title: 'O mně',
-                text: 'Ahoj! Jsem Adam a věnuji se technologiím. Jsem čerstvý absolvent oboru Informační technologie se silným technickým zázemím a hlubokým zájmem o IT, hardware a síťové technologie. Jsem proaktivní, rychle se učím novým systémům a baví mě skládání PC i konfigurace sítí. Hledám příležitost, kde uplatním své znalosti a budu se dále profesně rozvíjet.',
+                text: 'Ahoj! Jsem Adam a věnuji se technologiím. Jsem čerstvý absolvent oboru Informační technologie se silným technickým zázemím a hlubokým zájmem o IT, hardware a síťové technologie. Jsem proaktivní, rychle se učím novým systémům a baví mě skládání PC, konfigurace sítí i tvorba s využitím AI (používám Claude a Gemini). Mimo technologie ve svém volném čase čtu mangu a jsem velkým fanouškem anime. Hledám příležitost, kde uplatním své znalosti a budu se dále profesně rozvíjet.',
                 locationLabel: 'Lokalita:',
                 locationValue: 'Liberec, Česká republika',
                 languagesLabel: 'Jazyky:',
@@ -473,7 +473,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 os: 'Správa OS',
                 support: 'IT Podpora',
                 office: 'MS Office',
-                photoshop: 'Photoshop (základy)'
+                photoshop: 'Photoshop (základy)',
+                php: 'PHP (základy)',
+                ai: 'AI Tvorba (Claude/Gemini)'
             },
             certs: {
                 title: 'Certifikace',
@@ -537,12 +539,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Projekty',
                 text: 'Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:',
                 c1t: 'Funny weby pro přítelkyni',
-                c1d: 'Pracuji na vtipných webech s love nebo detektivní tématikou.',
-                c1badge: 'Ve vývoji',
+                c1d: 'Dva propojené zábavné weby s detektivní a zamilovanou tématikou vytvořené pro mou přítelkyni Týnku.',
+                c1badge: 'Spuštěno',
+                c1hintDet: 'Detektivní web',
+                c1hintGf: 'Zamilovaný web',
                 c2t: 'ScrapScrap',
                 c2d: 'Steampunková webová hra, kterou jsem vyvinul. Obsahuje herní obchod, žebříčky a vlastní herní mechaniky.',
                 c2badge: 'Spuštěno',
-                c2hint: 'Hrát ScrapScrap'
+                c2hint: 'Hrát ScrapScrap',
+                c3t: 'Kasař',
+                c3d: 'Open-source webová aplikace pro správu financí. Umožňuje přehledně sledovat příjmy, výdaje a plánovat rozpočet.',
+                c3badge: 'Spuštěno',
+                c3hint: 'Spustit Kasař',
+                c4t: 'Výherní automaty',
+                c4d: 'Jednoduchá hra typu výherní automat vytvořená v Pythonu s využitím knihovny Pygame.',
+                c4badge: 'Python',
+                c4hint: 'Zobrazit GitHub',
+                c4summary: 'Návod ke spuštění',
+                c4step1: 'Stáhněte nebo klonujte repozitář z <a href="https://github.com/gitArby/mamradautomaty" target="_blank">GitHubu</a>.',
+                c4step2: 'Rozbalte staženou složku hry.',
+                c4step3: 'Spusťte soubor <code>gamble.exe</code>.',
+                c4controls: '<strong>Ovládání:</strong> ESC pro ukončení, tlačítko QUIT vpravo nahoře, kliknutí myší pro nastavení sázky a roztočení (SPIN).',
+                cMoreText: 'Všechny mé ostatní projekty a zdrojové kódy najdete na mém GitHubu.',
+                cMoreBtn: 'Zobrazit další repozitáře'
             },
             contact: {
                 title: 'Kontakt',
@@ -637,7 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             about: {
                 title: 'About me',
-                text: 'Hey! I\'m Adam and I\'m passionate about tech. I\'m a fresh IT graduate with a strong technical background and a deep interest in IT, computer hardware, and network technologies. I am proactive, a fast learner, and I enjoy building PCs and configuring networks. I am looking for opportunities to apply my knowledge and grow professionally.',
+                text: 'Hey! I\'m Adam and I\'m passionate about tech. I\'m a fresh IT graduate with a strong technical background and a deep interest in IT, computer hardware, and network technologies. I am proactive, a fast learner, and I enjoy building PCs, configuring networks, and creating with AI (using Claude and Gemini). Outside of tech, I enjoy reading manga and I am a big fan of anime in my free time. I am looking for opportunities to apply my knowledge and grow professionally.',
                 locationLabel: 'Location:',
                 locationValue: 'Liberec, Czech Republic',
                 languagesLabel: 'Languages:',
@@ -653,7 +672,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 os: 'OS Admin',
                 support: 'IT Support',
                 office: 'MS Office',
-                photoshop: 'Photoshop (basics)'
+                photoshop: 'Photoshop (basics)',
+                php: 'PHP (basics)',
+                ai: 'AI Creation (Claude/Gemini)'
             },
             certs: {
                 title: 'Certifications',
@@ -716,13 +737,30 @@ document.addEventListener('DOMContentLoaded', () => {
             projects: {
                 title: 'Projects',
                 text: 'Still pushing forward. Here\'s a small preview of what I\'m currently working on and what\'s coming soon:',
-                c1t: 'Funny websites for my girlfriend',
-                c1d: 'Working on fun websites with love or detective themes.',
-                c1badge: 'In progress',
+                c1t: 'Fun websites for my girlfriend',
+                c1d: 'Two interconnected fun websites with detective and love themes, created for my girlfriend Týnka.',
+                c1badge: 'Live',
+                c1hintDet: 'Detective Site',
+                c1hintGf: 'Love Site',
                 c2t: 'ScrapScrap',
                 c2d: 'A steampunk-themed web clicker game that I developed. Features an in-game shop, leaderboards, and custom game mechanics.',
                 c2badge: 'Live',
-                c2hint: 'Play ScrapScrap'
+                c2hint: 'Play ScrapScrap',
+                c3t: 'Kasař',
+                c3d: 'An open-source personal finance manager web application. Allows you to easily track income, expenses, and plan budgets.',
+                c3badge: 'Live',
+                c3hint: 'Open Kasař',
+                c4t: 'Slot Machine Game',
+                c4d: 'A simple slot machine game made using Python and Pygame.',
+                c4badge: 'Python',
+                c4hint: 'View GitHub',
+                c4summary: 'Running Instructions',
+                c4step1: 'Clone or download the project files from <a href="https://github.com/gitArby/mamradautomaty" target="_blank">GitHub</a>.',
+                c4step2: 'Extract the game folder.',
+                c4step3: 'Open the <code>gamble.exe</code> file.',
+                c4controls: '<strong>Controls:</strong> ESC to quit, QUIT button in the top-right corner to exit, mouse click to bet or spin.',
+                cMoreText: 'You can find all of my other projects and source codes on my GitHub.',
+                cMoreBtn: 'View More Repositories'
             },
             contact: {
                 title: 'Contact',
@@ -869,6 +907,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (skillOffice) skillOffice.textContent = t.skills.office;
         const skillPhotoshop = document.getElementById('skill-photoshop');
         if (skillPhotoshop) skillPhotoshop.textContent = t.skills.photoshop;
+        const skillPhp = document.getElementById('skill-php');
+        if (skillPhp) skillPhp.textContent = t.skills.php;
+        const skillAi = document.getElementById('skill-ai');
+        if (skillAi) skillAi.textContent = t.skills.ai;
 
 
         // Certificates
@@ -970,9 +1012,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const h4 = cards[0].querySelector('h4');
             const p = cards[0].querySelector('p');
             const badge = cards[0].querySelector('.wip-badge');
+            const hintDet = cards[0].querySelector('.hint-det a');
+            const hintGf = cards[0].querySelector('.hint-gf a');
             if (h4) h4.textContent = t.projects.c1t;
             if (p) p.textContent = t.projects.c1d;
             if (badge) badge.textContent = t.projects.c1badge;
+            if (hintDet) hintDet.innerHTML = `${t.projects.c1hintDet} <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
+            if (hintGf) hintGf.innerHTML = `${t.projects.c1hintGf} <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
         }
         if (cards[1]) {
             const h4 = cards[1].querySelector('h4');
@@ -984,6 +1030,42 @@ document.addEventListener('DOMContentLoaded', () => {
             if (badge) badge.textContent = t.projects.c2badge;
             if (hint) hint.innerHTML = `${t.projects.c2hint} <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
         }
+        if (cards[2]) {
+            const h4 = cards[2].querySelector('h4');
+            const p = cards[2].querySelector('p');
+            const badge = cards[2].querySelector('.wip-badge');
+            const hint = cards[2].querySelector('.project-link-hint');
+            if (h4) h4.textContent = t.projects.c3t;
+            if (p) p.textContent = t.projects.c3d;
+            if (badge) badge.textContent = t.projects.c3badge;
+            if (hint) hint.innerHTML = `${t.projects.c3hint} <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
+        }
+        if (cards[3]) {
+            const h4 = cards[3].querySelector('h4');
+            const p = cards[3].querySelector('p');
+            const badge = cards[3].querySelector('.wip-badge');
+            const hint = cards[3].querySelector('.project-link-hint a');
+            const summary = cards[3].querySelector('.details-summary');
+            const step1 = cards[3].querySelector('.step-1');
+            const step2 = cards[3].querySelector('.step-2');
+            const step3 = cards[3].querySelector('.step-3');
+            const controls = cards[3].querySelector('.details-controls');
+
+            if (h4) h4.textContent = t.projects.c4t;
+            if (p) p.textContent = t.projects.c4d;
+            if (badge) badge.textContent = t.projects.c4badge;
+            if (hint) hint.innerHTML = `${t.projects.c4hint} <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
+            if (summary) summary.textContent = t.projects.c4summary;
+            if (step1) step1.innerHTML = t.projects.c4step1;
+            if (step2) step2.innerHTML = t.projects.c4step2;
+            if (step3) step3.innerHTML = t.projects.c4step3;
+            if (controls) controls.innerHTML = t.projects.c4controls;
+        }
+
+        const projMoreText = document.getElementById('projects-more-text');
+        if (projMoreText) projMoreText.textContent = t.projects.cMoreText;
+        const projGithubBtn = document.getElementById('btn-projects-github');
+        if (projGithubBtn) projGithubBtn.innerHTML = `<i class="fa-brands fa-github"></i> ${t.projects.cMoreBtn}`;
 
         // Contact
         const contactH3 = document.querySelector('#contact h3');
@@ -1213,7 +1295,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
             skillsTitle: isCs ? 'Technické dovednosti' : 'Technical Skills',
             skillsWebTitle: isCs ? 'Vývoj & Web' : 'Development & Web',
-            skillsWebList: ['Python', 'HTML', 'CSS', 'SQL basics'],
+            skillsWebList: ['Python', 'HTML', 'CSS', 'JavaScript', 'SQL basics', isCs ? 'PHP (základy)' : 'PHP (basics)', isCs ? 'AI tvorba (Claude, Gemini)' : 'AI creation (Claude, Gemini)'],
             skillsNetTitle: isCs ? 'Počítačové sítě' : 'Computer Networks',
             skillsNetList: ['Cisco CCNA 1', 'Cisco CCNA 2', 'Cisco Packet Tracer', 'TCP/IP & DNS'],
             skillsSysTitle: isCs ? 'Hardware & OS' : 'Hardware & OS',
