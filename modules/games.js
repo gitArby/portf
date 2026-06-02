@@ -1,0 +1,790 @@
+/**
+ * Games Module
+ * Implements the Cyber Snake, Hacker Minesweeper, and Defend the Firewall typing games.
+ * Interfaces with AppState for game variables and UISelectors for DOM objects.
+ */
+import { AppState } from './state.js';
+import { UISelectors } from './selectors.js';
+import { i18n } from './translations.js';
+import { playClick, playNotificationSound, showHUDNotification } from './utils.js';
+
+// Dictionaries for the speed-typing game (Defend the Firewall)
+const dictCS = ['sit', 'smerovac', 'prepinac', 'brana', 'paket', 'adresa', 'uzel', 'pripojeni', 'databaze', 'heslo', 'sifrovani', 'klic', 'uzivatel', 'kabel', 'protokol', 'vlakno', 'server', 'klient', 'pamet', 'jadro', 'procesor', 'hlavicka', 'maska', 'rozsah', 'vypocet', 'analyza', 'hrozba', 'filtr', 'konzole', 'vstup', 'vystup', 'spojeni', 'trida', 'odkaz', 'chyba'];
+const dictEN = ['network', 'router', 'switch', 'gateway', 'packet', 'address', 'node', 'connection', 'database', 'password', 'encryption', 'key', 'user', 'cable', 'protocol', 'fiber', 'server', 'client', 'memory', 'kernel', 'processor', 'header', 'mask', 'range', 'compute', 'analysis', 'threat', 'filter', 'console', 'input', 'output', 'link', 'class', 'error', 'session', 'firewall', 'security'];
+
+// ==========================================================================
+// MINIGAMES HUB NAVIGATION & VIEW MANAGERS
+// ==========================================================================
+
+export function initGames() {
+    const gameTabBtns = UISelectors.gameTabBtns;
+    const gameViews = UISelectors.gameViews;
+    
+    if (gameTabBtns.length > 0 && gameViews.length > 0) {
+        gameTabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                gameTabBtns.forEach(b => b.classList.remove('active'));
+                gameViews.forEach(v => v.classList.remove('active'));
+                
+                btn.classList.add('active');
+                const viewId = `view-game-${btn.getAttribute('data-game-tab')}`;
+                const activeView = document.getElementById(viewId);
+                if (activeView) activeView.classList.add('active');
+                
+                // Switch loops off to prevent background performance drain
+                if (btn.getAttribute('data-game-tab') !== 'snake') {
+                    stopSnakeGame();
+                } else {
+                    drawSnakeGame();
+                }
+                
+                if (btn.getAttribute('data-game-tab') !== 'type') {
+                    stopTypeGame();
+                } else {
+                    initTypeGame();
+                }
+                playClick();
+            });
+        });
+    }
+
+    // --- Snake Keyboard Bindings ---
+    document.addEventListener('keydown', (e) => {
+        const activeTab = localStorage.getItem('activeTab');
+        if (activeTab !== 'games-view') return;
+
+        const snakeTab = UISelectors.tabSnake;
+        if (!snakeTab || !snakeTab.classList.contains('active')) return;
+
+        switch (e.key) {
+            case 'ArrowUp':
+            case 'w':
+            case 'W':
+                setSnakeDir('up');
+                e.preventDefault();
+                break;
+            case 'ArrowDown':
+            case 's':
+            case 'S':
+                setSnakeDir('down');
+                e.preventDefault();
+                break;
+            case 'ArrowLeft':
+            case 'a':
+            case 'A':
+                setSnakeDir('left');
+                e.preventDefault();
+                break;
+            case 'ArrowRight':
+            case 'd':
+            case 'D':
+                setSnakeDir('right');
+                e.preventDefault();
+                break;
+        }
+    });
+
+    // --- Snake Mobile D-Pad controls ---
+    if (UISelectors.dpadUp) UISelectors.dpadUp.addEventListener('click', () => setSnakeDir('up'));
+    if (UISelectors.dpadDown) UISelectors.dpadDown.addEventListener('click', () => setSnakeDir('down'));
+    if (UISelectors.dpadLeft) UISelectors.dpadLeft.addEventListener('click', () => setSnakeDir('left'));
+    if (UISelectors.dpadRight) UISelectors.dpadRight.addEventListener('click', () => setSnakeDir('right'));
+
+    if (UISelectors.btnSnakeStart) {
+        UISelectors.btnSnakeStart.addEventListener('click', startSnakeGame);
+    }
+
+    // --- Minesweeper Control Bindings ---
+    if (UISelectors.btnMinesReset) {
+        UISelectors.btnMinesReset.addEventListener('click', initMinesGame);
+    }
+
+    if (UISelectors.btnMinesMode) {
+        UISelectors.btnMinesMode.addEventListener('click', () => {
+            AppState.minesFlagMode = !AppState.minesFlagMode;
+            updateMinesModeButton();
+            playClick();
+        });
+    }
+
+    // --- Typing Game Input and Control Bindings ---
+    if (UISelectors.typeInput) {
+        UISelectors.typeInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim().toLowerCase();
+            
+            for (let i = 0; i < AppState.typeWords.length; i++) {
+                if (AppState.typeWords[i].word.toLowerCase() === val) {
+                    AppState.typeWords[i].el.remove();
+                    AppState.typeWords.splice(i, 1);
+
+                    e.target.value = '';
+                    AppState.typeScoreValue += 10;
+                    if (UISelectors.typeScoreEl) UISelectors.typeScoreEl.textContent = AppState.typeScoreValue;
+
+                    if (AppState.typeScoreValue > AppState.typeHighScoreValue) {
+                        AppState.typeHighScoreValue = AppState.typeScoreValue;
+                        localStorage.setItem('type_highscore', AppState.typeHighScoreValue);
+                        if (UISelectors.typeHighScoreEl) UISelectors.typeHighScoreEl.textContent = AppState.typeHighScoreValue;
+                    }
+
+                    playNotificationSound('success');
+                    break;
+                }
+            }
+        });
+    }
+
+    if (UISelectors.btnTypeStart) {
+        UISelectors.btnTypeStart.addEventListener('click', startTypeGame);
+    }
+
+    if (UISelectors.btnTypeReset) {
+        UISelectors.btnTypeReset.addEventListener('click', initTypeGame);
+    }
+
+    // Global reset hooks when navigation switches to minigames tab
+    document.body.addEventListener('click', e => {
+        const link = e.target.closest('a');
+        if (!link) return;
+        const href = link.getAttribute('href');
+        if (href === '#games-view') {
+            setTimeout(() => {
+                drawSnakeGame();
+                initMinesGame();
+                initTypeGame();
+            }, 100);
+        }
+    });
+
+    // Run high scores rendering checks on load
+    if (UISelectors.snakeHighScoreEl) {
+        UISelectors.snakeHighScoreEl.textContent = AppState.snakeHighScoreValue;
+    }
+    if (UISelectors.typeHighScoreEl) {
+        UISelectors.typeHighScoreEl.textContent = AppState.typeHighScoreValue;
+    }
+}
+
+// ==========================================================================
+// CYBER SNAKE GAME MECHANICS
+// ==========================================================================
+
+function initSnakeGame() {
+    AppState.snake = [
+        { x: 10, y: 10 },
+        { x: 9, y: 10 },
+        { x: 8, y: 10 }
+    ];
+    AppState.snakeDir = 'right';
+    AppState.nextSnakeDir = 'right';
+    AppState.snakeScoreValue = 0;
+    if (UISelectors.snakeScoreEl) UISelectors.snakeScoreEl.textContent = '0';
+    spawnSnakeFood();
+}
+
+function spawnSnakeFood() {
+    let proposed;
+    let onSnake;
+    do {
+        proposed = {
+            x: Math.floor(Math.random() * 20),
+            y: Math.floor(Math.random() * 20)
+        };
+        onSnake = AppState.snake.some(part => part.x === proposed.x && part.y === proposed.y);
+    } while (onSnake);
+    AppState.snakeFood = proposed;
+}
+
+function startSnakeGame() {
+    initSnakeGame();
+    if (UISelectors.snakeOverlay) UISelectors.snakeOverlay.style.display = 'none';
+    
+    let speed = 80;
+    if (UISelectors.snakeSpeedSelect) {
+        speed = parseInt(UISelectors.snakeSpeedSelect.value, 10);
+    }
+
+    if (AppState.snakeGameInterval) clearInterval(AppState.snakeGameInterval);
+    AppState.snakeGameInterval = setInterval(snakeGameTick, speed);
+    playClick();
+}
+
+function stopSnakeGame() {
+    if (AppState.snakeGameInterval) {
+        clearInterval(AppState.snakeGameInterval);
+        AppState.snakeGameInterval = null;
+    }
+    if (UISelectors.snakeOverlay) {
+        UISelectors.snakeOverlay.style.display = 'flex';
+    }
+}
+
+function snakeGameTick() {
+    AppState.snakeDir = AppState.nextSnakeDir;
+    const head = { ...AppState.snake[0] };
+
+    switch (AppState.snakeDir) {
+        case 'up': head.y--; break;
+        case 'down': head.y++; break;
+        case 'left': head.x--; break;
+        case 'right': head.x++; break;
+    }
+
+    // Grid bounds collision check
+    if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
+        endSnakeGame();
+        return;
+    }
+
+    // Self-intersection check
+    if (AppState.snake.some(part => part.x === head.x && part.y === head.y)) {
+        endSnakeGame();
+        return;
+    }
+
+    AppState.snake.unshift(head);
+
+    // Food consumption verification
+    if (head.x === AppState.snakeFood.x && head.y === AppState.snakeFood.y) {
+        AppState.snakeScoreValue += 10;
+        if (UISelectors.snakeScoreEl) UISelectors.snakeScoreEl.textContent = AppState.snakeScoreValue;
+        
+        if (AppState.snakeScoreValue > AppState.snakeHighScoreValue) {
+            AppState.snakeHighScoreValue = AppState.snakeScoreValue;
+            localStorage.setItem('snake_highscore', AppState.snakeHighScoreValue);
+            if (UISelectors.snakeHighScoreEl) UISelectors.snakeHighScoreEl.textContent = AppState.snakeHighScoreValue;
+        }
+        
+        spawnSnakeFood();
+        playNotificationSound('success');
+    } else {
+        AppState.snake.pop();
+    }
+
+    drawSnakeGame();
+}
+
+function endSnakeGame() {
+    stopSnakeGame();
+    playNotificationSound('error');
+    if (UISelectors.snakeOverlayText) {
+        const lang = AppState.currentLang;
+        const t = i18n[lang].games;
+        UISelectors.snakeOverlayText.textContent = t.snakeGameOver.replace('{score}', AppState.snakeScoreValue);
+    }
+}
+
+function drawSnakeGame() {
+    const canvas = UISelectors.snakeCanvas;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const size = 20;
+    
+    ctx.fillStyle = '#050505';
+    ctx.fillRect(0, 0, 400, 400);
+
+    // Canvas matrix-grid render
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.015)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 20; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * size, 0);
+        ctx.lineTo(i * size, 400);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, i * size);
+        ctx.lineTo(400, i * size);
+        ctx.stroke();
+    }
+
+    // Resolving theme glow colors
+    let activeColor = '#00ff66';
+    let glowColor = 'rgba(0, 255, 102, 0.4)';
+    const activeTheme = AppState.activeTheme;
+    
+    if (activeTheme === 'blue') {
+        activeColor = '#00b4d8';
+        glowColor = 'rgba(0, 180, 216, 0.4)';
+    } else if (activeTheme === 'amber') {
+        activeColor = '#ffb703';
+        glowColor = 'rgba(255, 183, 3, 0.4)';
+    } else if (activeTheme === 'red') {
+        activeColor = '#ff4d4d';
+        glowColor = 'rgba(255, 77, 77, 0.4)';
+    }
+
+    // Draw glowing red node food
+    ctx.save();
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = '#ff4d4d';
+    ctx.fillStyle = '#ff4d4d';
+    ctx.beginPath();
+    ctx.arc(AppState.snakeFood.x * size + size / 2, AppState.snakeFood.y * size + size / 2, size / 2 - 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Render snake segments
+    AppState.snake.forEach((part, idx) => {
+        ctx.save();
+        ctx.shadowBlur = idx === 0 ? 10 : 4;
+        ctx.shadowColor = idx === 0 ? activeColor : glowColor;
+
+        if (idx === 0) {
+            ctx.fillStyle = activeColor;
+        } else {
+            const alpha = Math.max(0.2, 1 - (idx / AppState.snake.length));
+            if (activeTheme === 'green') ctx.fillStyle = `rgba(0, 255, 102, ${alpha})`;
+            else if (activeTheme === 'blue') ctx.fillStyle = `rgba(0, 180, 216, ${alpha})`;
+            else if (activeTheme === 'amber') ctx.fillStyle = `rgba(255, 183, 3, ${alpha})`;
+            else if (activeTheme === 'red') ctx.fillStyle = `rgba(255, 77, 77, ${alpha})`;
+        }
+
+        ctx.fillRect(part.x * size + 1, part.y * size + 1, size - 2, size - 2);
+        ctx.restore();
+    });
+}
+
+function setSnakeDir(dir) {
+    if (dir === 'up' && AppState.snakeDir !== 'down') AppState.nextSnakeDir = 'up';
+    if (dir === 'down' && AppState.snakeDir !== 'up') AppState.nextSnakeDir = 'down';
+    if (dir === 'left' && AppState.snakeDir !== 'right') AppState.nextSnakeDir = 'left';
+    if (dir === 'right' && AppState.snakeDir !== 'left') AppState.nextSnakeDir = 'right';
+}
+
+// ==========================================================================
+// HACKER MINESWEEPER GAME MECHANICS
+// ==========================================================================
+
+export function initMinesGame() {
+    if (AppState.minesTimerInterval) {
+        clearInterval(AppState.minesTimerInterval);
+        AppState.minesTimerInterval = null;
+    }
+    AppState.minesTimeElapsed = 0;
+    if (UISelectors.minesTimeEl) UISelectors.minesTimeEl.textContent = '0';
+    if (UISelectors.minesFlagsEl) UISelectors.minesFlagsEl.textContent = '15';
+    if (UISelectors.minesCountEl) UISelectors.minesCountEl.textContent = '85';
+    AppState.minesFirstClick = true;
+    AppState.minesGameOverState = false;
+    AppState.minesGameWonState = false;
+    
+    AppState.minesFlagMode = false;
+    updateMinesModeButton();
+
+    AppState.minesBoard = [];
+    for (let r = 0; r < AppState.minesRows; r++) {
+        const row = [];
+        for (let c = 0; c < AppState.minesCols; c++) {
+            row.push({
+                row: r,
+                col: c,
+                isMine: false,
+                isRevealed: false,
+                isFlagged: false,
+                neighborMines: 0
+            });
+        }
+        AppState.minesBoard.push(row);
+    }
+
+    renderMinesBoardHTML();
+}
+
+function renderMinesBoardHTML() {
+    const boardEl = UISelectors.minesBoardEl;
+    if (!boardEl) return;
+    boardEl.innerHTML = '';
+
+    for (let r = 0; r < AppState.minesRows; r++) {
+        for (let c = 0; c < AppState.minesCols; c++) {
+            const cellBtn = document.createElement('button');
+            cellBtn.className = 'mines-cell';
+            cellBtn.setAttribute('data-row', r);
+            cellBtn.setAttribute('data-col', c);
+            
+            cellBtn.addEventListener('click', () => {
+                handleMinesCellClick(r, c);
+            });
+
+            cellBtn.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                handleMinesCellRightClick(r, c);
+            });
+
+            // Prevent memory leaks of cursor hover indicators by referencing global selectors
+            cellBtn.addEventListener('mouseover', () => {
+                const dot = UISelectors.cursorDot;
+                const outline = UISelectors.cursorOutline;
+                if (dot) dot.classList.add('active');
+                if (outline) outline.classList.add('active');
+            });
+            cellBtn.addEventListener('mouseleave', () => {
+                const dot = UISelectors.cursorDot;
+                const outline = UISelectors.cursorOutline;
+                if (dot) dot.classList.remove('active');
+                if (outline) outline.classList.remove('active');
+            });
+
+            boardEl.appendChild(cellBtn);
+        }
+    }
+}
+
+function generateMinesBoard(safeRow, safeCol) {
+    let minesPlaced = 0;
+    while (minesPlaced < AppState.minesCountValue) {
+        const r = Math.floor(Math.random() * AppState.minesRows);
+        const c = Math.floor(Math.random() * AppState.minesCols);
+
+        // Safe zone on first click prevents instant failure
+        if ((r === safeRow && c === safeCol) || AppState.minesBoard[r][c].isMine) {
+            continue;
+        }
+
+        AppState.minesBoard[r][c].isMine = true;
+        minesPlaced++;
+    }
+
+    for (let r = 0; r < AppState.minesRows; r++) {
+        for (let c = 0; c < AppState.minesCols; c++) {
+            if (AppState.minesBoard[r][c].isMine) continue;
+            
+            let count = 0;
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    const nr = r + dr;
+                    const nc = c + dc;
+                    if (nr >= 0 && nr < AppState.minesRows && nc >= 0 && nc < AppState.minesCols) {
+                        if (AppState.minesBoard[nr][nc].isMine) count++;
+                    }
+                }
+            }
+            AppState.minesBoard[r][c].neighborMines = count;
+        }
+    }
+}
+
+function handleMinesCellClick(r, c) {
+    if (AppState.minesGameOverState || AppState.minesGameWonState) return;
+
+    if (AppState.minesFlagMode) {
+        toggleFlag(r, c);
+    } else {
+        revealCell(r, c);
+    }
+}
+
+function handleMinesCellRightClick(r, c) {
+    if (AppState.minesGameOverState || AppState.minesGameWonState) return;
+    toggleFlag(r, c);
+}
+
+function toggleFlag(r, c) {
+    const cell = AppState.minesBoard[r][c];
+    if (cell.isRevealed) return;
+
+    cell.isFlagged = !cell.isFlagged;
+    const cellBtn = getMinesCellBtn(r, c);
+
+    if (cellBtn) {
+        if (cell.isFlagged) {
+            cellBtn.classList.add('flagged');
+            cellBtn.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+            playClick();
+        } else {
+            cellBtn.classList.remove('flagged');
+            cellBtn.innerHTML = '';
+            playClick();
+        }
+    }
+
+    const totalFlagged = AppState.minesBoard.flat().filter(cell => cell.isFlagged).length;
+    if (UISelectors.minesFlagsEl) {
+        UISelectors.minesFlagsEl.textContent = Math.max(0, AppState.minesCountValue - totalFlagged);
+    }
+}
+
+function revealCell(r, c) {
+    const cell = AppState.minesBoard[r][c];
+    if (cell.isRevealed || cell.isFlagged) return;
+
+    if (AppState.minesFirstClick) {
+        AppState.minesFirstClick = false;
+        generateMinesBoard(r, c);
+        startMinesTimer();
+    }
+
+    cell.isRevealed = true;
+    const cellBtn = getMinesCellBtn(r, c);
+
+    if (cellBtn) {
+        cellBtn.classList.add('revealed');
+        
+        if (cell.isMine) {
+            cellBtn.classList.add('mine');
+            cellBtn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            triggerMinesGameOver();
+            return;
+        }
+
+        if (cell.neighborMines > 0) {
+            cellBtn.textContent = cell.neighborMines;
+            cellBtn.classList.add(`count-${cell.neighborMines}`);
+        } else {
+            // Flood-fill logic on empty cell hit
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    const nr = r + dr;
+                    const nc = c + dc;
+                    if (nr >= 0 && nr < AppState.minesRows && nc >= 0 && nc < AppState.minesCols) {
+                        revealCell(nr, nc);
+                    }
+                }
+            }
+        }
+        playClick();
+    }
+
+    checkMinesWin();
+}
+
+function triggerMinesGameOver() {
+    AppState.minesGameOverState = true;
+    if (AppState.minesTimerInterval) {
+        clearInterval(AppState.minesTimerInterval);
+    }
+
+    playNotificationSound('error');
+    showHUDNotification(i18n[AppState.currentLang].games.minesGameOver, 'error');
+
+    for (let r = 0; r < AppState.minesRows; r++) {
+        for (let c = 0; c < AppState.minesCols; c++) {
+            const cell = AppState.minesBoard[r][c];
+            const cellBtn = getMinesCellBtn(r, c);
+            if (cellBtn) {
+                if (cell.isMine) {
+                    cellBtn.classList.add('revealed', 'mine');
+                    cellBtn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                } else if (cell.isFlagged) {
+                    cellBtn.classList.add('wrong-flag');
+                }
+            }
+        }
+    }
+}
+
+function checkMinesWin() {
+    const totalSafeRevealed = AppState.minesBoard.flat().filter(cell => !cell.isMine && cell.isRevealed).length;
+    const totalSafeCells = (AppState.minesRows * AppState.minesCols) - AppState.minesCountValue;
+
+    if (UISelectors.minesCountEl) {
+        UISelectors.minesCountEl.textContent = totalSafeCells - totalSafeRevealed;
+    }
+
+    if (totalSafeRevealed === totalSafeCells) {
+        AppState.minesGameWonState = true;
+        if (AppState.minesTimerInterval) {
+            clearInterval(AppState.minesTimerInterval);
+        }
+
+        playNotificationSound('success');
+        showHUDNotification(i18n[AppState.currentLang].games.minesWin, 'success');
+
+        for (let r = 0; r < AppState.minesRows; r++) {
+            for (let c = 0; c < AppState.minesCols; c++) {
+                const cell = AppState.minesBoard[r][c];
+                if (cell.isMine && !cell.isFlagged) {
+                    cell.isFlagged = true;
+                    const cellBtn = getMinesCellBtn(r, c);
+                    if (cellBtn) {
+                        cellBtn.classList.add('flagged');
+                        cellBtn.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+                    }
+                }
+            }
+        }
+        if (UISelectors.minesFlagsEl) UISelectors.minesFlagsEl.textContent = '0';
+    }
+}
+
+function startMinesTimer() {
+    AppState.minesTimeElapsed = 0;
+    if (UISelectors.minesTimeEl) UISelectors.minesTimeEl.textContent = '0';
+    AppState.minesTimerInterval = setInterval(() => {
+        AppState.minesTimeElapsed++;
+        if (UISelectors.minesTimeEl) UISelectors.minesTimeEl.textContent = AppState.minesTimeElapsed;
+    }, 1000);
+}
+
+function getMinesCellBtn(r, c) {
+    const boardEl = UISelectors.minesBoardEl;
+    if (!boardEl) return null;
+    return boardEl.querySelector(`.mines-cell[data-row="${r}"][data-col="${c}"]`);
+}
+
+function updateMinesModeButton() {
+    const btnModeText = UISelectors.btnMinesModeText;
+    if (!btnModeText) return;
+    const t = i18n[AppState.currentLang].games;
+    btnModeText.textContent = AppState.minesFlagMode ? t.minesModeFlag : t.minesModeReveal;
+    const btnMinesMode = UISelectors.btnMinesMode;
+    if (btnMinesMode) {
+        if (AppState.minesFlagMode) {
+            btnMinesMode.classList.add('flag-mode-active');
+        } else {
+            btnMinesMode.classList.remove('flag-mode-active');
+        }
+    }
+}
+
+// ==========================================================================
+// DEFEND THE FIREWALL SPEED TYPING MECHANICS
+// ==========================================================================
+
+export function initTypeGame() {
+    stopTypeGame();
+    AppState.typeScoreValue = 0;
+    AppState.typeIntegrity = 100;
+    AppState.typeWords = [];
+    AppState.typeWordSpawnTimer = 0;
+    AppState.typeBaseSpeed = 1.0;
+
+    if (UISelectors.typeScoreEl) UISelectors.typeScoreEl.textContent = '0';
+    if (UISelectors.typeIntegrityText) UISelectors.typeIntegrityText.textContent = '100%';
+    if (UISelectors.typeIntegrityFill) {
+        UISelectors.typeIntegrityFill.style.width = '100%';
+        UISelectors.typeIntegrityFill.style.backgroundColor = 'var(--accent-color)';
+    }
+    if (UISelectors.typeInput) {
+        UISelectors.typeInput.value = '';
+        UISelectors.typeInput.disabled = true;
+    }
+    if (UISelectors.typeTerminalScreen) {
+        UISelectors.typeTerminalScreen.innerHTML = '';
+    }
+    if (UISelectors.typeOverlay) {
+        UISelectors.typeOverlay.style.display = 'flex';
+    }
+    const t = i18n[AppState.currentLang].games;
+    if (UISelectors.typeOverlayText) {
+        UISelectors.typeOverlayText.textContent = t.typeStartMsg;
+    }
+}
+
+function startTypeGame() {
+    initTypeGame();
+    if (UISelectors.typeOverlay) UISelectors.typeOverlay.style.display = 'none';
+    if (UISelectors.typeInput) {
+        UISelectors.typeInput.disabled = false;
+        UISelectors.typeInput.focus();
+    }
+    playClick();
+
+    if (AppState.typeGameInterval) clearInterval(AppState.typeGameInterval);
+    AppState.typeGameInterval = setInterval(typeGameTick, 20);
+}
+
+function stopTypeGame() {
+    if (AppState.typeGameInterval) {
+        clearInterval(AppState.typeGameInterval);
+        AppState.typeGameInterval = null;
+    }
+    if (UISelectors.typeInput) {
+        UISelectors.typeInput.value = '';
+        UISelectors.typeInput.disabled = true;
+    }
+}
+
+function spawnTypeWord() {
+    const dict = AppState.currentLang === 'cs' ? dictCS : dictEN;
+    const randomWord = dict[Math.floor(Math.random() * dict.length)];
+    
+    // Spawns randomly between 5% and 80% screen width to stay readable
+    const leftPercent = 5 + Math.random() * 75;
+
+    const wordEl = document.createElement('div');
+    wordEl.className = 'type-falling-word';
+    wordEl.textContent = randomWord;
+    wordEl.style.left = `${leftPercent}%`;
+    wordEl.style.top = '0px';
+
+    if (UISelectors.typeTerminalScreen) {
+        UISelectors.typeTerminalScreen.appendChild(wordEl);
+    }
+
+    AppState.typeWords.push({
+        word: randomWord,
+        el: wordEl,
+        top: 0,
+        left: leftPercent
+    });
+}
+
+function typeGameTick() {
+    AppState.typeWordSpawnTimer += 20;
+
+    // Word spawn rate accelerates as user score increases
+    const spawnRate = Math.max(800, 2000 - AppState.typeScoreValue * 15);
+    if (AppState.typeWordSpawnTimer >= spawnRate) {
+        spawnTypeWord();
+        AppState.typeWordSpawnTimer = 0;
+    }
+
+    // Speed increases slowly based on current score
+    const speed = (1.0 + (AppState.typeScoreValue / 150)) * 0.9;
+    const screenHeight = UISelectors.typeTerminalScreen ? UISelectors.typeTerminalScreen.clientHeight : 320;
+
+    for (let i = AppState.typeWords.length - 1; i >= 0; i--) {
+        const wordObj = AppState.typeWords[i];
+        wordObj.top += speed;
+        wordObj.el.style.top = `${wordObj.top}px`;
+
+        // If a word touches the bottom, integrity breaches
+        if (wordObj.top >= screenHeight - 24) {
+            wordObj.el.remove();
+            AppState.typeWords.splice(i, 1);
+
+            AppState.typeIntegrity = Math.max(0, AppState.typeIntegrity - 20);
+            updateIntegrityUI();
+            playNotificationSound('error');
+
+            if (AppState.typeIntegrity <= 0) {
+                endTypeGame();
+                return;
+            }
+        }
+    }
+}
+
+function updateIntegrityUI() {
+    const textEl = UISelectors.typeIntegrityText;
+    const fillEl = UISelectors.typeIntegrityFill;
+    
+    if (textEl) textEl.textContent = `${AppState.typeIntegrity}%`;
+    if (fillEl) {
+        fillEl.style.width = `${AppState.typeIntegrity}%`;
+
+        // Change bar colors dynamically based on severity
+        if (AppState.typeIntegrity > 50) {
+            fillEl.style.backgroundColor = 'var(--accent-color)';
+        } else if (AppState.typeIntegrity > 20) {
+            fillEl.style.backgroundColor = '#ffb703';
+        } else {
+            fillEl.style.backgroundColor = '#ff4d4d';
+        }
+    }
+}
+
+function endTypeGame() {
+    stopTypeGame();
+    if (UISelectors.typeOverlay) UISelectors.typeOverlay.style.display = 'flex';
+    if (UISelectors.typeOverlayText) {
+        UISelectors.typeOverlayText.textContent = i18n[AppState.currentLang].games.typeGameOver;
+    }
+}
+
+// React to global language changes by updating labels in minesweeper
+document.addEventListener('langchanged', () => {
+    updateMinesModeButton();
+});
