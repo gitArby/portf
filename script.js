@@ -12,6 +12,9 @@ import { initTools } from './modules/tools.js';
 import { initGames } from './modules/games.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Funny message for curious devs pressing F12
+    console.log('%c Nesahat a nekoukat :D ', 'color: #00ff66; font-size: 30px; font-weight: bold; text-shadow: 2px 2px 0 #000; background: #1a1a1a; padding: 10px; border-radius: 5px; border: 2px solid #00ff66;');
+
     // --- Initial Config & Boot Setup ---
     
     // Add glitch-hover class to all h3 headers for retro cybersecurity aesthetic

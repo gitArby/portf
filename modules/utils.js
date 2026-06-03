@@ -229,7 +229,7 @@ export function applyLanguage(lang) {
     if (catTitles[1]) catTitles[1].textContent = t.skills.catNet;
     if (catTitles[2]) catTitles[2].textContent = t.skills.catSys;
 
-    const ids = ['diag', 'os', 'support', 'office', 'photoshop', 'php', 'ai', 'jellyfin'];
+    const ids = ['diag', 'os', 'support', 'office', 'photoshop', 'php', 'ai', 'jellyfin', 'oop', 'graphs', 'pcbs', 'apache', 'pma'];
     ids.forEach(id => {
         const el = document.getElementById(`skill-${id}`);
         if (el && t.skills[id]) el.textContent = t.skills[id];
@@ -257,6 +257,22 @@ export function applyLanguage(lang) {
         if (h4) h4.textContent = t.certs.ccna2.title;
         if (p) p.textContent = t.certs.ccna2.desc;
         if (status) status.innerHTML = `<i class="fa-solid fa-check-double"></i> ${t.certs.status}`;
+    }
+    if (certCards[2]) {
+        const h4 = certCards[2].querySelector('.cert-name');
+        const p = certCards[2].querySelector('.cert-desc');
+        const status = certCards[2].querySelector('.status-label');
+        if (h4) h4.textContent = t.certs.sololearn.title;
+        if (p) p.textContent = t.certs.sololearn.desc;
+        if (status) status.innerHTML = `<i class="fa-solid fa-check-double"></i> ${t.certs.status}`;
+    }
+    if (certCards[3]) {
+        const h4 = certCards[3].querySelector('.cert-name');
+        const p = certCards[3].querySelector('.cert-desc');
+        const status = certCards[3].querySelector('.status-label');
+        if (h4) h4.textContent = t.certs.lol.title;
+        if (p) p.textContent = t.certs.lol.desc;
+        if (status) status.innerHTML = `<i class="fa-solid fa-crown"></i> ${t.certs.lol.status}`;
     }
 
     // Timeline/Experience
@@ -351,10 +367,22 @@ export function applyLanguage(lang) {
         if (badge) badge.textContent = t.projects.c4badge;
         if (hint) hint.innerHTML = `${t.projects.c4hint} <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
         if (summary) summary.textContent = t.projects.c4summary;
-        if (step1) step1.innerHTML = t.projects.c4step1;
-        if (step2) step2.innerHTML = t.projects.c4step2;
-        if (step3) step3.innerHTML = t.projects.c4step3;
+        if (step1) step1.innerHTML = `${t.projects.c4step1} <a href="https://github.com/gitArby/mamradautomaty" target="_blank">GitHubu</a>.`;
+        if (step2) step2.textContent = t.projects.c4step2;
+        if (step3) step3.innerHTML = `${t.projects.c4step3} <code>gamble.exe</code>.`;
         if (controls) controls.innerHTML = t.projects.c4controls;
+    }
+    if (cards[4]) {
+        const h4 = cards[4].querySelector('h4');
+        const p = cards[4].querySelector('p');
+        if (h4) h4.textContent = t.projects.c5t;
+        if (p) p.textContent = t.projects.c5d;
+    }
+    if (cards[5]) {
+        const h4 = cards[5].querySelector('h4');
+        const p = cards[5].querySelector('p');
+        if (h4) h4.textContent = t.projects.c6t;
+        if (p) p.textContent = t.projects.c6d;
     }
 
     const projMoreText = document.getElementById('projects-more-text');
@@ -499,8 +527,8 @@ export function generateCV(lang) {
         
         profileTitle: isCs ? 'Osobní profil' : 'Professional Profile',
         profileText: isCs 
-            ? 'Čerstvý absolvent oboru Informační technologie se silným technickým zázemím a zájmem o IT, hardware a síťové technologie. Jsem proaktivní, rychle se učím novým systémům a baví mě práce s technologiemi. Hledám příležitost, kde uplatním své znalosti a budu se dále profesně rozvíjet.'
-            : 'Fresh IT graduate with a strong technical background and a deep interest in IT, computer hardware, and network technologies. I am proactive, a fast learner, and I enjoy working with technology. Seeking an opportunity to apply my knowledge and grow professionally.',
+            ? 'Čerstvý absolvent oboru Informační technologie se silným technickým zázemím a zájmem o IT, hardware a síťové technologie. Zvládám i manuální práci a nebráním se pozicím mimo můj obor. Jsem velmi flexibilní, umím pracovat v týmu a po zaučení se dokážu rychle adaptovat na jakoukoliv činnost. Hledám příležitost, kde uplatním své znalosti a budu se dále profesně rozvíjet.'
+            : 'Fresh IT graduate with a strong technical background and a deep interest in IT, computer hardware, and network technologies. I am also capable of manual labor and open to positions outside my field. I am highly flexible, a strong team player, and can quickly adapt to new tasks once explained. Seeking an opportunity to apply my skills and grow professionally.',
             
         educationTitle: isCs ? 'Vzdělání' : 'Education',
         schoolName: 'Střední průmyslová škola a Střední odborná škola, Varnsdorf',
@@ -523,7 +551,7 @@ export function generateCV(lang) {
             
         skillsTitle: isCs ? 'Technické dovednosti' : 'Technical Skills',
         skillsWebTitle: isCs ? 'Vývoj & Web' : 'Development & Web',
-        skillsWebList: ['Python', 'HTML', 'CSS', 'JavaScript', 'SQL basics', isCs ? 'PHP (základy)' : 'PHP (basics)', isCs ? 'AI tvorba (Claude, Gemini)' : 'AI creation (Claude, Gemini)'],
+        skillsWebList: ['Python', 'HTML', 'CSS', 'SASS', 'JavaScript', 'Django', 'SQL basics', isCs ? 'OOP & Návrhové vzory' : 'OOP & Design Patterns', isCs ? 'Teorie grafů' : 'Graph Theory', isCs ? 'PHP (základy)' : 'PHP (basics)', 'Apache (XAMPP)', 'phpMyAdmin', isCs ? 'AI tvorba (Claude, Gemini)' : 'AI creation (Claude, Gemini)'],
         skillsNetTitle: isCs ? 'Počítačové sítě' : 'Computer Networks',
         skillsNetList: ['Cisco CCNA 1', 'Cisco CCNA 2', 'Cisco Packet Tracer', 'TCP/IP & DNS'],
         skillsSysTitle: isCs ? 'Hardware & OS' : 'Hardware & OS',
@@ -533,7 +561,8 @@ export function generateCV(lang) {
             isCs ? 'IT podpora' : 'IT Support',
             isCs ? 'Microsoft Office' : 'MS Office',
             isCs ? 'Photoshop (základy)' : 'Photoshop (basics)',
-            'Git & GitHub'
+            'Git & GitHub',
+            isCs ? '100h v PC Building Simulatoru 1 & 2' : '100h in PC Building Simulator 1 & 2'
         ],
         
         certsTitle: isCs ? 'Certifikace' : 'Certifications',
@@ -551,6 +580,20 @@ export function generateCV(lang) {
                 desc: isCs
                     ? 'Směrovací protokoly (OSPF), konfigurace VLAN, redundantní sítě (STP/EtherChannel), bezpečnost sítě a základy WLAN.'
                     : 'Routing protocols (OSPF), VLANs, redundant networks (STP/EtherChannel), network security, and WLAN essentials.'
+            },
+            {
+                name: isCs ? 'Certifikáty ze všech zmíněných jazyků' : 'Certificates in all mentioned languages',
+                issuer: 'SoloLearn',
+                desc: isCs 
+                    ? 'Úspěšné absolvování kurzů a získání certifikátů pro všechny programovací jazyky uvedené v sekci dovedností.'
+                    : 'Successfully completed courses and obtained certificates for all programming languages listed in the skills section.'
+            },
+            {
+                name: isCs ? '1V9 L9 Mašina (Not Low Elo)' : '1V9 L9 Machine (Not Low Elo)',
+                issuer: 'League of Legends',
+                desc: isCs 
+                    ? 'Oficiální potvrzení, že jsem 1v9 L9 mašina, dokážu vyhrát hru i se zavázanýma očima a rozhodně nepatřím do low elo.'
+                    : 'Official confirmation that I am a 1v9 L9 machine, can win the game blindfolded, and definitely do not belong in low elo.'
             }
         ],
         

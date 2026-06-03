@@ -14,7 +14,7 @@ export const i18n = {
         },
         about: {
             title: 'O mně',
-            text: 'Ahoj! Jsem Adam a věnuji se technologiím. Jsem čerstvý absolvent oboru Informační technologie se silným technickým zázemím a hlubokým zájmem o IT, hardware a síťové technologie. Jsem proaktivní, rychle se učím novým systémům a baví mě skládání PC, konfigurace sítí i tvorba s využitím AI (používám Claude a Gemini). Mimo technologie ve svém volném čase čtu mangu a jsem velkým fanouškem anime. Hledám příležitost, kde uplatním své znalosti a budu se dále profesně rozvíjet.',
+            text: 'Ahoj! Jsem Adam a věnuji se technologiím. Jsem čerstvý absolvent oboru Informační technologie se silným technickým zázemím a hlubokým zájmem o IT, hardware a síťové technologie. Jsem proaktivní, rychle se učím novým systémům a baví mě skládání PC, konfigurace sítí i tvorba s využitím AI (používám Claude a Gemini). Zvládám i manuální práci a nebráním se pozicím mimo můj obor. Jsem velmi flexibilní, umím pracovat v týmu a po zaučení se dokážu rychle adaptovat na jakoukoliv činnost. Mimo technologie ve svém volném čase čtu mangu a jsem velkým fanouškem anime. Hledám příležitost, kde uplatním své znalosti a budu se dále profesně rozvíjet.',
             locationLabel: 'Lokalita:',
             locationValue: 'Liberec, Česká republika',
             languagesLabel: 'Jazyky:',
@@ -33,7 +33,12 @@ export const i18n = {
             photoshop: 'Photoshop (základy)',
             php: 'PHP (základy)',
             ai: 'AI Tvorba (Claude/Gemini)',
-            jellyfin: 'Jellyfin Server'
+            jellyfin: 'Jellyfin Server',
+            oop: 'OOP & Návrhové vzory',
+            graphs: 'Teorie grafů',
+            pcbs: '100h v PCBS 1 & 2',
+            apache: 'Apache (XAMPP)',
+            pma: 'phpMyAdmin'
         },
         certs: {
             title: 'Certifikace',
@@ -46,6 +51,15 @@ export const i18n = {
             ccna2: {
                 title: 'CCNA 2: Switching, Routing, and Wireless Essentials',
                 desc: 'Směrovací protokoly (OSPF), konfigurace VLAN, redundantní sítě (STP/EtherChannel), bezpečnost sítě (ACL/DHCP Snooping) a základy WLAN.'
+            },
+            sololearn: {
+                title: 'Certifikáty ze všech zmíněných jazyků',
+                desc: 'Úspěšné absolvování kurzů a získání certifikátů pro všechny programovací jazyky uvedené v sekci dovedností.'
+            },
+            lol: {
+                title: '1V9 L9 Mašina (Not Low Elo)',
+                desc: 'Oficiální potvrzení, že jsem 1v9 L9 mašina, dokážu vyhrát hru i se zavázanýma očima a rozhodně nepatřím do low elo.',
+                status: 'Challenger potvrzen v mých očích'
             }
         },
         calculator: {
@@ -157,7 +171,7 @@ export const i18n = {
             c1hintDet: 'Detektivní web',
             c1hintGf: 'Zamilovaný web',
             c2t: 'ScrapScrap',
-            c2d: 'Steampunková webová hra, kterou jsem vyvinul. Obsahuje herní obchod, žebříčky a vlastní herní mechaniky.',
+            c2d: 'Velmi se zajímám o gamedev, a právě proto vznikla tahle steampunková webová hra. Obsahuje herní obchod, žebříčky a vlastní mechaniky.',
             c2badge: 'Spuštěno',
             c2hint: 'Hrát ScrapScrap',
             c3t: 'Kasař',
@@ -171,8 +185,12 @@ export const i18n = {
             c4summary: 'Návod ke spuštění',
             c4step1: 'Stáhněte nebo klonujte repozitář z <a href="https://github.com/gitArby/mamradautomaty" target="_blank">GitHubu</a>.',
             c4step2: 'Rozbalte staženou složku hry.',
-            c4step3: 'Spusťte soubor <code>gamble.exe</code>.',
+            c4step3: 'Spusťte soubor ',
             c4controls: '<strong>Ovládání:</strong> ESC pro ukončení, tlačítko QUIT vpravo nahoře, kliknutí myší pro nastavení sázky a roztočení (SPIN).',
+            c5t: 'Rádio Bot',
+            c5d: 'Vlastní Discord bot navržený speciálně pro plynulé přehrávání českých rádiových stanic přímo v hlasových kanálech.',
+            c6t: 'Roblox Gamedev',
+            c6d: 'Experimentování s vývojem her v platformě Roblox. Skriptování vlastních herních mechanik, systémů a interakcí pomocí jazyka Lua.',
             cMoreText: 'Všechny mé ostatní projekty a zdrojové kódy najdete na mém GitHubu.',
             cMoreBtn: 'Zobrazit další repozitáře'
         },
@@ -296,7 +314,7 @@ export const i18n = {
         },
         about: {
             title: 'About me',
-            text: 'Hey! I\'m Adam and I\'m passionate about tech. I\'m a fresh IT graduate with a strong technical background and a deep interest in IT, computer hardware, and network technologies. I am proactive, a fast learner, and I enjoy building PCs, configuring networks, and creating with AI (using Claude and Gemini). Outside of tech, I enjoy reading manga and I am a big fan of anime in my free time. I am looking for opportunities to apply my knowledge and grow professionally.',
+            text: 'Hey! I\'m Adam and I\'m passionate about tech. I\'m a fresh IT graduate with a strong technical background and a deep interest in IT, computer hardware, and network technologies. I am proactive, a fast learner, and I enjoy building PCs, configuring networks, and creating with AI (using Claude and Gemini). I am also capable of manual labor and open to positions outside my field. I am highly flexible, a strong team player, and can quickly adapt to new tasks once explained. Outside of tech, I enjoy reading manga and I am a big fan of anime in my free time. I am looking for opportunities to apply my knowledge and grow professionally.',
             locationLabel: 'Location:',
             locationValue: 'Liberec, Czech Republic',
             languagesLabel: 'Languages:',
@@ -315,7 +333,12 @@ export const i18n = {
             photoshop: 'Photoshop (basics)',
             php: 'PHP (basics)',
             ai: 'AI Creation (Claude/Gemini)',
-            jellyfin: 'Jellyfin Server'
+            jellyfin: 'Jellyfin Server',
+            oop: 'OOP & Design Patterns',
+            graphs: 'Graph Theory',
+            pcbs: '100h in PCBS 1 & 2',
+            apache: 'Apache (XAMPP)',
+            pma: 'phpMyAdmin'
         },
         certs: {
             title: 'Certifications',
@@ -328,6 +351,15 @@ export const i18n = {
             ccna2: {
                 title: 'CCNA 2: Switching, Routing, and Wireless Essentials',
                 desc: 'Routing protocols (OSPF), VLAN configuration, redundant network topologies (STP/EtherChannel), network security (ACLs/DHCP Snooping), and WLAN basics.'
+            },
+            sololearn: {
+                title: 'Certificates in all mentioned languages',
+                desc: 'Successfully completed courses and obtained certificates for all programming languages listed in the skills section.'
+            },
+            lol: {
+                title: '1V9 L9 Machine (Not Low Elo)',
+                desc: 'Official confirmation that I am a 1v9 L9 machine, can win the game blindfolded, and definitely do not belong in low elo.',
+                status: 'Challenger Confirmed In My Eyes'
             }
         },
         calculator: {
@@ -439,7 +471,7 @@ export const i18n = {
             c1hintDet: 'Detective Site',
             c1hintGf: 'Love Site',
             c2t: 'ScrapScrap',
-            c2d: 'A steampunk-themed web clicker game that I developed. Features an in-game shop, leaderboards, and custom game mechanics.',
+            c2d: 'I am very interested in gamedev, which is why this steampunk web game was created. It features an in-game shop, leaderboards, and custom mechanics.',
             c2badge: 'Live',
             c2hint: 'Play ScrapScrap',
             c3t: 'Kasař',
@@ -452,9 +484,13 @@ export const i18n = {
             c4hint: 'View GitHub',
             c4summary: 'Running Instructions',
             c4step1: 'Clone or download the project files from <a href="https://github.com/gitArby/mamradautomaty" target="_blank">GitHub</a>.',
-            c4step2: 'Extract the game folder.',
-            c4step3: 'Open the <code>gamble.exe</code> file.',
-            c4controls: '<strong>Controls:</strong> ESC to quit, QUIT button in the top-right corner to exit, mouse click to bet or spin.',
+            c4step2: 'Extract the downloaded game folder.',
+            c4step3: 'Run the file ',
+            c4controls: '<strong>Controls:</strong> ESC to exit, QUIT button in top right, mouse click to set bet and SPIN.',
+            c5t: 'Radio Bot',
+            c5d: 'A custom Discord bot designed specifically for seamless playback of Czech radio stations directly in voice channels.',
+            c6t: 'Roblox Gamedev',
+            c6d: 'Experimenting with game development on the Roblox platform. Scripting custom game mechanics, systems, and interactions using Lua.',
             cMoreText: 'You can find all of my other projects and source codes on my GitHub.',
             cMoreBtn: 'View More Repositories'
         },
