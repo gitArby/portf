@@ -561,8 +561,7 @@ export function generateCV(lang) {
             isCs ? 'IT podpora' : 'IT Support',
             isCs ? 'Microsoft Office' : 'MS Office',
             isCs ? 'Photoshop (základy)' : 'Photoshop (basics)',
-            'Git & GitHub',
-            isCs ? '100h v PC Building Simulatoru 1 & 2' : '100h in PC Building Simulator 1 & 2'
+            'Git & GitHub'
         ],
         
         certsTitle: isCs ? 'Certifikace' : 'Certifications',
@@ -587,13 +586,6 @@ export function generateCV(lang) {
                 desc: isCs 
                     ? 'Úspěšné absolvování kurzů a získání certifikátů pro všechny programovací jazyky uvedené v sekci dovedností.'
                     : 'Successfully completed courses and obtained certificates for all programming languages listed in the skills section.'
-            },
-            {
-                name: isCs ? '1V9 L9 Mašina (Not Low Elo)' : '1V9 L9 Machine (Not Low Elo)',
-                issuer: 'League of Legends',
-                desc: isCs 
-                    ? 'Oficiální potvrzení, že jsem 1v9 L9 mašina, dokážu vyhrát hru i se zavázanýma očima a rozhodně nepatřím do low elo.'
-                    : 'Official confirmation that I am a 1v9 L9 machine, can win the game blindfolded, and definitely do not belong in low elo.'
             }
         ],
         
