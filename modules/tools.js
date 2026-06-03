@@ -4,7 +4,7 @@
  * standard/scientific math calculations, and interactive CCNA Lab console simulations.
  * Subscribes to the 'langchanged' event to update UI outputs dynamically.
  */
-import { AppState } from './state.js';
+import { AppState, subscribe } from './state.js';
 import { UISelectors } from './selectors.js';
 import { i18n } from './translations.js';
 import { playClick, showHUDNotification } from './utils.js';
@@ -21,6 +21,10 @@ let consoleTimeout = null;
 // SUBNET CALCULATOR
 // ==========================================================================
 
+/**
+ * Calculates subnet mask, network IP, broadcast IP, and host range
+ * from an IPv4 address and CIDR prefix. Updates the DOM outputs.
+ */
 export function calculateSubnet() {
     const ipInput = UISelectors.ipInput;
     const cidrSlider = UISelectors.cidrSlider;
@@ -289,6 +293,10 @@ function formatDisksCount(count, lang) {
     }
 }
 
+/**
+ * Calculates RAID array capacity, fault tolerance, and speeds
+ * based on selected RAID level and disk sizes. Updates DOM outputs.
+ */
 export function calculateRaid() {
     const raidLevelSelect = UISelectors.raidLevelSelect;
     const raidDisksInput = UISelectors.raidDisksInput;
@@ -429,6 +437,10 @@ export function calculateRaid() {
 // PC PSU CALCULATOR
 // ==========================================================================
 
+/**
+ * Estimates PC Power Supply Unit (PSU) requirements based on 
+ * selected CPU, GPU, RAM, drives, and overclocking status. Updates DOM outputs.
+ */
 export function calculatePsu() {
     const psuCpuSelect = UISelectors.psuCpuSelect;
     const psuGpuSelect = UISelectors.psuGpuSelect;
@@ -473,6 +485,10 @@ export function calculatePsu() {
 // PASSWORD GENERATOR & SHA-256 HASHER
 // ==========================================================================
 
+/**
+ * Generates a secure random password using Web Crypto API.
+ * Calculates its entropy and updates the DOM outputs.
+ */
 export function calculatePassword() {
     const pwdLengthInput = UISelectors.pwdLengthInput;
     const pwdOutputField = UISelectors.pwdOutputField;
@@ -583,6 +599,11 @@ function updatePasswordStrength(entropy, poolSize) {
     strengthEl.className = `result-val ${ratingClass}`;
 }
 
+/**
+ * Computes a SHA-256 hash for the given string using Web Crypto API.
+ * 
+ * @param {string} text - The input string to hash
+ */
 export async function calculateHashFor(text) {
     const outputEl = UISelectors.resValHash;
     if (!outputEl) return;
@@ -608,6 +629,11 @@ export async function calculateHashFor(text) {
 // CISCO TOPOLOGY LAB
 // ==========================================================================
 
+/**
+ * Simulates a typing console output for CCNA lab devices.
+ * 
+ * @param {string} deviceKey - Key corresponding to the device logs in translations
+ */
 export function runSimulatedConsole(deviceKey) {
     const consoleBody = UISelectors.consoleBody;
     const consoleHeaderTitle = UISelectors.consoleHeaderTitle;
@@ -657,6 +683,9 @@ export function runSimulatedConsole(deviceKey) {
 // MODULE INITIALIZATION & EVENT REGISTER
 // ==========================================================================
 
+/**
+ * Initializes all tool calculators, binding event listeners to UI inputs.
+ */
 export function initTools() {
     // --- CCNA Console Bindings ---
     if (UISelectors.topoNodes) {
@@ -786,7 +815,7 @@ export function initTools() {
 }
 
 // React to dynamic language changes (recalculating localized results)
-document.addEventListener('langchanged', () => {
+subscribe('currentLang', () => {
     calculateSubnet();
     calculateRaid();
     calculatePsu();
@@ -798,7 +827,7 @@ document.addEventListener('langchanged', () => {
     } else {
         const consolePlaceholder = UISelectors.consolePlaceholder;
         if (consolePlaceholder) {
-            consolePlaceholder.innerHTML = i18n[AppState.currentLang].ciscoLab.placeholder;
+            consolePlaceholder.textContent = i18n[AppState.currentLang].ciscoLab.consolePlaceholder;
         }
     }
 });

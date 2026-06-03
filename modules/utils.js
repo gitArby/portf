@@ -7,7 +7,10 @@ import { AppState } from './state.js';
 import { UISelectors } from './selectors.js';
 import { i18n } from './translations.js';
 
-// Resolve or initialize AudioContext safely on user interaction
+/**
+ * Resolve or initialize AudioContext safely on user interaction.
+ * @returns {AudioContext} Active AudioContext instance
+ */
 function getCtx() {
     if (!AppState.audioCtx) {
         AppState.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -15,7 +18,9 @@ function getCtx() {
     return AppState.audioCtx;
 }
 
-// Synthesize clicking chime
+/**
+ * Synthesize a clicking chime for UI interaction feedback.
+ */
 export function playClick() {
     if (!AppState.audioEnabled) return;
     try {
@@ -39,7 +44,9 @@ export function playClick() {
     }
 }
 
-// Synthesize subtle hover chirp
+/**
+ * Synthesize a subtle hover chirp for UI elements.
+ */
 export function playHover() {
     if (!AppState.audioEnabled) return;
     try {
@@ -61,7 +68,10 @@ export function playHover() {
     }
 }
 
-// Synthesize success/error tones
+/**
+ * Synthesize success or error tones.
+ * @param {string} type - 'success', 'error', or default beep
+ */
 export function playNotificationSound(type) {
     if (!AppState.audioEnabled) return;
     try {
@@ -107,7 +117,29 @@ export function playNotificationSound(type) {
     }
 }
 
-// Show terminal HUD popup
+/**
+ * Centralized error handler to gracefully manage application failures.
+ * Prevents complete app crashes and notifies the user.
+ * 
+ * @param {Error|string} error - The caught error object or message.
+ * @param {string} context - A description of where the error occurred.
+ */
+export function handleAppError(error, context) {
+    console.error(`[App Error] ${context}:`, error);
+    
+    // Determine language for error message
+    const lang = AppState.currentLang || 'cs';
+    const msg = lang === 'cs' ? `Chyba: ${context}` : `Error: ${context}`;
+    
+    showHUDNotification(msg, 'error');
+}
+
+/**
+ * Show terminal HUD popup notification.
+ * 
+ * @param {string} message - Notification text
+ * @param {string} type - 'info', 'success', or 'error'
+ */
 export function showHUDNotification(message, type = 'info') {
     const container = document.getElementById('hud-notifier-container');
     if (!container) return;
@@ -141,7 +173,12 @@ export function showHUDNotification(message, type = 'info') {
     setTimeout(dismiss, 5000);
 }
 
-// Translate the page static texts
+/**
+ * Translate the page static texts based on the selected language.
+ * This is triggered by a state subscription to 'currentLang'.
+ * 
+ * @param {string} lang - Language code ('cs' or 'en')
+ */
 export function applyLanguage(lang) {
     const t = i18n[lang];
     if (!t) return;
@@ -192,7 +229,7 @@ export function applyLanguage(lang) {
     if (catTitles[1]) catTitles[1].textContent = t.skills.catNet;
     if (catTitles[2]) catTitles[2].textContent = t.skills.catSys;
 
-    const ids = ['diag', 'os', 'support', 'office', 'photoshop', 'php', 'ai'];
+    const ids = ['diag', 'os', 'support', 'office', 'photoshop', 'php', 'ai', 'jellyfin'];
     ids.forEach(id => {
         const el = document.getElementById(`skill-${id}`);
         if (el && t.skills[id]) el.textContent = t.skills[id];
@@ -435,14 +472,14 @@ export function applyLanguage(lang) {
     });
 
     document.documentElement.lang = lang;
-    AppState.currentLang = lang;
     localStorage.setItem('lang', lang);
-
-    // DECOUPLED NOTIFICATION: Broadcast event to keep other modules updated
-    document.dispatchEvent(new CustomEvent('langchanged', { detail: { lang } }));
 }
 
-// Generate print ready PDF CV layout in a new tab
+/**
+ * Generate print ready PDF CV layout in a new tab.
+ * 
+ * @param {string} lang - Language code ('cs' or 'en')
+ */
 export function generateCV(lang) {
     const cvWindow = window.open('', '_blank');
     if (!cvWindow) {

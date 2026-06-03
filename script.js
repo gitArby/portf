@@ -5,9 +5,9 @@
  * calculator Tools, and Minigames.
  */
 import { UISelectors } from './modules/selectors.js';
-import { AppState } from './modules/state.js';
+import { AppState, subscribe } from './modules/state.js';
 import { applyLanguage, generateCV, playClick, playHover, showHUDNotification } from './modules/utils.js';
-import { connectLanyard, fetchLoLStats } from './modules/api.js';
+import { connectLanyard, fetchLoLStats, renderFavoriteChampions } from './modules/api.js';
 import { initTools } from './modules/tools.js';
 import { initGames } from './modules/games.js';
 
@@ -445,9 +445,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (langToggleBtn) {
         langToggleBtn.addEventListener('click', () => {
             const nextLang = AppState.currentLang === 'cs' ? 'en' : 'cs';
-            applyLanguage(nextLang);
+            AppState.currentLang = nextLang;
         });
     }
+
+    // Subscribe to language changes so UI is updated automatically
+    subscribe('currentLang', (newLang) => {
+        applyLanguage(newLang);
+    });
 
     // --- CV Print ---
     const cvBtn = document.getElementById('btn-hero-cv');
@@ -538,4 +543,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fire safe Lanyard websocket connections and LoL profile requests
     connectLanyard();
     fetchLoLStats();
+    renderFavoriteChampions(AppState.currentLang);
 });

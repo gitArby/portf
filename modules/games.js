@@ -3,7 +3,7 @@
  * Implements the Cyber Snake, Hacker Minesweeper, and Defend the Firewall typing games.
  * Interfaces with AppState for game variables and UISelectors for DOM objects.
  */
-import { AppState } from './state.js';
+import { AppState, subscribe } from './state.js';
 import { UISelectors } from './selectors.js';
 import { i18n } from './translations.js';
 import { playClick, playNotificationSound, showHUDNotification } from './utils.js';
@@ -16,6 +16,10 @@ const dictEN = ['network', 'router', 'switch', 'gateway', 'packet', 'address', '
 // MINIGAMES HUB NAVIGATION & VIEW MANAGERS
 // ==========================================================================
 
+/**
+ * Initializes the Minigames hub by binding tab navigations,
+ * keyboard controls (Snake), and global reset hooks.
+ */
 export function initGames() {
     const gameTabBtns = UISelectors.gameTabBtns;
     const gameViews = UISelectors.gameViews;
@@ -356,6 +360,10 @@ function setSnakeDir(dir) {
 // HACKER MINESWEEPER GAME MECHANICS
 // ==========================================================================
 
+/**
+ * Initializes and resets the Hacker Minesweeper game state,
+ * stops any running timers, and generates the initial board grid.
+ */
 export function initMinesGame() {
     if (AppState.minesTimerInterval) {
         clearInterval(AppState.minesTimerInterval);
@@ -642,6 +650,10 @@ function updateMinesModeButton() {
 // DEFEND THE FIREWALL SPEED TYPING MECHANICS
 // ==========================================================================
 
+/**
+ * Initializes and resets the Defend the Firewall typing game state,
+ * clearing the terminal and resetting integrity to 100%.
+ */
 export function initTypeGame() {
     stopTypeGame();
     AppState.typeScoreValue = 0;
@@ -785,6 +797,6 @@ function endTypeGame() {
 }
 
 // React to global language changes by updating labels in minesweeper
-document.addEventListener('langchanged', () => {
+subscribe('currentLang', () => {
     updateMinesModeButton();
 });

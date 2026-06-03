@@ -1,9 +1,12 @@
 /**
  * AppState Module
  * Centralized state container holding all dynamic values of the application.
- * Prevents pollute of global window scope and provides structured state variables.
+ * Utilizes a Proxy to implement the Observer pattern, allowing other modules
+ * to subscribe to state changes and react automatically.
  */
-export const AppState = {
+
+// Internal raw state object
+const rawState = {
     // General UI
     activeTopoNode: null,
     currentLang: localStorage.getItem('lang') || 'cs',
@@ -50,3 +53,57 @@ export const AppState = {
     typeWordSpawnTimer: 0,
     typeBaseSpeed: 1.0
 };
+
+// Map of listeners for each state key
+const listeners = new Map();
+
+/**
+ * Subscribes to changes on a specific state key.
+ * 
+ * @param {string} key - The state property name to listen to.
+ * @param {Function} callback - The function to call when the value changes (receives new value and old value).
+ * @returns {Function} Unsubscribe function.
+ */
+export function subscribe(key, callback) {
+    if (!listeners.has(key)) {
+        listeners.set(key, new Set());
+    }
+    listeners.get(key).add(callback);
+
+    // Return an unsubscribe function
+    return () => {
+        const keyListeners = listeners.get(key);
+        if (keyListeners) {
+            keyListeners.delete(callback);
+            if (keyListeners.size === 0) {
+                listeners.delete(key);
+            }
+        }
+    };
+}
+
+/**
+ * Proxy-wrapped Application State.
+ * Assigning a value to any property here will trigger registered listeners if the value changed.
+ */
+export const AppState = new Proxy(rawState, {
+    set(target, property, value) {
+        const oldValue = target[property];
+        if (oldValue !== value) {
+            target[property] = value;
+            
+            // Notify listeners
+            const keyListeners = listeners.get(property);
+            if (keyListeners) {
+                keyListeners.forEach(callback => {
+                    try {
+                        callback(value, oldValue);
+                    } catch (err) {
+                        console.error(`Error in subscriber for state key "${property}":`, err);
+                    }
+                });
+            }
+        }
+        return true;
+    }
+});

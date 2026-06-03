@@ -3,14 +3,25 @@
  * Manages external API connectivity and presence syncing.
  * Handles Lanyard WebSocket connectivity and HenrikDev League of Legends API requests.
  */
-import { AppState } from './state.js';
+import { AppState, subscribe } from './state.js';
 import { UISelectors } from './selectors.js';
 import { i18n } from './translations.js';
+import { handleAppError } from './utils.js';
 
 const DISCORD_ID = '938119246196666378';
+let reconnectAttempts = 0;
+const MAX_RECONNECTS = 5;
 
-// Establish Lanyard WebSocket connection
+/**
+ * Establish connection to Lanyard WebSocket for real-time Discord presence.
+ * Includes automatic heartbeat and exponential backoff reconnection up to a max limit.
+ */
 export function connectLanyard() {
+    if (reconnectAttempts >= MAX_RECONNECTS) {
+        handleAppError(new Error('Max reconnect attempts reached'), 'Lanyard WebSocket (Discord Status)');
+        return;
+    }
+
     try {
         const ws = new WebSocket('wss://api.lanyard.rest/socket');
         let hb;
@@ -33,21 +44,31 @@ export function connectLanyard() {
 
         ws.onclose = () => {
             clearInterval(hb);
-            // Reconnect backoff fallback
-            setTimeout(connectLanyard, 5000);
+            reconnectAttempts++;
+            const backoff = Math.min(5000 * Math.pow(2, reconnectAttempts - 1), 30000);
+            setTimeout(connectLanyard, backoff);
         };
 
         ws.onerror = err => {
             console.error('Lanyard socket connection error', err);
         };
+        
+        ws.onopen = () => {
+            reconnectAttempts = 0;
+        };
     } catch (e) {
-        console.error('WebSocket initialisation failed', e);
-        // Fallback retry
+        console.error('WebSocket initialization failed', e);
+        reconnectAttempts++;
         setTimeout(connectLanyard, 5000);
     }
 }
 
-// Convert asset IDs into Discord CDN paths
+/**
+ * Convert asset IDs into Discord CDN paths.
+ * @param {string} appId - The Discord Application ID
+ * @param {string} assetId - The asset ID from presence data
+ * @returns {string} URL to the asset image
+ */
 function getDiscordAssetUrl(appId, assetId) {
     if (!assetId) return '';
     if (assetId.startsWith('mp:external/')) {
@@ -56,7 +77,12 @@ function getDiscordAssetUrl(appId, assetId) {
     return `https://cdn.discordapp.com/app-assets/${appId}/${assetId}.png`;
 }
 
-// Draw the interactive Discord profile presence card
+/**
+ * Render the interactive Discord profile presence card dynamically.
+ * Updates activity, Spotify playback progress, and game timers.
+ * 
+ * @param {Object} data - The presence payload from Lanyard
+ */
 export function updatePresence(data) {
     AppState.lastPresenceData = data;
     
@@ -273,7 +299,11 @@ export function updatePresence(data) {
         </div>`;
 }
 
-// Render dynamic League of Legends favorite champions
+/**
+ * Render dynamic League of Legends favorite champions card grid.
+ * 
+ * @param {string} lang - Language code ('cs' or 'en')
+ */
 export function renderFavoriteChampions(lang) {
     const container = UISelectors.lolChampsContainer;
     if (!container) return;
@@ -316,58 +346,26 @@ export function renderFavoriteChampions(lang) {
         </div>`;
 }
 
-// Fetch League of Legends summoner statistics with fallback card
-export async function fetchLoLStats() {
+/**
+ * Renders static League of Legends summoner statistics (No specific rank).
+ */
+export function fetchLoLStats() {
     const card = UISelectors.lolCard;
     if (!card) return;
 
-    const NAME = 'arby';
-    const TAG = 'him';
-    const REGION = 'eune';
-
-    try {
-        const [sumRes, rankRes] = await Promise.all([
-            fetch(`https://api.henrikdev.xyz/lol/v2/summoner/${REGION}/${encodeURIComponent(NAME)}/${TAG}`),
-            fetch(`https://api.henrikdev.xyz/lol/v2/ranked/${REGION}/${encodeURIComponent(NAME)}/${TAG}`)
-        ]);
-
-        if (!sumRes.ok || !rankRes.ok) {
-            throw new Error('LoL stats request failed');
-        }
-
-        const { data: sum } = await sumRes.json();
-        const { data: ranks } = await rankRes.json();
-        const solo = ranks?.find(r => r.queue_type === 'RANKED_SOLO_5x5') || null;
-        const tier = solo?.tier || 'UNRANKED';
-        const tierCap = tier[0] + tier.slice(1).toLowerCase();
-        const winrate = solo ? Math.round(solo.wins / (solo.wins + solo.losses) * 100) : null;
-
-        card.innerHTML = `
-            <div class="lol-info">
-                <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_${tierCap}.webp" alt="${tierCap}" onerror="this.style.display='none'">
-                <div class="lol-details">
-                    <div class="lol-name">${sum.name ?? NAME} <span class="lol-level">Lvl ${sum.account_level ?? sum.summoner_level}</span></div>
-                    <div class="lol-rank">${solo ? `${tierCap} ${solo.rank} &mdash; ${solo.lp} LP` : 'Unranked'}</div>
-                    ${winrate !== null ? `<div class="lol-winrate">${solo.wins}W / ${solo.losses}L &mdash; <span class="wr-${winrate >= 50 ? 'good' : 'bad'}">${winrate}% WR</span></div>` : ''}
-                </div>
-            </div>`;
-    } catch (err) {
-        console.warn('LoL stats API error. Loading local cached fallback card...', err);
-        // Fallback UI
-        card.innerHTML = `
-            <div class="lol-info">
-                <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_Gold.webp" alt="LoL" onerror="this.style.display='none'">
-                <div class="lol-details">
-                    <div class="lol-name">arby <span class="lol-server">#him</span></div>
-                    <div class="lol-rank">Podívej se na u.gg pro aktuální stats</div>
-                </div>
-            </div>`;
-    }
+    card.innerHTML = `
+        <div class="lol-info">
+            <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_Diamond.webp" alt="Rank" onerror="this.style.display='none'">
+            <div class="lol-details">
+                <div class="lol-name">arby <span class="lol-server">#him</span></div>
+                <div class="lol-rank">Podívej se na u.gg pro aktuální stats</div>
+            </div>
+        </div>`;
 }
 
-// Bind presence and champion card refreshes to langchanged event
-document.addEventListener('langchanged', e => {
-    renderFavoriteChampions(e.detail.lang);
+// Bind presence and champion card refreshes to state changes
+subscribe('currentLang', (newLang) => {
+    renderFavoriteChampions(newLang);
     if (AppState.lastPresenceData) {
         updatePresence(AppState.lastPresenceData);
     }

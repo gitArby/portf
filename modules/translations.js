@@ -32,7 +32,8 @@ export const i18n = {
             office: 'MS Office',
             photoshop: 'Photoshop (základy)',
             php: 'PHP (základy)',
-            ai: 'AI Tvorba (Claude/Gemini)'
+            ai: 'AI Tvorba (Claude/Gemini)',
+            jellyfin: 'Jellyfin Server'
         },
         certs: {
             title: 'Certifikace',
@@ -313,7 +314,8 @@ export const i18n = {
             office: 'MS Office',
             photoshop: 'Photoshop (basics)',
             php: 'PHP (basics)',
-            ai: 'AI Creation (Claude/Gemini)'
+            ai: 'AI Creation (Claude/Gemini)',
+            jellyfin: 'Jellyfin Server'
         },
         certs: {
             title: 'Certifications',
