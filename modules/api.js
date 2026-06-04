@@ -358,9 +358,16 @@ export function fetchLoLStats() {
             <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_Diamond.webp" alt="Rank" onerror="this.style.display='none'">
             <div class="lol-details">
                 <div class="lol-name">arby <span class="lol-server">#him</span></div>
-                <div class="lol-rank">Podívej se na u.gg pro aktuální stats</div>
+                <div class="lol-rank" id="lol-rank-text">Podívej se na u.gg pro aktuální stats</div>
             </div>
         </div>`;
+    
+    // Auto-translate if lang is known
+    const lang = AppState.currentLang || localStorage.getItem('lang') || 'cs';
+    const t = i18n[lang]?.lol;
+    if (t && t.statsDesc) {
+        document.getElementById('lol-rank-text').textContent = t.statsDesc;
+    }
 }
 
 // Bind presence and champion card refreshes to state changes

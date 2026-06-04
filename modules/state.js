@@ -22,6 +22,7 @@ const rawState = {
     // Easter Egg
     clickCount: 0,
     lastClickTime: 0,
+    foundEggs: JSON.parse(localStorage.getItem('foundEggs') || '[]'),
 
     // Snake game state
     snakeGameInterval: null,

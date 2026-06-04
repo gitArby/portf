@@ -30,9 +30,9 @@ export function playClick() {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(600, now);
-            osc.frequency.exponentialRampToValueAtTime(120, now + 0.04);
-            gain.gain.setValueAtTime(0.35, now);
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.04);
+            gain.gain.setValueAtTime(0.15, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
             osc.connect(gain);
             gain.connect(ctx.destination);
@@ -54,14 +54,14 @@ export function playHover() {
         ctx.resume().then(() => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
-            osc.frequency.value = 1200;
+            osc.frequency.value = 300;
             osc.type = 'sine';
-            gain.gain.setValueAtTime(0.08, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.02, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
             osc.connect(gain);
             gain.connect(ctx.destination);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.08);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.06);
         });
     } catch (e) {
         console.warn('Audio hover synth failed', e);
@@ -499,6 +499,75 @@ export function applyLanguage(lang) {
         el.setAttribute('data-text', el.textContent.trim());
     });
 
+    // Fix missing sections
+    // Games
+    const gamesTitle = document.getElementById('games-title');
+    if (gamesTitle && t.games) gamesTitle.textContent = t.games.title;
+    const gamesSubtitle = document.getElementById('games-subtitle');
+    if (gamesSubtitle && t.games) gamesSubtitle.textContent = t.games.subtitle;
+    
+    const lblSnakeScore = document.getElementById('lbl-snake-score');
+    if (lblSnakeScore && t.games) lblSnakeScore.textContent = t.games.snakeScore;
+    const lblSnakeHigh = document.getElementById('lbl-snake-highscore');
+    if (lblSnakeHigh && t.games) lblSnakeHigh.textContent = t.games.snakeHigh;
+    const lblSnakeDiff = document.getElementById('lbl-snake-difficulty');
+    if (lblSnakeDiff && t.games) lblSnakeDiff.textContent = t.games.snakeDiff;
+
+    // Calculator
+    const calcTitle = document.getElementById('calc-title');
+    if (calcTitle && t.calculator) calcTitle.textContent = t.calculator.title;
+    const calcSubtitle = document.getElementById('calc-subtitle');
+    if (calcSubtitle && t.calculator) calcSubtitle.textContent = t.calculator.subtitle;
+
+    // Projects Filters
+    const filterAll = document.querySelector('button[data-filter="all"]');
+    if (filterAll && t.projects) filterAll.textContent = t.projects.filterAll;
+    const filterEdu = document.querySelector('button[data-filter="education"]');
+    if (filterEdu && t.projects) filterEdu.textContent = t.projects.filterEdu;
+    const filterExp = document.querySelector('button[data-filter="experience"]');
+    if (filterExp && t.projects) filterExp.textContent = t.projects.filterExp;
+
+    // Ipsum
+    const ipsumTitle = document.querySelector('#ipsum-view h3');
+    if (ipsumTitle && t.ipsum) ipsumTitle.textContent = t.ipsum.title;
+    const ipsumDesc = document.querySelector('#ipsum-view .section-desc');
+    if (ipsumDesc && t.ipsum) ipsumDesc.textContent = t.ipsum.subtitle;
+    const ipsumLabel = document.querySelector('label[for="ipsum-paragraphs"]');
+    if (ipsumLabel && t.ipsum) ipsumLabel.textContent = t.ipsum.label;
+    
+    const btnGen = document.getElementById('btn-generate-ipsum');
+    if (btnGen && t.ipsum) btnGen.innerHTML = `<i class="fa-solid fa-bolt"></i> ${t.ipsum.btnGen}`;
+    const btnCopy = document.getElementById('btn-copy-ipsum');
+    if (btnCopy && t.ipsum) btnCopy.innerHTML = `<i class="fa-solid fa-copy"></i> ${t.ipsum.btnCopy}`;
+    
+    const ipsumOut = document.getElementById('ipsum-output');
+    if (ipsumOut && t.ipsum && !ipsumOut.dataset.generated) ipsumOut.textContent = t.ipsum.placeholder;
+
+    // League of Legends
+    const btnUgg = document.getElementById('btn-ugg');
+    if (btnUgg && t.lol) btnUgg.textContent = t.lol.btn;
+    const lolRankText = document.getElementById('lol-rank-text');
+    if (lolRankText && t.lol && t.lol.statsDesc) lolRankText.textContent = t.lol.statsDesc;
+
+
+
+    // FAQ section
+    const faqTitle = document.querySelector('#faq-view h3');
+    if (faqTitle && t.faq) faqTitle.textContent = t.faq.title;
+    
+    const faqQuestions = document.querySelectorAll('#faq-view .faq-question span');
+    const faqAnswers = document.querySelectorAll('#faq-view .faq-answer p');
+    if (t.faq && faqQuestions.length >= 4) {
+        faqQuestions[0].textContent = t.faq.q1;
+        faqAnswers[0].textContent = t.faq.a1;
+        faqQuestions[1].textContent = t.faq.q2;
+        faqAnswers[1].textContent = t.faq.a2;
+        faqQuestions[2].textContent = t.faq.q3;
+        faqAnswers[2].textContent = t.faq.a3;
+        faqQuestions[3].textContent = t.faq.q4;
+        faqAnswers[3].textContent = t.faq.a4;
+    }
+
     document.documentElement.lang = lang;
     localStorage.setItem('lang', lang);
 }
@@ -522,6 +591,7 @@ export function generateCV(lang) {
         name: 'Adam Macků',
         role: isCs ? 'IT Specialista / Síťový Technik' : 'IT Specialist / Network Technician',
         email: 'mackuadam37@gmail.com',
+        phone: '+420 776 739 054',
         location: isCs ? 'Liberec, Česká republika' : 'Liberec, Czech Republic',
         github: 'github.com/gitArby',
         
@@ -966,6 +1036,10 @@ export function generateCV(lang) {
                 <li class="contact-item">
                     <i class="fa-solid fa-envelope"></i>
                     <a href="mailto:${data.email}">${data.email}</a>
+                </li>
+                <li class="contact-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <a href="tel:${data.phone.replace(/\s+/g, '')}">${data.phone}</a>
                 </li>
                 <li class="contact-item">
                     <i class="fa-solid fa-location-dot"></i>

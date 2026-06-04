@@ -6,11 +6,36 @@
  */
 export const i18n = {
     cs: {
-        nav: ['Domů', 'O mně', 'Dovednosti', 'Certifikáty', 'Nástroje', 'Praxe', 'LoL', 'Minihry', 'Projekty', 'Kontakt'],
+        nav: ['Domů', 'O mně', 'Dovednosti', 'Certifikáty', 'Nástroje', 'Praxe', 'LoL', 'Minihry', 'Projekty', 'Ipsum', 'FAQ', 'Kontakt'],
         subtitle: ['Tech nadšenec', 'hráč her', 'PC builder', 'web developer'],
         hero: {
             contactBtn: 'Kontakt',
             cvBtn: 'Zobrazit CV'
+        },
+        ipsum: {
+            title: 'Arby Ipsum Generator',
+            subtitle: 'Proč používat nudnou latinu, když si můžeš vygenerovat pravý "Nerd" výplňový text plný RGB a síťařiny?',
+            label: 'Počet odstavců:',
+            btnGen: 'Generovat Arby Ipsum',
+            btnCopy: 'Kopírovat',
+            placeholder: 'Klikni na tlačítko "Generovat" pro vytvoření textu...'
+        },
+        easterEggs: {
+            hint: 'Zmáčkni <b>F</b> pro zobrazení tajných Easter Eggů',
+            found: '🏆 Skrytý Easter Egg nalezen!',
+            allFound: 'Neskutečné! Našel jsi všechny 4 skryté Easter Eggy. Jsi opravdový lovec pokladů! 🏆',
+            trackerTitle: 'Odhaleno tajných Easter Eggů:'
+        },
+        faq: {
+            title: 'Často kladené dotazy',
+            q1: 'Opravíš mi tiskárnu?',
+            a1: 'Ne. Tiskárny jsou dílem čisté temné magie a odmítám se jich dotýkat. Zkus ji vypnout a zapnout.',
+            q2: 'Složíš mi PC?',
+            a2: 'Jasně! Napiš mi do zpráv, sepíšeme si rozpočet, k čemu má PC sloužit a vymyslíme tu nejlepší sestavu.',
+            q3: 'Jsi opravdu 1v9 L9 mašina?',
+            a3: 'Samozřejmě. Moje herní mechaniky jsou bezchybné. Za případné prohry může čistě jen ping a špatný tým.',
+            q4: 'Co znamená "arbyy"?',
+            a4: 'To je tajemství, které se předává z generace na generaci. (Nebo prostě jen cool herní nick, záleží, čemu chceš věřit).'
         },
         about: {
             title: 'O mně',
@@ -159,12 +184,16 @@ export const i18n = {
         lol: {
             title: 'League of Legends',
             btn: 'Zobrazit na u.gg',
+            statsDesc: 'Podívej se na u.gg pro aktuální stats',
             favChamps: 'Nejoblíbenější šampioni',
             roles: { ADC: 'ADC / Bot laner', Support: 'Support', Mid: 'Mid laner', Jungle: 'Jungler', Top: 'Top laner' }
         },
         projects: {
             title: 'Projekty',
             text: 'Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:',
+            filterAll: 'Vše',
+            filterEdu: 'Vzdělání',
+            filterExp: 'Praxe',
             c1t: 'Funny weby pro přítelkyni',
             c1d: 'Dva propojené zábavné weby s detektivní a zamilovanou tématikou vytvořené pro mou přítelkyni Týnku.',
             c1badge: 'Spuštěno',
@@ -306,11 +335,36 @@ export const i18n = {
         }
     },
     en: {
-        nav: ['Home', 'About', 'Skills', 'Certificates', 'Tools', 'Experience', 'LoL', 'Minigames', 'Projects', 'Contact'],
+        nav: ['Home', 'About', 'Skills', 'Certificates', 'Tools', 'Experience', 'LoL', 'Minigames', 'Projects', 'Ipsum', 'FAQ', 'Contact'],
         subtitle: ['Tech enthusiast', 'gamer', 'PC builder', 'web developer'],
         hero: {
             contactBtn: 'Contact',
             cvBtn: 'View CV'
+        },
+        ipsum: {
+            title: 'Arby Ipsum Generator',
+            subtitle: 'Why use boring Latin when you can generate real "Nerd" filler text full of RGB and networking?',
+            label: 'Paragraphs count:',
+            btnGen: 'Generate Arby Ipsum',
+            btnCopy: 'Copy',
+            placeholder: 'Click the "Generate" button to create text...'
+        },
+        easterEggs: {
+            hint: 'Press <b>F</b> to show secret Easter Eggs',
+            found: '🏆 Secret Easter Egg found!',
+            allFound: 'Incredible! You found all 4 secret Easter Eggs. You are a true treasure hunter! 🏆',
+            trackerTitle: 'Secret Easter Eggs uncovered:'
+        },
+        faq: {
+            title: 'Frequently Asked Questions',
+            q1: 'Will you fix my printer?',
+            a1: 'No. Printers are a product of dark magic and I refuse to touch them. Have you tried turning it off and on again?',
+            q2: 'Will you build a PC for me?',
+            a2: 'Sure! Send me a message, we can discuss your budget, what the PC will be used for, and we will come up with the best build.',
+            q3: 'Are you really a 1v9 L9 machine?',
+            a3: 'Of course. My gaming mechanics are flawless. Any losses are purely due to ping and bad teammates.',
+            q4: 'What does "arbyy" mean?',
+            a4: 'It\'s a secret passed down from generation to generation. (Or just a cool gaming nick, depends on what you want to believe).'
         },
         about: {
             title: 'About me',
@@ -459,12 +513,16 @@ export const i18n = {
         lol: {
             title: 'League of Legends',
             btn: 'View on u.gg',
+            statsDesc: 'Check u.gg for current stats',
             favChamps: 'Favorite Champions',
             roles: { ADC: 'ADC / Bot laner', Support: 'Support', Mid: 'Mid laner', Jungle: 'Jungler', Top: 'Top laner' }
         },
         projects: {
             title: 'Projects',
             text: 'Still pushing forward. Here\'s a small preview of what I\'m currently working on and what\'s coming soon:',
+            filterAll: 'All',
+            filterEdu: 'Education',
+            filterExp: 'Experience',
             c1t: 'Fun websites for my girlfriend',
             c1d: 'Two interconnected fun websites with detective and love themes, created for my girlfriend Týnka.',
             c1badge: 'Live',

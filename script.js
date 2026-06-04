@@ -10,6 +10,7 @@ import { applyLanguage, generateCV, playClick, playHover, showHUDNotification } 
 import { connectLanyard, fetchLoLStats, renderFavoriteChampions } from './modules/api.js';
 import { initTools } from './modules/tools.js';
 import { initGames } from './modules/games.js';
+import { i18n } from './modules/translations.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Funny message for curious devs pressing F12
@@ -514,10 +515,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Theme Selector ---
     const themeDots = UISelectors.themeDots;
-    function applyTheme(themeName) {
+    const customColorPicker = document.getElementById('custom-color-picker');
+
+    function hexToRgbString(hex) {
+        let c;
+        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+            c= hex.substring(1).split('');
+            if(c.length== 3){
+                c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c= '0x'+c.join('');
+            return [(c>>16)&255, (c>>8)&255, c&255].join(', ');
+        }
+        return '0, 255, 102';
+    }
+
+    function hexToRgba(hex, alpha) {
+        return `rgba(${hexToRgbString(hex)}, ${alpha})`;
+    }
+
+    function applyTheme(themeName, customHex = null) {
         document.documentElement.setAttribute('data-theme', themeName);
         AppState.activeTheme = themeName;
         localStorage.setItem('theme', themeName);
+        
+        if (themeName === 'custom' && customHex) {
+            document.documentElement.style.setProperty('--accent-color', customHex);
+            document.documentElement.style.setProperty('--accent-color-rgb', hexToRgbString(customHex));
+            document.documentElement.style.setProperty('--accent-color-glow', hexToRgba(customHex, 0.4));
+            localStorage.setItem('customThemeColor', customHex);
+            if (customColorPicker) {
+                customColorPicker.value = customHex;
+            }
+        } else {
+            document.documentElement.style.removeProperty('--accent-color');
+            document.documentElement.style.removeProperty('--accent-color-rgb');
+            document.documentElement.style.removeProperty('--accent-color-glow');
+        }
         
         if (themeDots) {
             themeDots.forEach(dot => {
@@ -526,17 +560,260 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const customColorPopover = document.getElementById('custom-color-popover');
+    const customHueSlider = document.getElementById('custom-hue-slider');
+    const customLightnessSlider = document.getElementById('custom-lightness-slider');
+    const customColorPreview = document.getElementById('custom-color-preview');
+    const btnCustomTheme = document.getElementById('btn-custom-theme');
+
+    function hslToHex(h, s, l) {
+        l /= 100;
+        const a = s * Math.min(l, 1 - l) / 100;
+        const f = n => {
+            const k = (n + h / 30) % 12;
+            const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+            return Math.round(255 * color).toString(16).padStart(2, '0');
+        };
+        return `#${f(0)}${f(8)}${f(4)}`;
+    }
+
+    function updateCustomColor(save = false) {
+        if (!customHueSlider || !customLightnessSlider) return;
+        const h = customHueSlider.value;
+        const l = customLightnessSlider.value;
+        const hex = hslToHex(h, 100, l);
+        const pureHue = hslToHex(h, 100, 50);
+
+        if (customColorPreview) customColorPreview.style.backgroundColor = hex;
+        customLightnessSlider.style.background = `linear-gradient(to right, #000000 0%, ${pureHue} 50%, #ffffff 100%)`;
+        
+        applyTheme('custom', hex);
+        if (save) {
+            localStorage.setItem('customThemeHue', h);
+            localStorage.setItem('customThemeLightness', l);
+            // We also save the hex so existing app logic works
+            localStorage.setItem('customThemeColor', hex);
+        }
+    }
+
+    if (btnCustomTheme && customColorPopover) {
+        btnCustomTheme.addEventListener('click', (e) => {
+            e.stopPropagation();
+            customColorPopover.classList.toggle('show');
+            const savedH = localStorage.getItem('customThemeHue');
+            const savedL = localStorage.getItem('customThemeLightness');
+            if (savedH && customHueSlider) customHueSlider.value = savedH;
+            if (savedL && customLightnessSlider) customLightnessSlider.value = savedL;
+            updateCustomColor(false);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!customColorPopover.contains(e.target) && !btnCustomTheme.contains(e.target)) {
+                customColorPopover.classList.remove('show');
+            }
+        });
+    }
+
+    if (customHueSlider) customHueSlider.addEventListener('input', () => updateCustomColor(true));
+    if (customLightnessSlider) customLightnessSlider.addEventListener('input', () => updateCustomColor(true));
+
     if (themeDots) {
         themeDots.forEach(dot => {
             dot.addEventListener('click', () => {
                 const selectedTheme = dot.getAttribute('data-theme');
-                applyTheme(selectedTheme);
+                if (selectedTheme !== 'custom') {
+                    applyTheme(selectedTheme);
+                    if (customColorPopover) customColorPopover.classList.remove('show');
+                }
             });
         });
     }
 
     // Initialize theme from storage
-    applyTheme(AppState.activeTheme);
+    if (AppState.activeTheme === 'custom') {
+        const savedCustom = localStorage.getItem('customThemeColor') || '#00ff66';
+        applyTheme('custom', savedCustom);
+    } else {
+        applyTheme(AppState.activeTheme);
+    }
+
+    // --- Easter Egg Tracker ---
+    const eggTrackerWidget = document.getElementById('egg-tracker-widget');
+    const eggCountSpan = document.getElementById('egg-tracker-count');
+    const totalEggs = 4;
+
+    function updateEggUI() {
+        if (!eggTrackerWidget) return;
+        const count = AppState.foundEggs.length;
+        eggCountSpan.textContent = `${count}/${totalEggs}`;
+        if (count >= totalEggs) {
+            eggTrackerWidget.classList.add('complete');
+        }
+        const lang = AppState.currentLang || localStorage.getItem('lang') || 'cs';
+        const titleMsg = i18n[lang]?.easterEggs?.trackerTitle || 'Odhaleno tajných Easter Eggů:';
+        eggTrackerWidget.title = `${titleMsg} ${count}/${totalEggs}`;
+    }
+
+    function discoverEgg(eggId) {
+        if (!AppState.foundEggs.includes(eggId)) {
+            AppState.foundEggs.push(eggId);
+            localStorage.setItem('foundEggs', JSON.stringify(AppState.foundEggs));
+            updateEggUI();
+            
+            const toast = document.createElement('div');
+            toast.className = 'type-falling-word';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '80px';
+            toast.style.right = '20px';
+            toast.style.zIndex = '9999';
+            toast.style.pointerEvents = 'none';
+            toast.style.transform = 'none';
+            const lang = AppState.currentLang || localStorage.getItem('lang') || 'cs';
+            const foundMsg = i18n[lang]?.easterEggs?.found || '🎉 Skrytý Easter Egg nalezen!';
+            toast.innerHTML = `${foundMsg} (${AppState.foundEggs.length}/${totalEggs})`;
+            document.body.appendChild(toast);
+            
+            if (AppState.audioEnabled && AppState.audioCtx) {
+                const osc = AppState.audioCtx.createOscillator();
+                const gain = AppState.audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, AppState.audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1760, AppState.audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.1, AppState.audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, AppState.audioCtx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(AppState.audioCtx.destination);
+                osc.start();
+                osc.stop(AppState.audioCtx.currentTime + 0.5);
+            }
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+
+            if (AppState.foundEggs.length === totalEggs) {
+                setTimeout(() => {
+                    const allFoundMsg = i18n[lang]?.easterEggs?.allFound || 'Neskutečné! Našel jsi všechny 4 skryté Easter Eggy. Jsi opravdový lovec pokladů! 🏆';
+                    alert(allFoundMsg);
+                }, 1000);
+            }
+        }
+    }
+
+    updateEggUI();
+    subscribe('currentLang', updateEggUI);
+
+    const eggTatranka = document.getElementById('egg-tatranka');
+    if (eggTatranka) {
+        eggTatranka.addEventListener('mouseenter', () => discoverEgg('tatranka'));
+        eggTatranka.addEventListener('click', () => discoverEgg('tatranka'));
+    }
+
+    const eggPcbs = document.getElementById('egg-pcbs');
+    if (eggPcbs) {
+        eggPcbs.addEventListener('mouseenter', () => discoverEgg('pcbs'));
+        eggPcbs.addEventListener('click', () => discoverEgg('pcbs'));
+    }
+
+    const eggLol = document.getElementById('egg-lol');
+    if (eggLol) {
+        eggLol.addEventListener('mouseenter', () => discoverEgg('lol'));
+        eggLol.addEventListener('click', () => discoverEgg('lol'));
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C'))) {
+            discoverEgg('f12');
+        }
+        if ((e.key === 'f' || e.key === 'F') && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+            if (eggTrackerWidget) eggTrackerWidget.classList.toggle('hidden');
+        }
+    });
+
+    // --- Arby Ipsum Generator ---
+    const btnGenerateIpsum = document.getElementById('btn-generate-ipsum');
+    const btnCopyIpsum = document.getElementById('btn-copy-ipsum');
+    const inputIpsumParagraphs = document.getElementById('ipsum-paragraphs');
+    const ipsumOutput = document.getElementById('ipsum-output');
+
+    const arbyDictionary = [
+        "RGB", "vodní chlazení", "airflow", "teplovodivá pasta", "mechanická klávesnice", 
+        "overclocking", "ping", "lagy", "Valorant", "headshot", "League of Legends", 
+        "Cisco router", "switch", "bottleneck", "základní deska", "FPS drop", 
+        "cable management", "cybersecurity", "server", "grafická karta", "monitor", 
+        "refresh rate", "BIOS", "síťařina", "Nexus", "CS:GO", "harddisk", "SSD",
+        "custom loop", "mechovka", "cherry mx", "DPI"
+    ];
+
+    function generateArbyIpsum(paragraphs) {
+        let text = "";
+        for (let i = 0; i < paragraphs; i++) {
+            let pText = "";
+            let sentenceCount = Math.floor(Math.random() * 4) + 4; // 4 to 7 sentences
+            for (let s = 0; s < sentenceCount; s++) {
+                let wordCount = Math.floor(Math.random() * 6) + 5; // 5 to 10 words
+                let sentence = [];
+                for (let w = 0; w < wordCount; w++) {
+                    let word = arbyDictionary[Math.floor(Math.random() * arbyDictionary.length)];
+                    // Randomly highlight some words
+                    if (Math.random() > 0.85) word = `<span class="highlight">${word}</span>`;
+                    sentence.push(word);
+                }
+                let sentenceStr = sentence.join(" ");
+                // Strip HTML for capitalization
+                let cleanStr = sentenceStr.replace(/<[^>]*>?/gm, '');
+                let firstChar = cleanStr.charAt(0);
+                // Simple capitalization that ignores the span tags
+                sentenceStr = sentenceStr.replace(firstChar, firstChar.toUpperCase()) + ".";
+                pText += sentenceStr + " ";
+            }
+            text += `<p>${pText.trim()}</p>`;
+        }
+        return text;
+    }
+
+    if (btnGenerateIpsum) {
+        btnGenerateIpsum.addEventListener('click', () => {
+            const num = parseInt(inputIpsumParagraphs.value) || 3;
+            ipsumOutput.innerHTML = generateArbyIpsum(Math.min(Math.max(num, 1), 20));
+            ipsumOutput.dataset.generated = 'true';
+            playClick();
+        });
+    }
+
+    if (btnCopyIpsum) {
+        btnCopyIpsum.addEventListener('click', () => {
+            if (ipsumOutput.innerText.trim() !== "" && !ipsumOutput.innerText.includes("Klikni na tlačítko")) {
+                navigator.clipboard.writeText(ipsumOutput.innerText).then(() => {
+                    const originalText = btnCopyIpsum.innerHTML;
+                    btnCopyIpsum.innerHTML = '<i class="fa-solid fa-check"></i> Zkopírováno!';
+                    setTimeout(() => {
+                        btnCopyIpsum.innerHTML = originalText;
+                    }, 2000);
+                });
+                playClick();
+            }
+        });
+    }
+
+    // --- FAQ Accordion ---
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            
+            // Optional: Close all other items
+            faqItems.forEach(i => i.classList.remove('active'));
+
+            if (!isActive) {
+                item.classList.add('active');
+            }
+            playClick(); // Play sound on toggle
+        });
+    });
 
     // --- Initialise Sub-Modules & API sync ---
     initTools();
@@ -547,4 +824,11 @@ document.addEventListener('DOMContentLoaded', () => {
     connectLanyard();
     fetchLoLStats();
     renderFavoriteChampions(AppState.currentLang);
+
+    // Show initial Easter Egg tracker hint
+    setTimeout(() => {
+        const lang = AppState.currentLang || localStorage.getItem('lang') || 'cs';
+        const hint = i18n[lang]?.easterEggs?.hint || "Zmáčkni <b>F</b> pro zobrazení tajných Easter Eggů";
+        showHUDNotification(hint, "info");
+    }, 1500); // slight delay after boot screen
 });

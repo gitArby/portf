@@ -39,7 +39,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preload" as="image" href="image.png">
     <link rel="stylesheet" href="style.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700;900&family=Orbitron:wght@900&display=swap"
@@ -68,6 +67,8 @@
             <li><a href="#lol-stats-view"><i class="fa-solid fa-gamepad"></i> <span>LoL</span></a></li>
             <li><a href="#games-view" id="nav-link-games"><i class="fa-solid fa-ghost"></i> <span>Minihry</span></a></li>
             <li><a href="#projects-view"><i class="fa-solid fa-laptop-code"></i> <span>Projekty</span></a></li>
+            <li><a href="#ipsum-view"><i class="fa-solid fa-align-left"></i> <span>Ipsum</span></a></li>
+            <li><a href="#faq-view"><i class="fa-solid fa-circle-question"></i> <span data-i18n="nav.10">FAQ</span></a></li>
             <li><a href="#contact-view"><i class="fa-solid fa-envelope"></i> <span>Kontakt</span></a></li>
             <!-- Controls are last item in the list so they collapse with hamburger on mobile -->
             <li class="nav-controls-footer" id="nav-controls-footer">
@@ -76,6 +77,25 @@
                     <button class="theme-dot theme-blue" data-theme="blue" title="Cisco Blue"></button>
                     <button class="theme-dot theme-amber" data-theme="amber" title="Cyberpunk Amber"></button>
                     <button class="theme-dot theme-red" data-theme="red" title="Valorant Red"></button>
+                    <button class="theme-dot theme-purple" data-theme="purple" title="Neon Purple"></button>
+                    <button class="theme-dot theme-pink" data-theme="pink" title="Cyber Pink"></button>
+                    <div class="theme-custom-wrapper" title="Vlastní barva">
+                        <button class="theme-dot theme-custom" data-theme="custom" id="btn-custom-theme">
+                            <i class="fa-solid fa-eye-dropper"></i>
+                        </button>
+                        <div class="custom-color-popover" id="custom-color-popover">
+                            <div class="popover-arrow"></div>
+                            <div class="color-preview" id="custom-color-preview"></div>
+                            <div class="slider-group">
+                                <i class="fa-solid fa-palette"></i>
+                                <input type="range" min="0" max="360" value="150" class="hue-slider color-slider" id="custom-hue-slider" title="Odstín (Barva)">
+                            </div>
+                            <div class="slider-group">
+                                <i class="fa-solid fa-sun"></i>
+                                <input type="range" min="0" max="100" value="50" class="lightness-slider color-slider" id="custom-lightness-slider" title="Světlost (Jas)">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="nav-controls-row">
                     <button class="audio-toggle" id="audio-toggle" title="Zvuky">
@@ -91,14 +111,24 @@
 
     <div id="boot-screen">
         <div class="terminal-text">
-            <p>> Inicializace arbyy_OS...</p>
-            <p>> Načítání hardwarových modulů... [OK]</p>
-            <p>> Připojování k League of Legends serverům... [OK]</p>
-            <p>> Vítej, uživateli.</p>
+            <p id="boot-1">> Inicializace arbyy_OS...</p>
+            <p id="boot-2">> Načítání hardwarových modulů... [OK]</p>
+            <p id="boot-3">> Připojování k League of Legends serverům... [OK]</p>
+            <p id="boot-4">> Vítej, uživateli.</p>
             <div class="cursor-blink">_</div>
         </div>
     </div>
-
+    <script>
+        (function(){
+            var lang = localStorage.getItem('lang') || 'cs';
+            if (lang === 'en') {
+                document.getElementById('boot-1').textContent = '> Initializing arbyy_OS...';
+                document.getElementById('boot-2').textContent = '> Loading hardware modules... [OK]';
+                document.getElementById('boot-3').textContent = '> Connecting to League of Legends servers... [OK]';
+                document.getElementById('boot-4').textContent = '> Welcome, user.';
+            }
+        })();
+    </script>
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
@@ -262,7 +292,7 @@
                             <div class="tech-icon"><i class="fa-solid fa-palette"></i><span id="skill-photoshop">Photoshop (základy)</span></div>
                             <div class="tech-icon"><i class="fa-brands fa-git-alt"></i><span>Git</span></div>
                             <div class="tech-icon"><i class="fa-brands fa-github"></i><span>GitHub</span></div>
-                            <div class="tech-icon" title="100 hodin v PC Building Simulatoru 1 a 2"><i class="fa-solid fa-gamepad"></i><span id="skill-pcbs">100h v PCBS 1 & 2</span></div>
+                            <div class="tech-icon" id="egg-pcbs" title="100 hodin v PC Building Simulatoru 1 a 2"><i class="fa-solid fa-gamepad"></i><span id="skill-pcbs">100h v PCBS 1 & 2</span></div>
                         </div>
                     </div>
                 </div>
@@ -343,7 +373,7 @@
                     </div>
 
                     <!-- LoL Easter Egg -->
-                    <div class="cert-card reveal-card" style="--stagger-delay: 6">
+                    <div id="egg-lol" class="cert-card reveal-card" style="--stagger-delay: 6">
                         <div class="cert-badge-wrapper">
                             <div class="cisco-badge" style="background: linear-gradient(135deg, #c2a14e, #93712b);">
                                 <div class="cisco-inner">
@@ -782,7 +812,7 @@
                 
                 <div id="lol-champs-container"></div>
 
-                <a href="https://u.gg/lol/profile/eun1/arby-him/overview" target="_blank" class="btn reveal-stagger"
+                <a href="https://u.gg/lol/profile/eun1/arby-him/overview" target="_blank" class="btn reveal-stagger" id="btn-ugg"
                     style="margin-top: 2rem; display: inline-block; --stagger-delay: 6">Zobrazit na u.gg</a>
             </section>
         </div>
@@ -954,6 +984,81 @@
                 </div>
             </section>
         </div>
+        <!-- Ipsum View -->
+        <div id="ipsum-view" class="dashboard-view">
+            <section class="container reveal">
+                <h3 class="reveal-stagger" style="--stagger-delay: 1">Arby Ipsum Generator</h3>
+                <p class="section-desc reveal-stagger" style="--stagger-delay: 2">Proč používat nudnou latinu, když si můžeš vygenerovat pravý "Nerd" výplňový text plný RGB a síťařiny?</p>
+                
+                <div class="ipsum-controls reveal-stagger" style="--stagger-delay: 3">
+                    <div class="ipsum-input-group">
+                        <label for="ipsum-paragraphs">Počet odstavců:</label>
+                        <input type="number" id="ipsum-paragraphs" min="1" max="10" value="3">
+                    </div>
+                    <button class="btn" id="btn-generate-ipsum">
+                        <i class="fa-solid fa-bolt"></i> Generovat Arby Ipsum
+                    </button>
+                    <button class="btn btn-cv" id="btn-copy-ipsum">
+                        <i class="fa-solid fa-copy"></i> Kopírovat
+                    </button>
+                </div>
+                
+                <div class="ipsum-output-box reveal-stagger" style="--stagger-delay: 4">
+                    <div id="ipsum-output" class="ipsum-text">
+                        Klikni na tlačítko "Generovat" pro vytvoření textu...
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- FAQ View -->
+        <div id="faq-view" class="dashboard-view">
+            <section class="container reveal">
+                <h3 class="reveal-stagger" style="--stagger-delay: 1" data-i18n="faq.title">Často kladené dotazy</h3>
+                
+                <div class="faq-accordion reveal-stagger" style="--stagger-delay: 2">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span data-i18n="faq.q1">Opravíš mi tiskárnu?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p data-i18n="faq.a1">Ne. Tiskárny jsou dílem čisté temné magie a odmítám se jich dotýkat. Zkus ji vypnout a zapnout.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span data-i18n="faq.q2">Složíš mi PC?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p data-i18n="faq.a2">Jasně! Napiš mi do zpráv, sepíšeme si rozpočet, k čemu má PC sloužit a vymyslíme tu nejlepší sestavu.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span data-i18n="faq.q3">Jsi opravdu 1v9 L9 mašina?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p data-i18n="faq.a3">Samozřejmě. Moje herní mechaniky jsou bezchybné. Za případné prohry může čistě jen ping a špatný tým.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span data-i18n="faq.q4">Co znamená "arbyy"?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p data-i18n="faq.a4">To je tajemství, které se předává z generace na generaci. (Nebo prostě jen cool herní nick, záleží, čemu chceš věřit).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
 
         <!-- Contact View -->
         <div id="contact-view" class="dashboard-view">
@@ -980,6 +1085,9 @@
                         <i class="fa-regular fa-copy"></i>
                     </button>
                 </div>
+                <div class="contact-email reveal-stagger" style="--stagger-delay: 4.5; margin-top: 1.5rem;">
+                    <a href="tel:+420776739054" class="btn btn-copy-email">+420 776 739 054</a>
+                </div>
                 <div class="contact-discord reveal-stagger" style="--stagger-delay: 5; margin-top: 1.5rem; text-align: center;">
                     <a href="https://discord.gg/6GJwv87JyX" target="_blank" class="btn" style="background-color: #5865F2; border-color: #5865F2; color: white; display: inline-flex; align-items: center; gap: 0.5rem;">
                         <i class="fa-brands fa-discord" style="font-size: 1.2rem;"></i> Můj Discord Server: Arbyho Podsvětí
@@ -1003,7 +1111,10 @@
                 <a href="mailto:mackuadam37@gmail.com" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
             </div>
             <p class="footer-copy">&copy; <span id="current-year"></span> arbyy.tech &mdash; made with <span
-                    class="footer-heart">&#10084;</span>, caffeine & <span title="Energie sbalená na cesty">tatranka.zip</span></p>
+                    class="footer-heart">&#10084;</span>, caffeine & <span id="egg-tatranka" title="Energie sbalená na cesty">tatranka.zip</span></p>
         </footer>
     </main>
     <div id="hud-notifier-container"></div>
+    <div id="egg-tracker-widget" class="egg-tracker hidden" title="Odhaleno tajných Easter Eggů: 0/4">
+        🥚 <span id="egg-tracker-count">0/4</span>
+    </div>
