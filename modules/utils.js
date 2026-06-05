@@ -135,6 +135,30 @@ export function handleAppError(error, context) {
 }
 
 /**
+ * Executes a function within an Error Boundary.
+ * If the function throws an error, it catches it, logs it, and displays a friendly fallback HTML in the container.
+ * @param {string} containerId - The DOM ID of the container
+ * @param {Function} executeFn - The async function to execute
+ * @param {string} fallbackHtml - The HTML to inject on failure
+ */
+export async function withErrorBoundary(containerId, executeFn, fallbackHtml) {
+    const container = document.getElementById(containerId);
+    try {
+        await executeFn();
+    } catch (error) {
+        console.error(`[Error Boundary] Selhání v kontejneru ${containerId}:`, error);
+        if (container) {
+            container.innerHTML = fallbackHtml || `
+                <div class="error-fallback reveal-card" style="padding: 2rem; text-align: center; color: var(--arbyy-error);">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p>Komponentu se nepodařilo načíst.</p>
+                </div>`;
+        }
+        handleAppError(error, `Modul ${containerId}`);
+    }
+}
+
+/**
  * Show terminal HUD popup notification.
  * 
  * @param {string} message - Notification text

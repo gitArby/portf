@@ -1,0 +1,24 @@
+{
+  "name": "portf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gitArby/portf.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gitArby/portf/issues"
+  },
+  "homepage": "https://github.com/gitArby/portf#readme",
+  "devDependencies": {
+    "vite": "^8.0.16"
+  }
+}

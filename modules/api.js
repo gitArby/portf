@@ -6,9 +6,11 @@
 import { AppState, subscribe } from './state.js';
 import { UISelectors } from './selectors.js';
 import { i18n } from './translations.js';
-import { handleAppError } from './utils.js';
+import { handleAppError, withErrorBoundary } from './utils.js';
 
-const DISCORD_ID = '938119246196666378';
+// Bezpečná extrakce pro případ, že to spustí přes starý Live Server místo Vite
+const env = typeof import.meta.env !== 'undefined' ? import.meta.env : {};
+const DISCORD_ID = env.VITE_DISCORD_ID || '938119246196666378';
 let reconnectAttempts = 0;
 const MAX_RECONNECTS = 5;
 
@@ -19,6 +21,15 @@ const MAX_RECONNECTS = 5;
 export function connectLanyard() {
     if (reconnectAttempts >= MAX_RECONNECTS) {
         handleAppError(new Error('Max reconnect attempts reached'), 'Lanyard WebSocket (Discord Status)');
+        const profileCard = UISelectors.discordProfileCard;
+        if (profileCard) {
+            profileCard.innerHTML = `
+                <div class="error-fallback reveal-card" style="padding: 2rem; text-align: center; color: var(--arbyy-error); border: 1px solid var(--arbyy-error); border-radius: 8px;">
+                    <i class="fa-brands fa-discord" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>Nelze načíst status Discordu.</p>
+                    <p style="font-size: 0.8rem; opacity: 0.7;">API je momentálně nedostupné.</p>
+                </div>`;
+        }
         return;
     }
 
@@ -349,25 +360,37 @@ export function renderFavoriteChampions(lang) {
 /**
  * Renders static League of Legends summoner statistics (No specific rank).
  */
-export function fetchLoLStats() {
-    const card = UISelectors.lolCard;
-    if (!card) return;
+export async function fetchLoLStats() {
+    await withErrorBoundary('lol-card', async () => {
+        const card = UISelectors.lolCard;
+        if (!card) return;
 
-    card.innerHTML = `
-        <div class="lol-info">
-            <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_Diamond.webp" alt="Rank" onerror="this.style.display='none'">
+        // Simulujeme dynamický fetch pomocí await
+        // V reálu by tady bylo fetch('https://na1.api.riotgames.com/...')
+        card.innerHTML = `
+            <div class="lol-info">
+                <img class="lol-emblem" src="https://ddragon.leagueoflegends.com/cdn/img/ranked-emblems/Emblem_Diamond.webp" alt="Rank" onerror="this.style.display='none'">
+                <div class="lol-details">
+                    <div class="lol-name">arby <span class="lol-server">#him</span></div>
+                    <div class="lol-rank" id="lol-rank-text">Podívej se na u.gg pro aktuální stats</div>
+                </div>
+            </div>`;
+        
+        // Auto-translate if lang is known
+        const lang = AppState.currentLang || localStorage.getItem('lang') || 'cs';
+        const t = i18n[lang]?.lol;
+        if (t && t.statsDesc) {
+            document.getElementById('lol-rank-text').textContent = t.statsDesc;
+        }
+    }, `
+        <div class="lol-info error-state" style="justify-content: center; opacity: 0.7;">
+            <i class="fa-solid fa-server" style="font-size: 2rem; margin-right: 1rem;"></i>
             <div class="lol-details">
-                <div class="lol-name">arby <span class="lol-server">#him</span></div>
-                <div class="lol-rank" id="lol-rank-text">Podívej se na u.gg pro aktuální stats</div>
+                <div class="lol-name">LoL API nedostupné</div>
+                <div class="lol-rank">Zkuste to prosím později</div>
             </div>
-        </div>`;
-    
-    // Auto-translate if lang is known
-    const lang = AppState.currentLang || localStorage.getItem('lang') || 'cs';
-    const t = i18n[lang]?.lol;
-    if (t && t.statsDesc) {
-        document.getElementById('lol-rank-text').textContent = t.statsDesc;
-    }
+        </div>
+    `);
 }
 
 // Bind presence and champion card refreshes to state changes
