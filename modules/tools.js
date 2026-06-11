@@ -687,6 +687,25 @@ export function runSimulatedConsole(deviceKey) {
  * Initializes all tool calculators, binding event listeners to UI inputs.
  */
 export function initTools() {
+    // --- Calculator Tab Switching ---
+    if (UISelectors.tabBtns && UISelectors.calcViews) {
+        UISelectors.tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.getAttribute('data-tab');
+                
+                UISelectors.tabBtns.forEach(b => b.classList.remove('active'));
+                UISelectors.calcViews.forEach(v => v.classList.remove('active'));
+                
+                btn.classList.add('active');
+                
+                const targetView = document.getElementById(`view-${targetTab}`);
+                if (targetView) targetView.classList.add('active');
+                
+                playClick();
+            });
+        });
+    }
+
     // --- CCNA Console Bindings ---
     if (UISelectors.topoNodes) {
         UISelectors.topoNodes.forEach(node => {

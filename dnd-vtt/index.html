@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy VTT - D&D Web Hra</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Přihlašovací obrazovka -->
+        <div id="login-screen" class="screen active">
+            <div class="background-overlay"></div>
+            <div class="login-card glass-panel">
+                <h1 class="glow-text">Fantasy VTT</h1>
+                <p>Ponořte se do světa dobrodružství se svými přáteli.</p>
+                
+                <div class="form-group">
+                    <label for="player-name">Tvé jméno:</label>
+                    <input type="text" id="player-name" placeholder="Např. Gandalf" autocomplete="off">
+                </div>
+
+                <div class="actions">
+                    <button id="btn-host" class="btn primary">Vytvořit hru (Host / DM)</button>
+                    <div class="divider"><span>nebo</span></div>
+                    <div class="join-group">
+                        <input type="text" id="room-code" placeholder="Kód místnosti" autocomplete="off">
+                        <button id="btn-join" class="btn secondary">Připojit se</button>
+                    </div>
+                </div>
+                <div id="login-error" class="error-msg hidden"></div>
+            </div>
+        </div>
+
+        <!-- Hlavní herní rozhraní -->
+        <div id="game-screen" class="screen hidden">
+            <!-- Levý panel: Nástroje a Hráči -->
+            <aside class="sidebar left-sidebar glass-panel">
+                <div class="room-info">
+                    <h2>Kód místnosti:</h2>
+                    <div class="code-box">
+                        <span id="display-room-code" class="highlight">---</span>
+                        <button id="btn-copy-code" class="icon-btn" title="Kopírovat kód"><i class="fas fa-copy"></i></button>
+                    </div>
+                </div>
+                
+                <div class="players-list-container">
+                    <h3>Hráči v místnosti</h3>
+                    <ul id="players-list">
+                        <!-- Dynamický seznam -->
+                    </ul>
+                </div>
+
+                <nav class="tools-nav">
+                    <button class="nav-btn active" data-target="tab-map"><i class="fas fa-map"></i> Mapa</button>
+                    <button class="nav-btn" data-target="tab-character"><i class="fas fa-user"></i> Deník postavy</button>
+                    <button class="nav-btn" data-target="tab-combat"><i class="fas fa-swords"></i> Combat Tracker</button>
+                    <button class="nav-btn danger" id="btn-leave"><i class="fas fa-sign-out-alt"></i> Opustit</button>
+                </nav>
+
+                <!-- Map Manager (pouze pro DM) -->
+                <div id="map-manager" class="map-manager hidden">
+                    <h3>Správa Map (DM)</h3>
+                    <ul id="maps-list">
+                        <!-- Seznam map -->
+                    </ul>
+                    <button id="btn-new-map" class="btn secondary btn-sm"><i class="fas fa-plus"></i> Nová Mapa</button>
+                    
+                    <div style="margin-top: 1rem; display:flex; gap: 0.5rem; flex-direction: column;">
+                        <button id="btn-export-world" class="btn secondary btn-sm" title="Uložit celý svět (Mapy, Tokeny, Combat Tracker)"><i class="fas fa-save"></i> Uložit Svět</button>
+                        <label for="import-world-upload" class="btn secondary btn-sm" style="cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem;" title="Nahrát uložený svět ze souboru .json"><i class="fas fa-folder-open"></i> Nahrát Svět</label>
+                        <input type="file" id="import-world-upload" accept=".json" class="hidden">
+                    </div>
+
+                    <div style="margin-top: 1rem;">
+                        <label style="font-size: 0.8rem; color: var(--text-muted);">Velikost Mřížky:</label>
+                        <input type="number" id="grid-size" value="50" min="20" max="200" style="padding: 0.2rem; margin-top:0.2rem;">
+                        <label style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem; font-size:0.8rem; cursor:pointer;">
+                            <input type="checkbox" id="grid-snap" checked> Přichytávat na mřížku
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Bestiář (pouze pro DM) -->
+                <div id="dm-bestiary" class="map-manager hidden" style="margin-top: 1rem;">
+                    <h3>🐉 Bestiář (Táhni a Pusť)</h3>
+                    <ul id="bestiary-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; max-height: 200px; overflow-y: auto;">
+                        <!-- Zde se vygenerují monstra z JS -->
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Hlavní středová oblast -->
+            <main class="main-area">
+                <!-- Tab: Mapa -->
+                <div id="tab-map" class="tab-content active">
+                    <div class="canvas-container glass-panel">
+                        <canvas id="game-map"></canvas>
+                        <!-- Nástroje mapy -->
+                        <div class="map-tools">
+                            <button id="tool-select" class="tool-btn active" title="Vybrat/Přesunout"><i class="fas fa-mouse-pointer"></i></button>
+                            <button id="tool-draw" class="tool-btn" title="Kreslit normální čáru"><i class="fas fa-pencil-alt"></i></button>
+                            <button id="tool-wall" class="tool-btn" title="Kreslit Zeď (Blokuje výhled)"><i class="fas fa-layer-group"></i></button>
+                            <div class="dropdown">
+                                <button id="tool-token" class="tool-btn" title="Vložit Token Postavy"><i class="fas fa-chess-pawn"></i></button>
+                                <div class="terrain-menu" style="min-width:200px">
+                                    <label style="color:#aaa; font-size:0.8rem">Vybrat Avatara</label>
+                                    <div class="terrain-options">
+                                        <img src="" class="avatar-btn active" data-avatar="color" title="Pouze barva (Výchozí)">
+                                        <img src="" class="avatar-btn" data-avatar="knight" title="Rytíř">
+                                        <img src="" class="avatar-btn" data-avatar="mage" title="Mág">
+                                        <img src="" class="avatar-btn" data-avatar="goblin" title="Goblin">
+                                        <img src="" class="avatar-btn" data-avatar="dragon" title="Drak">
+                                    </div>
+                                    <input type="color" id="tool-color" value="#ff3333" title="Barva tokenu nebo čáry" style="width:100%; margin-top:0.5rem;">
+                                </div>
+                            </div>
+                            
+                            <div class="dropdown">
+                                <button id="tool-aoe" class="tool-btn" title="Magické Šablony (AoE)"><i class="fas fa-magic"></i></button>
+                                <div class="aoe-menu">
+                                    <button class="aoe-btn" data-aoe="circle" title="Ohnivá koule atd.">🔴 Kruh (Rádius)</button>
+                                    <button class="aoe-btn" data-aoe="cone" title="Plamenné ruce atd.">📐 Kužel (Cone)</button>
+                                </div>
+                            </div>
+
+                            <button id="tool-ruler" class="tool-btn" title="Pravítko (Měření vzdálenosti)"><i class="fas fa-ruler"></i></button>
+                            
+                            <input type="color" id="tool-color" value="#e74c3c" title="Barva tokenu/pera">
+                            
+                            <!-- DM Tools -->
+                            <div id="dm-map-tools" class="hidden" style="display:flex; gap:0.5rem; margin-left: 1rem; padding-left: 1rem; border-left: 1px solid rgba(255,255,255,0.2);">
+                                
+                                <div class="dropdown">
+                                    <button id="tool-terrain" class="tool-btn" title="Malovat terén (Tráva, Voda...)"><i class="fas fa-paint-roller"></i></button>
+                                    <div class="terrain-menu">
+                                        <label style="color:#aaa; font-size:0.8rem">Typ Terénu</label>
+                                        <div class="terrain-options">
+                                            <div class="terrain-btn active" data-terrain="grass" style="background:#3B7A3B;" title="Tráva"></div>
+                                            <div class="terrain-btn" data-terrain="water" style="background:#1C537B;" title="Voda"></div>
+                                            <div class="terrain-btn" data-terrain="stone" style="background:#555;" title="Kámen"></div>
+                                            <div class="terrain-btn" data-terrain="wood" style="background:#6B4226;" title="Dřevo"></div>
+                                        </div>
+                                        <label style="color:#aaa; font-size:0.8rem; margin-top:0.5rem;">Velikost štětce</label>
+                                        <input type="range" id="terrain-size" min="20" max="200" value="80" style="width:100%">
+                                    </div>
+                                </div>
+
+                                <div class="dropdown">
+                                    <button class="tool-btn" title="Jukebox (Hudba pro všechny)"><i class="fas fa-music"></i></button>
+                                    <div class="music-menu">
+                                        <button class="aoe-btn" onclick="window.gameApp.playJukebox('tavern')">🍻 Hlučná Krčma</button>
+                                        <button class="aoe-btn" onclick="window.gameApp.playJukebox('cave')">🦇 Temná Jeskyně</button>
+                                        <button class="aoe-btn" onclick="window.gameApp.playJukebox('forest')">🌲 Lesní Cesta</button>
+                                        <button class="aoe-btn" onclick="window.gameApp.playJukebox('combat')">⚔️ Epická Bitva</button>
+                                        <button class="aoe-btn" onclick="window.gameApp.stopJukebox()" style="background:#8b0000">⏹ Zastavit hudbu</button>
+                                    </div>
+                                </div>
+                
+                                <div class="dropdown">
+                                    <button id="tool-prop" class="tool-btn" title="Katalog objektů (HD Budovy, Stromy)"><i class="fas fa-tree"></i></button>
+                                    <div class="dropdown-content props-grid" id="prop-menu">
+                                        <img src="" class="prop-item-hd" data-prop="tree" title="Strom">
+                                        <img src="" class="prop-item-hd" data-prop="tower" title="Věž">
+                                        <img src="" class="prop-item-hd" data-prop="camp" title="Táborák">
+                                        <img src="" class="prop-item-hd" data-prop="chest" title="Truhla">
+                                        <img src="" class="prop-item-hd" data-prop="skull" title="Lebka">
+                                    </div>
+                                </div>
+                                
+                                <button id="tool-hide" class="tool-btn" title="Skrýt/Odhalit token nebo objekt (pro hráče neviditelné)"><i class="fas fa-user-secret"></i></button>
+
+                                <label for="bg-upload" class="tool-btn" style="display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Nahrát obrázek na pozadí"><i class="fas fa-image"></i></label>
+                                <input type="file" id="bg-upload" accept="image/*" class="hidden">
+                                
+                                <button id="tool-fog-reveal" class="tool-btn" title="Odhalit mlhu války (štětec)"><i class="fas fa-eye"></i></button>
+                                <button id="tool-fog-reset" class="tool-btn danger" title="Zahalit celou mapu (Noc)"><i class="fas fa-cloud-moon"></i></button>
+                                <button id="tool-fog-clear" class="tool-btn" style="color:var(--accent-warning)" title="Vypnout mlhu války (Den)"><i class="fas fa-sun"></i></button>
+
+                                <label for="handout-upload" class="tool-btn" style="color:var(--accent-primary); display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Ukázat všem obrázek (Handout)"><i class="fas fa-scroll"></i></label>
+                                <input type="file" id="handout-upload" accept="image/*" class="hidden">
+
+                                <button id="tool-clear" class="tool-btn danger" title="Smazat vše na aktuální mapě"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Postava -->
+                <div id="tab-character" class="tab-content hidden glass-panel">
+                    <h2>Deník postavy</h2>
+                    <div id="character-sheet" class="character-sheet">
+                        <input type="text" id="char-name" placeholder="Jméno postavy" class="chat-input" style="font-size: 1.2rem; margin-bottom: 0.5rem; text-align: center;">
+                        <input type="text" id="char-class" placeholder="Třída a Úroveň" class="chat-input" style="margin-bottom: 1rem; text-align: center; color: #aaa;">
+                        
+                        <div class="char-tabs">
+                            <button class="char-tab active" data-target="tab-stats">Statistiky</button>
+                            <button class="char-tab" data-target="tab-inventory">Inventář</button>
+                            <button class="char-tab" data-target="tab-spells">Kouzla</button>
+                        </div>
+
+                        <div id="tab-stats" class="char-pane active">
+                            <div class="stats-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem">
+                                <div class="stat-box primary"><div class="stat-label">HP</div><input type="number" id="char-hp" value="10" class="stat-val"></div>
+                                <div class="stat-box primary"><div class="stat-label">AC</div><input type="number" id="char-ac" value="10" class="stat-val"></div>
+                            </div>
+                            <div class="stats-grid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:0.5rem; margin-top: 1rem;">
+                                <div class="stat-box"><div class="stat-label rollable-stat" data-stat="char-str" data-name="Sílu" title="Hodit na Sílu" style="cursor:pointer; color:var(--accent-primary)">SIL <i class="fas fa-dice-d20" style="font-size:0.7em"></i></div><input type="number" id="char-str" value="10" class="stat-val"></div>
+                                <div class="stat-box"><div class="stat-label rollable-stat" data-stat="char-dex" data-name="Obratnost" title="Hodit na Obratnost" style="cursor:pointer; color:var(--accent-primary)">OBR <i class="fas fa-dice-d20" style="font-size:0.7em"></i></div><input type="number" id="char-dex" value="10" class="stat-val"></div>
+                                <div class="stat-box"><div class="stat-label rollable-stat" data-stat="char-con" data-name="Odolnost" title="Hodit na Odolnost" style="cursor:pointer; color:var(--accent-primary)">ODL <i class="fas fa-dice-d20" style="font-size:0.7em"></i></div><input type="number" id="char-con" value="10" class="stat-val"></div>
+                                <div class="stat-box"><div class="stat-label rollable-stat" data-stat="char-int" data-name="Inteligenci" title="Hodit na Inteligenci" style="cursor:pointer; color:var(--accent-primary)">INT <i class="fas fa-dice-d20" style="font-size:0.7em"></i></div><input type="number" id="char-int" value="10" class="stat-val"></div>
+                                <div class="stat-box"><div class="stat-label rollable-stat" data-stat="char-wis" data-name="Moudrost" title="Hodit na Moudrost" style="cursor:pointer; color:var(--accent-primary)">MOU <i class="fas fa-dice-d20" style="font-size:0.7em"></i></div><input type="number" id="char-wis" value="10" class="stat-val"></div>
+                                <div class="stat-box"><div class="stat-label rollable-stat" data-stat="char-cha" data-name="Charisma" title="Hodit na Charisma" style="cursor:pointer; color:var(--accent-primary)">CHA <i class="fas fa-dice-d20" style="font-size:0.7em"></i></div><input type="number" id="char-cha" value="10" class="stat-val"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-inventory" class="char-pane">
+                            <textarea id="char-inventory" class="chat-input" rows="8" placeholder="Zbraně, Zbroj, Zlaťáky, Vybavení..."></textarea>
+                        </div>
+
+                        <div id="tab-spells" class="char-pane">
+                            <div style="margin-bottom: 1rem;">
+                                <label style="color:#aaa; font-size:0.8rem">Pozice Kouzel (Level 1-3)</label>
+                                <div style="margin-top:0.5rem">
+                                    <span style="display:inline-block; width:30px">L1:</span>
+                                    <div class="spell-slot" onclick="this.classList.toggle('used')"></div>
+                                    <div class="spell-slot" onclick="this.classList.toggle('used')"></div>
+                                    <div class="spell-slot" onclick="this.classList.toggle('used')"></div>
+                                    <div class="spell-slot" onclick="this.classList.toggle('used')"></div>
+                                </div>
+                                <div style="margin-top:0.5rem">
+                                    <span style="display:inline-block; width:30px">L2:</span>
+                                    <div class="spell-slot" onclick="this.classList.toggle('used')"></div>
+                                    <div class="spell-slot" onclick="this.classList.toggle('used')"></div>
+                                    <div class="spell-slot" onclick="this.classList.toggle('used')"></div>
+                                </div>
+                                <div style="margin-top:0.5rem">
+                                    <span style="display:inline-block; width:30px">L3:</span>
+                                    <div class="spell-slot" onclick="this.classList.toggle('used')"></div>
+                                    <div class="spell-slot" onclick="this.classList.toggle('used')"></div>
+                                </div>
+                            </div>
+                            <textarea id="char-spells" class="chat-input" rows="5" placeholder="Seznam naučených kouzel..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Combat Tracker -->
+                <div id="tab-combat" class="tab-content hidden glass-panel">
+                    <h2>Iniciativa (Combat Tracker)</h2>
+                    <div class="combat-controls hidden" id="dm-combat-tools">
+                        <input type="text" id="combat-name" placeholder="Jméno (NPC)" class="char-input" style="width: auto;">
+                        <input type="number" id="combat-init" placeholder="Inic." class="char-input" style="width: 80px;">
+                        <input type="number" id="combat-hp" placeholder="HP" class="char-input" style="width: 80px;">
+                        <button id="btn-add-combatant" class="btn secondary" style="width: auto;"><i class="fas fa-plus"></i></button>
+                        <button id="btn-next-turn" class="btn primary" style="width: auto; margin-left: auto;">Další tah <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <ul id="combat-list" class="combat-list">
+                        <!-- Zde budou bojovníci -->
+                    </ul>
+                </div>
+            </main>
+
+            <!-- Pravý panel: Chat a Kostky -->
+            <aside class="sidebar right-sidebar glass-panel">
+                <div class="dice-panel">
+                    <h3>Hod kostkou</h3>
+                    <div class="dice-buttons">
+                        <button class="dice-btn" data-sides="4"><i class="fas fa-dice-d20"></i> d4</button>
+                        <button class="dice-btn" data-sides="6"><i class="fas fa-dice-d6"></i> d6</button>
+                        <button class="dice-btn" data-sides="8"><i class="fas fa-dice-d20"></i> d8</button>
+                        <button class="dice-btn" data-sides="10"><i class="fas fa-dice-d20"></i> d10</button>
+                        <button class="dice-btn" data-sides="12"><i class="fas fa-dice-d20"></i> d12</button>
+                        <button class="dice-btn highlight-dice" data-sides="20"><i class="fas fa-dice-d20"></i> d20</button>
+                    </div>
+                    <label id="secret-roll-wrapper" style="display:none; align-items:center; gap:0.5rem; margin-top:0.5rem; font-size:0.8rem; cursor:pointer; color:var(--text-muted);">
+                        <input type="checkbox" id="secret-roll"> Tajný hod (pouze DM)
+                    </label>
+                </div>
+
+                <div class="chat-container">
+                    <div id="chat-messages" class="chat-messages">
+                        <!-- Zprávy se budou přidávat sem -->
+                    </div>
+                    <form id="chat-form" class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Napiš zprávu..." autocomplete="off">
+                        <button type="submit" id="btn-send"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Kód místnosti zobrazený na ploše pro ostatní -->
+    <div id="room-code-display" class="room-code-display hidden"></div>
+
+    <!-- Modální okno pro Novou Mapu -->
+    <div id="modal-new-map" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Vytvořit novou mapu</h2>
+            <div class="form-group">
+                <label>Název mapy</label>
+                <input type="text" id="modal-map-name" placeholder="Např. Jeskyně goblinů">
+            </div>
+            <div class="form-group">
+                <label>Obrázek pozadí (volitelné)</label>
+                <input type="file" id="modal-map-bg" accept="image/*" class="char-input" style="padding: 0.5rem; background: transparent; border: 1px dashed var(--border-glass);">
+            </div>
+            <div class="form-group">
+                <label>Velikost mřížky (px)</label>
+                <input type="number" id="modal-map-grid" value="50" min="20" max="200">
+            </div>
+            <div class="modal-actions">
+                <button id="modal-btn-cancel" class="btn secondary">Zrušit</button>
+                <button id="modal-btn-create" class="btn primary">Vytvořit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nápis Další Tah -->
+    <div id="turn-overlay" class="turn-overlay">
+        <div class="turn-subtext">NA TAHU JE</div>
+        <div id="turn-name" class="turn-text">GANDALF</div>
+    </div>
+
+    <!-- Handout (Obrázek pro hráče) -->
+    <div id="handout-overlay" class="handout-overlay hidden">
+        <button id="close-handout" class="close-handout"><i class="fas fa-times"></i></button>
+        <img id="handout-img" src="">
+    </div>
+
+    <!-- Hlavní JS logika -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
