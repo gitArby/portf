@@ -1,0 +1,100 @@
+
+html.show-system-cursor,
+html.show-system-cursor * {
+    cursor: default !important;
+}
+html.show-system-cursor .cursor-dot,
+html.show-system-cursor .cursor-outline {
+    display: none !important;
+}
+
+html.cursor-active .cursor-dot {
+    opacity: 1;
+}
+
+html.cursor-active .cursor-outline {
+    opacity: 1;
+}
+
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--arbyy-green);
+    border-radius: 50%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    z-index: 12000;
+    /* Start off-screen until JS sets real coordinates on first mousemove */
+    transform: translate3d(-200vw, -200vh, 0) translate(-50%, -50%);
+    box-shadow: 0 0 10px var(--arbyy-green);
+    opacity: 0;
+    will-change: transform;
+    transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+}
+
+.cursor-dot.active {
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    border: 2px solid var(--arbyy-green);
+    animation: cursorPulse 1s infinite alternate;
+}
+
+.cursor-outline {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(var(--accent-color-rgb), 0.2);
+    border-radius: 50%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    z-index: 11999;
+    /* Start off-screen until JS sets real coordinates on first mousemove */
+    transform: translate3d(-200vw, -200vh, 0) translate(-50%, -50%);
+    opacity: 0;
+    will-change: transform;
+    transition: opacity 0.3s ease, border-color 0.3s ease;
+}
+
+.cursor-outline.active {
+    border-color: rgba(var(--accent-color-rgb), 0.6);
+}
+
+
+#easter-egg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 998;
+    display: none;
+}
+
+#mega-trigger {
+    cursor: none;
+    position: relative;
+    z-index: 100;
+}
+
+@keyframes cursorPulse {
+    0% { box-shadow: 0 0 5px var(--arbyy-green), 0 0 0px rgba(var(--accent-color-rgb), 0.3); }
+    100% { box-shadow: 0 0 15px var(--arbyy-green), 0 0 25px rgba(var(--accent-color-rgb), 0.2); }
+}
+
+#scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--arbyy-green);
+    z-index: 10001;
+    box-shadow: 0 0 8px var(--arbyy-green);
+    transition: width 0.1s linear;
+}
+

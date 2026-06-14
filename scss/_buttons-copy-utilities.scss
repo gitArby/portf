@@ -1,0 +1,63 @@
+
+.btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    border: 2px solid var(--arbyy-green);
+    color: var(--arbyy-green);
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: none;
+}
+
+.btn:hover {
+    background-color: var(--arbyy-green);
+    color: var(--bg-dark);
+    box-shadow: 0 0 15px var(--arbyy-green-glow);
+}
+
+.btn-cv {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-light);
+}
+
+.btn-cv:hover {
+    background-color: transparent;
+    border-color: var(--arbyy-green);
+    color: var(--arbyy-green);
+    box-shadow: 0 0 15px var(--arbyy-green-glow);
+}
+
+.btn-copy {
+    background: none;
+    border: 2px solid #333;
+    color: var(--text-muted);
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: none;
+}
+
+.btn-copy:hover {
+    border-color: var(--arbyy-green);
+    color: var(--arbyy-green);
+    box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.2);
+}
+
+.copy-toast {
+    display: inline-block;
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    color: var(--arbyy-green);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.copy-toast.visible {
+    opacity: 1;
+}
+

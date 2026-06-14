@@ -1,0 +1,306 @@
+<!-- Calculator View -->
+        <div id="calculator-view" class="dashboard-view">
+            <section id="calculator" class="container reveal">
+                <h3 id="calc-title" class="reveal-stagger" style="--stagger-delay: 1">Nástroje & Kalkulačky</h3>
+                <p class="container-text reveal-stagger" id="calc-subtitle" style="--stagger-delay: 2">Rychlé výpočty podsítí pro síťaře a standardní/vědecká kalkulačka pro každodenní úkoly.</p>
+                
+                <div class="calc-hub reveal-card" style="--stagger-delay: 3">
+                    <div class="calc-tabs">
+                        <button class="calc-tab-btn active" data-tab="subnet" id="tab-btn-subnet">Subnet kalkulačka</button>
+                        <button class="calc-tab-btn" data-tab="raid" id="tab-btn-raid">RAID kalkulačka</button>
+                        <button class="calc-tab-btn" data-tab="psu" id="tab-btn-psu">PC Zdroj (PSU)</button>
+                        <button class="calc-tab-btn" data-tab="password" id="tab-btn-password">Generátor hesel</button>
+                        <button class="calc-tab-btn" data-tab="math" id="tab-btn-math">Matematická kalkulačka</button>
+                    </div>
+                    
+                    <div class="calc-content">
+                        <!-- SUBNET CALCULATOR VIEW -->
+                        <div class="calc-view active" id="view-subnet">
+                            <div class="subnet-input-grid">
+                                <div class="input-field">
+                                    <label for="subnet-ip" id="lbl-subnet-ip">IP adresa:</label>
+                                    <input type="text" id="subnet-ip" value="192.168.1.1" placeholder="Např. 192.168.1.1">
+                                </div>
+                                <div class="input-field">
+                                    <label for="subnet-cidr" id="lbl-subnet-cidr">Maska / CIDR: <span id="cidr-val">/24</span></label>
+                                    <input type="range" id="subnet-cidr" min="0" max="32" value="24" class="slider">
+                                </div>
+                            </div>
+                            
+                            <div class="subnet-results">
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-mask">Maska sítě:</span>
+                                    <span class="result-val" id="res-val-mask">255.255.255.0</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-net">Adresa sítě (Network):</span>
+                                    <span class="result-val" id="res-val-net">192.168.1.0</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-broadcast">Broadcast adresa:</span>
+                                    <span class="result-val" id="res-val-broadcast">192.168.1.255</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-range">Rozsah použitelných IP:</span>
+                                    <span class="result-val" id="res-val-range">192.168.1.1 - 192.168.1.254</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-hosts">Počet použitelných hostů:</span>
+                                    <span class="result-val" id="res-val-hosts">254</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-wildcard">Wildcard maska:</span>
+                                    <span class="result-val" id="res-val-wildcard">0.0.0.255</span>
+                                </div>
+                            </div>
+                            
+                            <div class="subnet-binary">
+                                <div class="binary-header" id="bin-hdr">Binární vizualizace</div>
+                                <div class="binary-row">
+                                    <span class="binary-label">IP:</span>
+                                    <span class="binary-val" id="bin-val-ip">11000000.10101000.00000001.00000001</span>
+                                </div>
+                                <div class="binary-row">
+                                    <span class="binary-label">MASK:</span>
+                                    <span class="binary-val" id="bin-val-mask">11111111.11111111.11111111.00000000</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- RAID CALCULATOR VIEW -->
+                        <div class="calc-view" id="view-raid">
+                            <div class="subnet-input-grid">
+                                <div class="input-field">
+                                    <label for="raid-level" id="lbl-raid-level">RAID Level:</label>
+                                    <select id="raid-level">
+                                        <option value="0">RAID 0 (Striping)</option>
+                                        <option value="1">RAID 1 (Mirroring)</option>
+                                        <option value="5">RAID 5 (Parity)</option>
+                                        <option value="6">RAID 6 (Double Parity)</option>
+                                        <option value="10">RAID 10 (Stripe of Mirrors)</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label for="raid-disks" id="lbl-raid-disks">Počet disků:</label>
+                                    <input type="number" id="raid-disks" min="2" max="32" value="4">
+                                </div>
+                                <div class="input-field">
+                                    <label for="raid-capacity" id="lbl-raid-capacity">Kapacita disku:</label>
+                                    <div class="capacity-input-wrapper">
+                                        <input type="number" id="raid-capacity" min="1" max="100000" value="1000">
+                                        <select id="raid-unit">
+                                            <option value="GB">GB</option>
+                                            <option value="TB">TB</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="raid-error hidden" id="raid-error-msg">Neplatná konfigurace!</div>
+
+                            <div class="subnet-results">
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-usable">Využitelná kapacita:</span>
+                                    <span class="result-val" id="res-val-raid-usable">0 GB</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-lost">Ztracená kapacita:</span>
+                                    <span class="result-val" id="res-val-raid-lost">0 GB</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-fault">Odolnost proti chybám:</span>
+                                    <span class="result-val" id="res-val-raid-fault">0 disků</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-read">Rychlost čtení (multiplikátor):</span>
+                                    <span class="result-val" id="res-val-raid-read">1x</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-raid-write">Rychlost zápisu (multiplikátor):</span>
+                                    <span class="result-val" id="res-val-raid-write">1x</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PSU CALCULATOR VIEW -->
+                        <div class="calc-view" id="view-psu">
+                            <div class="subnet-input-grid">
+                                <div class="input-field">
+                                    <label for="psu-cpu" id="lbl-psu-cpu">Procesor (CPU):</label>
+                                    <select id="psu-cpu">
+                                        <option value="65">Kancelářský / Úsporný (65W)</option>
+                                        <option value="125" selected>Střední třída / Herní (125W)</option>
+                                        <option value="250">High-end / Taktovaný (250W)</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label for="psu-gpu" id="lbl-psu-gpu">Grafická karta (GPU):</label>
+                                    <select id="psu-gpu">
+                                        <option value="0">Integrovaná / Žádná (0W)</option>
+                                        <option value="75">Základní (75W)</option>
+                                        <option value="200" selected>Střední třída (200W)</option>
+                                        <option value="350">High-end (350W)</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label for="psu-ram" id="lbl-psu-ram">Počet pamětí RAM:</label>
+                                    <select id="psu-ram">
+                                        <option value="1">1 modul</option>
+                                        <option value="2" selected>2 moduly</option>
+                                        <option value="4">4 moduly</option>
+                                        <option value="8">8 modulů</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label for="psu-drives" id="lbl-psu-drives">Počet disků (SSD/HDD):</label>
+                                    <input type="number" id="psu-drives" min="1" max="20" value="2">
+                                </div>
+                                <div class="input-field">
+                                    <label for="psu-fans" id="lbl-psu-fans">Počet ventilátorů:</label>
+                                    <input type="number" id="psu-fans" min="1" max="30" value="4">
+                                </div>
+                                <div class="input-field checkbox-field-wrapper">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="psu-oc">
+                                        <label for="psu-oc" id="lbl-psu-oc">Taktování (OC +15%)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="subnet-results">
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-psu-est">Odhadovaný špičkový příkon:</span>
+                                    <span class="result-val" id="res-val-psu-est">0 W</span>
+                                </div>
+                                <div class="result-row">
+                                    <span class="result-label" id="res-lbl-psu-rec">Doporučený výkon zdroje:</span>
+                                    <span class="result-val" id="res-val-psu-rec" style="color: var(--accent-color); font-weight: 900;">0 W</span>
+                                </div>
+                                <div class="result-row psu-eff-row">
+                                    <span class="result-label" id="res-lbl-psu-eff">Doporučená certifikace:</span>
+                                    <span class="result-val" id="res-val-psu-eff">80 Plus Gold</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PASSWORD GENERATOR VIEW -->
+                        <div class="calc-view" id="view-password">
+                            <div class="subnet-input-grid">
+                                <div class="input-field span-2">
+                                    <label for="pwd-length" id="lbl-pwd-length">Délka hesla: <span id="pwd-len-val">16</span></label>
+                                    <input type="range" id="pwd-length" min="6" max="64" value="16" class="slider">
+                                </div>
+                                
+                                <div class="input-field span-2 checkboxes-grid">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="pwd-lower" checked>
+                                        <label for="pwd-lower" id="lbl-pwd-lower">Malá písmena (a-z)</label>
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="pwd-upper" checked>
+                                        <label for="pwd-upper" id="lbl-pwd-upper">Velká písmena (A-Z)</label>
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="pwd-digits" checked>
+                                        <label for="pwd-digits" id="lbl-pwd-digits">Číslice (0-9)</label>
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="pwd-symbols" checked>
+                                        <label for="pwd-symbols" id="lbl-pwd-symbols">Symboly (!@#$...)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="password-output-field">
+                                <input type="text" id="pwd-output" readonly placeholder="Klikněte na Generovat">
+                                <button class="btn btn-action" id="btn-pwd-copy" title="Zkopírovat heslo" aria-label="Zkopírovat heslo"><i class="fa-regular fa-copy"></i></button>
+                                <button class="btn btn-action" id="btn-pwd-generate">Generovat</button>
+                            </div>
+
+                            <div class="result-row password-strength-row">
+                                <span class="result-label" id="res-lbl-pwd-strength">Síla hesla / Entropie:</span>
+                                <span class="result-val" id="res-val-pwd-strength">---</span>
+                            </div>
+
+                            <!-- SHA-256 HASH GENERATOR -->
+                            <div class="binary-header" id="hash-hdr">SHA-256 Hasher</div>
+                            <div class="hash-section-wrapper">
+                                <div class="input-field">
+                                    <input type="text" id="hash-input" placeholder="Zadejte text pro SHA-256 hash...">
+                                </div>
+                                <div class="result-row hash-output-row">
+                                    <span class="result-val" id="res-val-hash">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</span>
+                                    <button class="btn-copy" id="btn-hash-copy" title="Zkopírovat hash"><i class="fa-regular fa-copy"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- MATH CALCULATOR VIEW -->
+                        <div class="calc-view" id="view-math">
+                            <div class="math-mode-toggle">
+                                <span id="math-mode-label">Režim:</span>
+                                <button class="mode-toggle-btn active" id="math-mode-std">Standardní</button>
+                                <button class="mode-toggle-btn" id="math-mode-sci">Vědecká</button>
+                            </div>
+                            
+                            <div class="math-screen">
+                                <div class="math-history" id="math-history"></div>
+                                <div class="math-display" id="math-display">0</div>
+                            </div>
+                            
+                            <div class="math-keypad standard" id="math-keypad">
+                                <!-- Scientific Row 1 -->
+                                <button class="calc-key scientific hidden" data-action="sin">sin</button>
+                                <button class="calc-key scientific hidden" data-action="cos">cos</button>
+                                <button class="calc-key scientific hidden" data-action="tan">tan</button>
+                                <button class="calc-key scientific hidden" data-action="log">log</button>
+                                
+                                <!-- Scientific Row 2 -->
+                                <button class="calc-key scientific hidden" data-action="ln">ln</button>
+                                <button class="calc-key scientific hidden" data-action="sqrt">√</button>
+                                <button class="calc-key scientific hidden" data-action="pow">xʸ</button>
+                                <button class="calc-key scientific hidden" data-action="pi">π</button>
+                                
+                                <!-- Scientific Row 3 -->
+                                <button class="calc-key scientific hidden" data-action="e">e</button>
+                                <button class="calc-key scientific hidden" data-action="open-paren">(</button>
+                                <button class="calc-key scientific hidden" data-action="close-paren">)</button>
+                                <button class="calc-key scientific hidden" data-action="mod">mod</button>
+
+                                <!-- Standard Buttons -->
+                                <button class="calc-key action-key" data-action="clear">C</button>
+                                <button class="calc-key action-key" data-action="backspace">⌫</button>
+                                <button class="calc-key op-key" data-action="divide">÷</button>
+                                <button class="calc-key op-key" data-action="multiply">×</button>
+                                
+                                <button class="calc-key num-key" data-val="7">7</button>
+                                <button class="calc-key num-key" data-val="8">8</button>
+                                <button class="calc-key num-key" data-val="9">9</button>
+                                <button class="calc-key op-key" data-action="subtract">-</button>
+                                
+                                <button class="calc-key num-key" data-val="4">4</button>
+                                <button class="calc-key num-key" data-val="5">5</button>
+                                <button class="calc-key num-key" data-val="6">6</button>
+                                <button class="calc-key op-key" data-action="add">+</button>
+                                
+                                <button class="calc-key num-key" data-val="1">1</button>
+                                <button class="calc-key num-key" data-val="2">2</button>
+                                <button class="calc-key num-key" data-val="3">3</button>
+                                <button class="calc-key equals-key" data-action="equals">=</button>
+                                
+                                <button class="calc-key num-key double-width" data-val="0">0</button>
+                                <button class="calc-key num-key" data-val=".">.</button>
+                            </div>
+                            
+                            <div class="math-bases scientific hidden" id="math-bases">
+                                <div class="base-row"><span class="base-lbl">DEC</span><span class="base-val" id="base-dec">0</span></div>
+                                <div class="base-row"><span class="base-lbl">HEX</span><span class="base-val" id="base-hex">0</span></div>
+                                <div class="base-row"><span class="base-lbl">BIN</span><span class="base-val" id="base-bin">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        

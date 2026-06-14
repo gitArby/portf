@@ -1,0 +1,149 @@
+
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 10.5pt;
+    }
+    main {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 1rem 0 !important;
+        page-break-inside: avoid;
+    }
+    .section-divider,
+    .main-nav,
+    #boot-screen,
+    .cursor-dot,
+    .cursor-outline,
+    #scroll-progress,
+    #easter-egg-canvas,
+    .hw-monitor,
+    .audio-toggle,
+    .lang-toggle,
+    .social-links,
+    .hero-actions,
+    .btn-copy,
+    .copy-toast,
+    .now-playing,
+    #lol-stats,
+    #calculator,
+    .topo-title,
+    .topo-subtitle,
+    .topo-grid,
+    .contact-form,
+    footer {
+        display: none !important;
+    }
+    h1, h2, h3, h4 {
+        color: black !important;
+        text-shadow: none !important;
+        margin-bottom: 0.5rem !important;
+    }
+    h3 {
+        border-bottom: 2px solid #333 !important;
+        padding-bottom: 3px !important;
+        font-size: 1.4rem !important;
+    }
+    p, span, div {
+        color: #222 !important;
+    }
+    .about-meta {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        margin-top: 1rem !important;
+    }
+    .meta-label {
+        color: black !important;
+    }
+    .skills-categories {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        margin-top: 1rem !important;
+    }
+    .skills-category-card {
+        background: transparent !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        padding: 1rem !important;
+    }
+    .category-header {
+        border-bottom: 1px solid #ddd !important;
+        margin-bottom: 0.8rem !important;
+    }
+    .category-header i {
+        display: none !important;
+    }
+    .tech-grid {
+        gap: 0.5rem !important;
+    }
+    .tech-icon {
+        background: transparent !important;
+        border: 1px solid #eee !important;
+        padding: 0.4rem !important;
+        min-width: 60px !important;
+        box-shadow: none !important;
+    }
+    .tech-icon i {
+        font-size: 1rem !important;
+    }
+    .tech-icon span {
+        font-size: 0.6rem !important;
+    }
+    .certs-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        margin-top: 1rem !important;
+    }
+    .cert-card {
+        background: transparent !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        padding: 1rem !important;
+    }
+    .cisco-badge {
+        display: none !important;
+    }
+    .status-label {
+        background: transparent !important;
+        border-color: #ddd !important;
+        color: black !important;
+    }
+    .timeline {
+        border-left-color: #ccc !important;
+        margin-top: 1rem !important;
+    }
+    .timeline-dot {
+        background: white !important;
+        border-color: black !important;
+    }
+    .timeline-content {
+        background: transparent !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        padding: 1rem !important;
+    }
+    .timeline-date {
+        color: black !important;
+        font-weight: bold !important;
+    }
+    .project-card {
+        background: transparent !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        padding: 1rem !important;
+        text-decoration: none !important;
+        color: black !important;
+    }
+    .project-link-hint {
+        display: none !important;
+    }
+}
+
+
+

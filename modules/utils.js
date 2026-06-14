@@ -11,7 +11,14 @@ import { i18n } from './translations.js';
  * Resolve or initialize AudioContext safely on user interaction.
  * @returns {AudioContext} Active AudioContext instance
  */
+let hasUserInteracted = false;
+window.addEventListener('click', () => { hasUserInteracted = true; }, { once: true });
+window.addEventListener('keydown', () => { hasUserInteracted = true; }, { once: true });
+
 function getCtx() {
+    // Prevent creating AudioContext on 'mouseover' before a valid user gesture
+    if (!hasUserInteracted) return null;
+    
     if (!AppState.audioCtx) {
         AppState.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -25,6 +32,7 @@ export function playClick() {
     if (!AppState.audioEnabled) return;
     try {
         const ctx = getCtx();
+        if (!ctx) return;
         ctx.resume().then(() => {
             const now = ctx.currentTime;
             const osc = ctx.createOscillator();
@@ -51,6 +59,7 @@ export function playHover() {
     if (!AppState.audioEnabled) return;
     try {
         const ctx = getCtx();
+        if (!ctx) return;
         ctx.resume().then(() => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
@@ -76,6 +85,7 @@ export function playNotificationSound(type) {
     if (!AppState.audioEnabled) return;
     try {
         const ctx = getCtx();
+        if (!ctx) return;
         ctx.resume().then(() => {
             const now = ctx.currentTime;
             const osc1 = ctx.createOscillator();

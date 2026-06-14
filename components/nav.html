@@ -1,0 +1,56 @@
+<nav class="main-nav" id="main-nav">
+        <a href="#home-view" class="nav-logo" id="nav-logo">arbyy</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#home-view" class="active"><i class="fa-solid fa-house"></i> <span>Home</span></a></li>
+            <li><a href="#about-view"><i class="fa-solid fa-user"></i> <span>O mně</span></a></li>
+            <li><a href="#skills-view"><i class="fa-solid fa-screwdriver-wrench"></i> <span>Dovednosti</span></a></li>
+            <li><a href="#certificates-view"><i class="fa-solid fa-certificate"></i> <span>Certifikáty</span></a></li>
+            <li><a href="#calculator-view"><i class="fa-solid fa-sliders"></i> <span>Nástroje</span></a></li>
+            <li><a href="#experience-view"><i class="fa-solid fa-briefcase"></i> <span>Praxe</span></a></li>
+            <li><a href="#lol-stats-view"><i class="fa-solid fa-gamepad"></i> <span>LoL</span></a></li>
+            <li><a href="#games-view" id="nav-link-games"><i class="fa-solid fa-ghost"></i> <span>Minihry</span></a></li>
+            <li><a href="#projects-view"><i class="fa-solid fa-laptop-code"></i> <span>Projekty</span></a></li>
+            <li><a href="#ipsum-view"><i class="fa-solid fa-align-left"></i> <span>Ipsum</span></a></li>
+            <li><a href="#faq-view"><i class="fa-solid fa-circle-question"></i> <span data-i18n="nav.10">FAQ</span></a></li>
+            <li><a href="#contact-view"><i class="fa-solid fa-envelope"></i> <span>Kontakt</span></a></li>
+            <!-- Controls are last item in the list so they collapse with hamburger on mobile -->
+            <li class="nav-controls-footer" id="nav-controls-footer">
+                <div class="theme-selector" id="theme-selector">
+                    <button class="theme-dot theme-green active" data-theme="green" title="Matrix Green"></button>
+                    <button class="theme-dot theme-blue" data-theme="blue" title="Cisco Blue"></button>
+                    <button class="theme-dot theme-amber" data-theme="amber" title="Cyberpunk Amber"></button>
+                    <button class="theme-dot theme-red" data-theme="red" title="Valorant Red"></button>
+                    <button class="theme-dot theme-purple" data-theme="purple" title="Neon Purple"></button>
+                    <button class="theme-dot theme-pink" data-theme="pink" title="Cyber Pink"></button>
+                    <div class="theme-custom-wrapper" title="Vlastní barva">
+                        <button class="theme-dot theme-custom" data-theme="custom" id="btn-custom-theme">
+                            <i class="fa-solid fa-eye-dropper"></i>
+                        </button>
+                        <div class="custom-color-popover" id="custom-color-popover">
+                            <div class="popover-arrow"></div>
+                            <div class="color-preview" id="custom-color-preview"></div>
+                            <div class="slider-group">
+                                <i class="fa-solid fa-palette"></i>
+                                <input type="range" min="0" max="360" value="150" class="hue-slider color-slider" id="custom-hue-slider" title="Odstín (Barva)">
+                            </div>
+                            <div class="slider-group">
+                                <i class="fa-solid fa-sun"></i>
+                                <input type="range" min="0" max="100" value="50" class="lightness-slider color-slider" id="custom-lightness-slider" title="Světlost (Jas)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-controls-row">
+                    <button class="audio-toggle" id="audio-toggle" title="Zvuky" aria-label="Přepnout zvuky">
+                        <i class="fa-solid fa-volume-xmark" id="audio-icon"></i>
+                    </button>
+                    <button class="lang-toggle" id="lang-toggle" aria-label="Přepnout jazyk">
+                        <span class="lang-opt" id="opt-cs">CZ</span><span class="lang-sep">/</span><span class="lang-opt" id="opt-en">EN</span>
+                    </button>
+                </div>
+            </li>
+        </ul>
+    </nav>

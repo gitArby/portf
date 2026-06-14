@@ -1,0 +1,98 @@
+
+.main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 60px;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    /* Always dark background so content doesn't show through on mobile */
+    background: rgba(8, 8, 8, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: opacity 0.6s ease, background 0.3s ease, border-color 0.3s ease;
+    cursor: none;
+}
+
+.main-nav.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.main-nav.scrolled {
+    background: rgba(5, 5, 5, 0.98);
+    backdrop-filter: blur(16px);
+    border-bottom-color: rgba(var(--accent-color-rgb), 0.1);
+}
+
+.nav-logo {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--arbyy-green);
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.4);
+    cursor: none;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.8rem;
+}
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: color 0.3s ease;
+    cursor: none;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--arbyy-green);
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: none;
+    padding: 4px;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.nav-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+    background: var(--arbyy-green);
+}
+
+.nav-toggle.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+    background: var(--arbyy-green);
+}
+

@@ -1,0 +1,23 @@
+
+.audio-toggle {
+    background: none;
+    border: 1px solid #333;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    cursor: none;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.audio-toggle:hover,
+.audio-toggle.audio-on {
+    border-color: var(--arbyy-green);
+    color: var(--arbyy-green);
+}
+
+.audio-toggle.audio-on {
+    border-color: rgba(var(--accent-color-rgb), 0.4);
+}
+

@@ -1,0 +1,42 @@
+
+#boot-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-terminal);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10vw;
+    font-family: var(--font-mono);
+    color: var(--arbyy-green);
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#boot-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.terminal-text p {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    margin: 0.5rem 0;
+    opacity: 0;
+    text-shadow: 0 0 5px var(--arbyy-green);
+}
+
+.cursor-blink {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    animation: blink 1s step-end infinite;
+    margin-top: 0.5rem;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+

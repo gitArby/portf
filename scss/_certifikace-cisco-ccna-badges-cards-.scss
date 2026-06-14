@@ -1,0 +1,92 @@
+
+.certs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 2.5rem;
+    text-align: left;
+}
+
+.cert-card {
+    display: flex;
+    gap: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.cert-card:hover {
+    border-color: var(--cisco-blue);
+    box-shadow: 0 0 25px var(--cisco-blue-glow);
+    transform: translateY(-5px);
+}
+
+.cert-badge-wrapper {
+    flex-shrink: 0;
+}
+
+.cisco-badge {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--cisco-blue-dark) 0%, var(--cisco-blue) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    box-shadow: 0 0 15px rgba(0, 180, 216, 0.3);
+}
+
+.cisco-inner {
+    width: 100%;
+    height: 100%;
+    background: #0d0d0d;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cisco-badge i {
+    font-size: 1.6rem;
+    color: var(--cisco-blue);
+    text-shadow: 0 0 8px rgba(0, 180, 216, 0.4);
+}
+
+.cert-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.cert-issuer {
+    font-size: 0.72rem;
+    color: var(--cisco-blue);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.cert-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-light);
+    line-height: 1.4;
+}
+
+.cert-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+}
+
+.cert-status {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+}
+

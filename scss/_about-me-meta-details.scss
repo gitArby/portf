@@ -1,0 +1,35 @@
+
+.about-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    background: rgba(17, 17, 17, 0.4);
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    backdrop-filter: blur(3px);
+}
+
+.meta-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.meta-label {
+    font-weight: 700;
+    color: var(--arbyy-green);
+    min-width: 90px;
+}
+
+.meta-value {
+    color: var(--text-light);
+    font-weight: 300;
+}
+

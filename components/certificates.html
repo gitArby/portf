@@ -1,0 +1,139 @@
+<!-- Certificates View -->
+        <div id="certificates-view" class="dashboard-view">
+            <section id="certificates" class="container reveal">
+                <h3 class="reveal-stagger" style="--stagger-delay: 1">Certifikace</h3>
+                <p class="container-text reveal-stagger" style="--stagger-delay: 2">
+                    Oficiální osvědčení, která potvrzují mé teoretické i praktické znalosti v oblasti síťových technologií.
+                </p>
+                <div class="certs-grid">
+                    <!-- CCNA 1 -->
+                    <div class="cert-card reveal-card" style="--stagger-delay: 3">
+                        <div class="cert-badge-wrapper">
+                            <div class="cisco-badge">
+                                <div class="cisco-inner">
+                                    <i class="fa-solid fa-ethernet"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cert-info">
+                            <span class="cert-issuer">Cisco Networking Academy</span>
+                            <h4 class="cert-name">CCNA 1: Introduction to Networks</h4>
+                            <p class="cert-desc">
+                                Základy počítačových sítí, IP adresace (IPv4/IPv6), síťové protokoly, Ethernet a základní
+                                konfigurace přepínačů a směrovačů.
+                            </p>
+                            <div class="cert-status">
+                                <span class="status-label"><i class="fa-solid fa-check-double"></i> Dokončeno</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CCNA 2 -->
+                    <div class="cert-card reveal-card" style="--stagger-delay: 4">
+                        <div class="cert-badge-wrapper">
+                            <div class="cisco-badge">
+                                <div class="cisco-inner">
+                                    <i class="fa-solid fa-route"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cert-info">
+                            <span class="cert-issuer">Cisco Networking Academy</span>
+                            <h4 class="cert-name">CCNA 2: Switching, Routing, and Wireless Essentials</h4>
+                            <p class="cert-desc">
+                                Směrovací protokoly (OSPF), konfigurace VLAN, redundantní sítě (STP/EtherChannel),
+                                bezpečnost sítě (ACL/DHCP Snooping) a základy WLAN.
+                            </p>
+                            <div class="cert-status">
+                                <span class="status-label"><i class="fa-solid fa-check-double"></i> Dokončeno</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SoloLearn -->
+                    <div class="cert-card reveal-card" style="--stagger-delay: 5">
+                        <div class="cert-badge-wrapper">
+                            <div class="cisco-badge" style="background: linear-gradient(135deg, #1abc9c, #16a085);">
+                                <div class="cisco-inner">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cert-info">
+                            <span class="cert-issuer">SoloLearn</span>
+                            <h4 class="cert-name">Certifikáty ze všech zmíněných jazyků</h4>
+                            <p class="cert-desc">
+                                Úspěšné absolvování kurzů a získání certifikátů pro všechny programovací jazyky uvedené v sekci dovedností.
+                            </p>
+                            <div class="cert-status">
+                                <span class="status-label"><i class="fa-solid fa-check-double"></i> Dokončeno</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LoL Easter Egg -->
+                    <div id="egg-lol" class="cert-card reveal-card" style="--stagger-delay: 6">
+                        <div class="cert-badge-wrapper">
+                            <div class="cisco-badge" style="background: linear-gradient(135deg, #c2a14e, #93712b);">
+                                <div class="cisco-inner">
+                                    <i class="fa-solid fa-gamepad"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cert-info">
+                            <span class="cert-issuer">League of Legends</span>
+                            <h4 class="cert-name">1V9 L9 Mašina (Not Low Elo)</h4>
+                            <p class="cert-desc">
+                                Oficiální potvrzení, že jsem 1v9 L9 mašina, dokážu vyhrát hru i se zavázanýma očima a rozhodně nepatřím do low elo.
+                            </p>
+                            <div class="cert-status">
+                                <span class="status-label" style="color: #c2a14e;"><i class="fa-solid fa-crown"></i> Challenger potvrzen v mých očích</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="topo-title reveal-stagger" id="topo-title" style="--stagger-delay: 5">Cisco CCNA Interaktivní Laboratoř</h4>
+                <p class="container-text topo-subtitle reveal-stagger" id="topo-subtitle" style="--stagger-delay: 6">Kliknutím na síťová zařízení v topologii spustíte simulaci IOS konzole a diagnostických logů.</p>
+                
+                <div class="topo-grid reveal-stagger" style="--stagger-delay: 7">
+                    <div class="topo-map">
+                        <div class="topo-cable cable-r-s"><span class="packet"></span></div>
+                        <div class="topo-cable cable-s-pc"><span class="packet"></span></div>
+                        <div class="topo-cable cable-s-srv"><span class="packet"></span></div>
+                        
+                        <div class="topo-node router" data-device="router" id="node-router">
+                            <div class="node-icon"><i class="fa-solid fa-route"></i></div>
+                            <span class="node-label">Edge_Router</span>
+                        </div>
+                        <div class="topo-node switch" data-device="switch" id="node-switch">
+                            <div class="node-icon"><i class="fa-solid fa-network-wired"></i></div>
+                            <span class="node-label">Core_Switch</span>
+                        </div>
+                        <div class="topo-node client" data-device="pc" id="node-pc">
+                            <div class="node-icon"><i class="fa-solid fa-desktop"></i></div>
+                            <span class="node-label">Workstation</span>
+                        </div>
+                        <div class="topo-node server" data-device="server" id="node-server">
+                            <div class="node-icon"><i class="fa-solid fa-server"></i></div>
+                            <span class="node-label">Local_Server</span>
+                        </div>
+                    </div>
+                    
+                    <div class="topo-console">
+                        <div class="console-header">
+                            <span class="console-status-dot"></span>
+                            <span id="console-header-title">CISCO_IOS_TERMINAL</span>
+                        </div>
+                        <div class="console-body" id="console-body">
+                            <div class="console-placeholder" id="console-placeholder">
+                                <p class="blink-fast">> KONEKTIVITA: SMĚROVÁNÍ AKTIVNÍ [OSPFv2]</p>
+                                <p>> Kliknutím na jakékoli zařízení na topologické mapě spustíte konzoli a vyvoláte stav konfigurace.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        

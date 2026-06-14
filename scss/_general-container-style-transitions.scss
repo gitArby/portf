@@ -1,0 +1,49 @@
+
+.container {
+    max-width: 800px;
+    width: 90%;
+    padding: 4rem 0;
+    text-align: center;
+    margin: 0 auto;
+}
+
+h3 {
+    font-size: 2rem;
+    color: var(--arbyy-green);
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+strong {
+    color: var(--text-light);
+    font-weight: 700;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-divider {
+    width: 90%;
+    max-width: 800px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(var(--accent-color-rgb), 0.25), transparent);
+    margin: 0 auto;
+}
+

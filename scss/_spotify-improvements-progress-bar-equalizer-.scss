@@ -1,0 +1,43 @@
+
+.np-content {
+    position: relative;
+    width: 100%;
+}
+.np-spotify-progress-container {
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    margin-top: 0.6rem;
+    overflow: hidden;
+    position: relative;
+}
+.np-spotify-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #1db954;
+    transition: width 0.5s linear;
+}
+.np-equalizer {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    width: 12px;
+    height: 10px;
+    margin-left: 6px;
+}
+.np-equalizer .eq-bar {
+    width: 2px;
+    background-color: #1db954;
+    animation: bounceEq 0.8s ease-in-out infinite alternate;
+    transform-origin: bottom;
+}
+.np-equalizer .bar1 { animation-delay: 0.1s; height: 30%; }
+.np-equalizer .bar2 { animation-delay: 0.3s; height: 60%; }
+.np-equalizer .bar3 { animation-delay: 0.5s; height: 40%; }
+
+@keyframes bounceEq {
+    0% { transform: scaleY(0.3); }
+    100% { transform: scaleY(1); }
+}
+

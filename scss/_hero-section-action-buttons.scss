@@ -1,0 +1,206 @@
+
+.hero {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 1.5rem 3rem;
+    /* Min-height ensures hero fills viewport but isn't locked to exact 100vh */
+    min-height: 90vh;
+    box-sizing: border-box;
+}
+
+.mega-text {
+    position: relative;
+    font-family: var(--font-heading);
+    font-size: clamp(4rem, 15vw, 8rem);
+    font-weight: 900;
+    color: var(--arbyy-green);
+    letter-spacing: -4px;
+    margin-bottom: -10px;
+    text-transform: lowercase;
+    opacity: 0;
+    animation: assembleText 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, neonPulse 4s infinite alternate ease-in-out 1.5s;
+}
+
+.mega-text::before,
+.mega-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.mega-text::before {
+    left: 3px;
+    text-shadow: -2px 0 red;
+    clip-path: inset(100% 0 100% 0);
+    animation: glitch-anim-1 4s infinite linear alternate-reverse;
+}
+
+.mega-text::after {
+    left: -3px;
+    text-shadow: -2px 0 blue;
+    clip-path: inset(100% 0 100% 0);
+    animation: glitch-anim-2 5s infinite linear alternate-reverse;
+}
+
+.name {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+    animation-delay: 0.8s;
+}
+
+.subtitle {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    color: var(--text-muted);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+    animation-delay: 1.1s;
+}
+
+.social-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+    animation-delay: 1.4s;
+}
+
+.social-links a,
+.discord-badge {
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: none;
+}
+
+.discord-badge span {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.social-links a:hover,
+.discord-badge:hover {
+    color: var(--arbyy-green);
+    transform: translateY(-5px);
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+    animation-delay: 1.4s;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes assembleText {
+    0% { letter-spacing: 50px; opacity: 0; filter: blur(10px); transform: scale(1.2); }
+    100% { letter-spacing: -4px; opacity: 1; filter: blur(0); transform: scale(1); }
+}
+
+@keyframes neonPulse {
+    /* Only animate text-shadow - compositor-safe, no layout reflow */
+    0%   { text-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.2); }
+    50%  { text-shadow: 0 0 30px rgba(var(--accent-color-rgb), 0.6), 0 0 60px rgba(var(--accent-color-rgb), 0.3); }
+    100% { text-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.2); }
+}
+
+@keyframes glitch-anim-1 {
+    0%, 90% { clip-path: inset(100% 0 100% 0); transform: translate(0); }
+    92% { clip-path: inset(20% 0 80% 0); transform: translate(-4px, 2px); }
+    94% { clip-path: inset(50% 0 30% 0); transform: translate(4px, -2px); }
+    96% { clip-path: inset(10% 0 60% 0); transform: translate(-4px, 2px); }
+    98% { clip-path: inset(80% 0 5% 0); transform: translate(4px, -2px); }
+    100% { clip-path: inset(100% 0 100% 0); transform: translate(0); }
+}
+
+@keyframes glitch-anim-2 {
+    0%, 90% { clip-path: inset(100% 0 100% 0); transform: translate(0); }
+    92% { clip-path: inset(10% 0 60% 0); transform: translate(4px, 2px); }
+    94% { clip-path: inset(80% 0 5% 0); transform: translate(-4px, -2px); }
+    96% { clip-path: inset(20% 0 80% 0); transform: translate(4px, 2px); }
+    98% { clip-path: inset(50% 0 30% 0); transform: translate(-4px, -2px); }
+    100% { clip-path: inset(100% 0 100% 0); transform: translate(0); }
+}
+
+/* Glitch Hover Effect */
+.glitch-hover {
+    position: relative;
+    display: inline-block;
+}
+
+.glitch-hover::before,
+.glitch-hover::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s ease;
+}
+
+.glitch-hover:hover::before,
+.glitch-hover:hover::after {
+    opacity: 1;
+}
+
+.glitch-hover:hover::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--accent-color);
+    clip-path: inset(100% 0 100% 0);
+    animation: glitch-hover-1 0.3s infinite linear alternate-reverse;
+}
+
+.glitch-hover:hover::after {
+    left: -2px;
+    text-shadow: -2px 0 var(--arbyy-red);
+    clip-path: inset(100% 0 100% 0);
+    animation: glitch-hover-2 0.3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-hover-1 {
+    0% { clip-path: inset(40% 0 61% 0); transform: skew(0.3deg); }
+    20% { clip-path: inset(92% 0 1% 0); transform: skew(-0.5deg); }
+    40% { clip-path: inset(15% 0 80% 0); transform: skew(0.8deg); }
+    60% { clip-path: inset(80% 0 5% 0); transform: skew(-0.2deg); }
+    80% { clip-path: inset(3% 0 92% 0); transform: skew(0.5deg); }
+    100% { clip-path: inset(50% 0 30% 0); transform: skew(0.1deg); }
+}
+
+@keyframes glitch-hover-2 {
+    0% { clip-path: inset(25% 0 58% 0); transform: skew(-0.8deg); }
+    20% { clip-path: inset(70% 0 15% 0); transform: skew(0.2deg); }
+    40% { clip-path: inset(5% 0 90% 0); transform: skew(-0.5deg); }
+    60% { clip-path: inset(85% 0 5% 0); transform: skew(0.6deg); }
+    80% { clip-path: inset(12% 0 75% 0); transform: skew(-0.1deg); }
+    100% { clip-path: inset(45% 0 35% 0); transform: skew(-0.3deg); }
+}
+

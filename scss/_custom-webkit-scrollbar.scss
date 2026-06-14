@@ -1,0 +1,19 @@
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--arbyy-green);
+    border-radius: 4px;
+    box-shadow: 0 0 8px var(--arbyy-green);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    box-shadow: 0 0 14px var(--arbyy-green);
+}
+

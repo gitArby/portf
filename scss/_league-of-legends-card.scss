@@ -1,0 +1,81 @@
+
+.lol-card {
+    background: var(--bg-card);
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    backdrop-filter: blur(5px);
+    min-height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lol-card:hover {
+    border-color: rgba(200, 155, 60, 0.35);
+    box-shadow: 0 0 20px rgba(200, 155, 60, 0.08);
+}
+
+.lol-loading {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.lol-info {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+}
+
+.lol-emblem {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 12px var(--lol-gold-glow));
+}
+
+.lol-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: left;
+}
+
+.lol-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-light);
+}
+
+.lol-level,
+.lol-server {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    margin-left: 0.5rem;
+}
+
+.lol-rank {
+    font-size: 1.1rem;
+    color: var(--lol-gold);
+    font-weight: 700;
+}
+
+.lol-winrate {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.wr-good {
+    color: var(--arbyy-green);
+    font-weight: 700;
+}
+
+.wr-bad {
+    color: #ff4d4d;
+    font-weight: 700;
+}
+

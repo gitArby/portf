@@ -1,0 +1,67 @@
+
+.timeline-filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0 2.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: rgba(17, 17, 17, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    padding: 0.5rem 1.4rem;
+    border-radius: 30px;
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(4px);
+}
+
+.filter-btn:hover {
+    color: var(--text-light);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.filter-btn.active {
+    color: var(--arbyy-green);
+    border-color: var(--arbyy-green);
+    background: rgba(var(--accent-color-rgb), 0.06);
+    box-shadow: 0 0 12px rgba(var(--accent-color-rgb), 0.2);
+    text-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.2);
+}
+
+.timeline-item {
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 500px;
+    opacity: 1;
+    transform: scale(1);
+    transform-origin: top center;
+    overflow: visible;
+}
+
+.timeline-item.hidden {
+    max-height: 0;
+    opacity: 0;
+    transform: scale(0.92) translateY(-10px);
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.timeline-item.hidden .timeline-dot {
+    opacity: 0;
+    transform: scale(0);
+}
+

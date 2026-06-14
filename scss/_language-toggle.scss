@@ -1,0 +1,37 @@
+
+.lang-toggle {
+    background: none;
+    border: 1px solid #333;
+    color: var(--text-muted);
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 0.35rem 0.7rem;
+    border-radius: 6px;
+    cursor: none;
+    transition: border-color 0.3s ease;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.lang-toggle:hover {
+    border-color: var(--arbyy-green);
+}
+
+.lang-opt {
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.lang-opt.active {
+    color: var(--arbyy-green);
+}
+
+.lang-sep {
+    color: #444;
+}
+

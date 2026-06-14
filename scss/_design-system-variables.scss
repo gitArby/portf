@@ -1,0 +1,60 @@
+
+:root {
+    --bg-dark: #0a0a0a;
+    --bg-card: rgba(17, 17, 17, 0.85);
+    --bg-terminal: #030303;
+    
+    --text-light: #f5f5f5;
+    --text-muted: #888888;
+    
+    --accent-color: #00ff66;
+    --accent-color-rgb: 0, 255, 102;
+    --accent-color-glow: rgba(var(--accent-color-rgb), 0.4);
+    
+    --arbyy-green: var(--accent-color);
+    --arbyy-green-glow: var(--accent-color-glow);
+    --lol-gold: rgb(200, 155, 60);
+    --lol-gold-glow: rgba(200, 155, 60, 0.35);
+    
+    --cisco-blue: #00b4d8;
+    --cisco-blue-dark: #0077b6;
+    --cisco-blue-glow: rgba(0, 180, 216, 0.4);
+    
+    --font-main: 'Exo 2', sans-serif;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-mono: 'Courier New', Courier, monospace;
+}
+
+/* Accessibility */
+:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 3px;
+}
+
+/* Themes */
+html[data-theme="green"] {
+    --accent-color: #00ff66;
+    --accent-color-rgb: 0, 255, 102;
+    --accent-color-glow: rgba(var(--accent-color-rgb), 0.4);
+}
+html[data-theme="blue"] {
+    --accent-color: #00b4d8;
+    --accent-color-rgb: 0, 180, 216;
+    --accent-color-glow: rgba(0, 180, 216, 0.4);
+}
+html[data-theme="amber"] {
+    --accent-color: #ffb703;
+    --accent-color-rgb: 255, 183, 3;
+    --accent-color-glow: rgba(255, 183, 3, 0.4);
+}
+html[data-theme="red"] {
+    --accent-color: #ff4d4d;
+    --accent-color-rgb: 255, 77, 77;
+    --accent-color-glow: rgba(255, 77, 77, 0.4);
+}
+

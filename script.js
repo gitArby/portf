@@ -1,3 +1,6 @@
+import { initCursor } from './modules/cursor.js';
+import { initTheme } from './modules/theme.js';
+import { initEasterEggs } from './modules/easterEggs.js';
 /**
  * script.js - Application Orchestrator
  * Main entry point of the portfolio application.
@@ -8,8 +11,6 @@ import { UISelectors } from './modules/selectors.js';
 import { AppState, subscribe } from './modules/state.js';
 import { applyLanguage, generateCV, playClick, playHover, showHUDNotification } from './modules/utils.js';
 import { connectLanyard, fetchLoLStats, renderFavoriteChampions } from './modules/api.js';
-import { initTools } from './modules/tools.js';
-import { initGames } from './modules/games.js';
 import { i18n } from './modules/translations.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -191,160 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         countersRun = true;
     }
 
-    // --- Custom Cursor coordination with coordinate lag physics ---
-    const cursorDot = UISelectors.cursorDot;
-    const cursorOutline = UISelectors.cursorOutline;
-    const isMobileDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-
-    if (cursorDot && cursorOutline) {
-        let mx = 0, my = 0; // Target mouse coordinates
-        let dotX = 0, dotY = 0; // Current dot positions
-        let outlineX = 0, outlineY = 0; // Current outline positions
-        let hasMoved = false;
-        let showCustomCursor = true;
-
-        const disableCustomCursor = () => {
-            if (showCustomCursor) {
-                showCustomCursor = false;
-                document.documentElement.classList.add('show-system-cursor');
-            }
-        };
-
-        const enableCustomCursor = () => {
-            if (!showCustomCursor && !isMobileDevice) {
-                showCustomCursor = true;
-                document.documentElement.classList.remove('show-system-cursor');
-                outlineX = mx;
-                outlineY = my;
-                dotX = mx;
-                dotY = my;
-            }
-        };
-
-        const scrollEl = UISelectors.mainContent;
-        let cachedScrollElRight = scrollEl ? scrollEl.getBoundingClientRect().right : window.innerWidth;
-
-        // Efficient ResizeObserver removes scrollbar layout reflows on mousemove
-        const edgeObserver = new ResizeObserver(() => {
-            cachedScrollElRight = scrollEl
-                ? scrollEl.getBoundingClientRect().right
-                : window.innerWidth;
-        });
-        if (scrollEl) edgeObserver.observe(scrollEl);
-        window.addEventListener('resize', () => {
-            cachedScrollElRight = scrollEl
-                ? scrollEl.getBoundingClientRect().right
-                : window.innerWidth;
-        }, { passive: true });
-
-        window.addEventListener('mousemove', e => {
-            mx = e.clientX;
-            my = e.clientY;
-
-            const nearScrollbar = e.clientX >= cachedScrollElRight - 17;
-            if (nearScrollbar) {
-                disableCustomCursor();
-            } else {
-                enableCustomCursor();
-            }
-
-            if (!hasMoved) {
-                dotX = mx;
-                dotY = my;
-                outlineX = mx;
-                outlineY = my;
-                hasMoved = true;
-                cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
-                cursorOutline.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0) translate(-50%, -50%)`;
-                requestAnimationFrame(() => {
-                    document.documentElement.classList.add('cursor-active');
-                });
-            }
-        }, { passive: true });
-
-        document.addEventListener('mouseleave', disableCustomCursor);
-        document.addEventListener('mouseenter', enableCustomCursor);
-
-        // Bind cursor hover feedback to elements on startup
-        document.querySelectorAll('a, button, summary, .discord-badge, #mega-trigger, .topo-node, select, input, label').forEach(el => {
-            el.addEventListener('mouseover', () => {
-                cursorDot.classList.add('active');
-                cursorOutline.classList.add('active');
-            });
-            el.addEventListener('mouseleave', () => {
-                cursorDot.classList.remove('active');
-                cursorOutline.classList.remove('active');
-            });
-        });
-
-        // Animation frame loops executing coordinate lags
-        (function animLoop() {
-            if (hasMoved) {
-                dotX = mx;
-                dotY = my;
-                outlineX += (mx - outlineX) * 0.15;
-                outlineY += (my - outlineY) * 0.15;
-
-                cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
-                cursorOutline.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0) translate(-50%, -50%)`;
-            }
-            requestAnimationFrame(animLoop);
-        })();
-    }
-
-    // --- Matrix Easter Egg rain ---
-    const megaTrigger = UISelectors.megaTrigger;
-    const easterEggCanvas = UISelectors.easterEggCanvas;
-    let clickCount = 0;
-    let lastClickTime = 0;
-    let matrixInterval = null;
-
-    if (megaTrigger && easterEggCanvas) {
-        const ctx = easterEggCanvas.getContext('2d');
-
-        megaTrigger.addEventListener('click', () => {
-            const now = Date.now();
-            clickCount = now - lastClickTime < 500 ? clickCount + 1 : 1;
-            lastClickTime = now;
-            if (clickCount === 6) {
-                startEasterEgg();
-                clickCount = 0;
-            }
-        });
-
-        function startEasterEgg() {
-            easterEggCanvas.style.display = 'block';
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            const drops = Array.from({ length: Math.floor(easterEggCanvas.width / 20) }, () => 1);
-            const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZPENTAKILLlol🏆";
-
-            matrixInterval = setInterval(() => {
-                ctx.fillStyle = "rgba(10,10,10,0.05)";
-                ctx.fillRect(0, 0, easterEggCanvas.width, easterEggCanvas.height);
-                ctx.fillStyle = "#00ff66";
-                ctx.font = "20px var(--font-main)";
-                drops.forEach((y, i) => {
-                    ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 20, y * 20);
-                    if (y * 20 > easterEggCanvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
-                });
-            }, 35);
-
-            setTimeout(() => {
-                clearInterval(matrixInterval);
-                easterEggCanvas.style.display = 'none';
-                window.removeEventListener('resize', resizeCanvas);
-            }, 5000);
-        }
-
-        function resizeCanvas() {
-            easterEggCanvas.width = window.innerWidth;
-            easterEggCanvas.height = window.innerHeight;
-        }
-    }
+    initCursor();
 
     // --- View switcher ---
     const allViews = document.querySelectorAll('.dashboard-view');
@@ -513,290 +361,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Theme Selector ---
-    const themeDots = UISelectors.themeDots;
-    const customColorPicker = document.getElementById('custom-color-picker');
+    initTheme();
 
-    function hexToRgbString(hex) {
-        let c;
-        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-            c= hex.substring(1).split('');
-            if(c.length== 3){
-                c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-            }
-            c= '0x'+c.join('');
-            return [(c>>16)&255, (c>>8)&255, c&255].join(', ');
-        }
-        return '0, 255, 102';
-    }
-
-    function hexToRgba(hex, alpha) {
-        return `rgba(${hexToRgbString(hex)}, ${alpha})`;
-    }
-
-    function applyTheme(themeName, customHex = null) {
-        document.documentElement.setAttribute('data-theme', themeName);
-        AppState.activeTheme = themeName;
-        localStorage.setItem('theme', themeName);
-        
-        if (themeName === 'custom' && customHex) {
-            document.documentElement.style.setProperty('--accent-color', customHex);
-            document.documentElement.style.setProperty('--accent-color-rgb', hexToRgbString(customHex));
-            document.documentElement.style.setProperty('--accent-color-glow', hexToRgba(customHex, 0.4));
-            localStorage.setItem('customThemeColor', customHex);
-            if (customColorPicker) {
-                customColorPicker.value = customHex;
-            }
-        } else {
-            document.documentElement.style.removeProperty('--accent-color');
-            document.documentElement.style.removeProperty('--accent-color-rgb');
-            document.documentElement.style.removeProperty('--accent-color-glow');
-        }
-        
-        if (themeDots) {
-            themeDots.forEach(dot => {
-                dot.classList.toggle('active', dot.getAttribute('data-theme') === themeName);
-            });
-        }
-    }
-
-    const customColorPopover = document.getElementById('custom-color-popover');
-    const customHueSlider = document.getElementById('custom-hue-slider');
-    const customLightnessSlider = document.getElementById('custom-lightness-slider');
-    const customColorPreview = document.getElementById('custom-color-preview');
-    const btnCustomTheme = document.getElementById('btn-custom-theme');
-
-    function hslToHex(h, s, l) {
-        l /= 100;
-        const a = s * Math.min(l, 1 - l) / 100;
-        const f = n => {
-            const k = (n + h / 30) % 12;
-            const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-            return Math.round(255 * color).toString(16).padStart(2, '0');
-        };
-        return `#${f(0)}${f(8)}${f(4)}`;
-    }
-
-    function updateCustomColor(save = false) {
-        if (!customHueSlider || !customLightnessSlider) return;
-        const h = customHueSlider.value;
-        const l = customLightnessSlider.value;
-        const hex = hslToHex(h, 100, l);
-        const pureHue = hslToHex(h, 100, 50);
-
-        if (customColorPreview) customColorPreview.style.backgroundColor = hex;
-        customLightnessSlider.style.background = `linear-gradient(to right, #000000 0%, ${pureHue} 50%, #ffffff 100%)`;
-        
-        applyTheme('custom', hex);
-        if (save) {
-            localStorage.setItem('customThemeHue', h);
-            localStorage.setItem('customThemeLightness', l);
-            // We also save the hex so existing app logic works
-            localStorage.setItem('customThemeColor', hex);
-        }
-    }
-
-    if (btnCustomTheme && customColorPopover) {
-        btnCustomTheme.addEventListener('click', (e) => {
-            e.stopPropagation();
-            customColorPopover.classList.toggle('show');
-            const savedH = localStorage.getItem('customThemeHue');
-            const savedL = localStorage.getItem('customThemeLightness');
-            if (savedH && customHueSlider) customHueSlider.value = savedH;
-            if (savedL && customLightnessSlider) customLightnessSlider.value = savedL;
-            updateCustomColor(false);
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!customColorPopover.contains(e.target) && !btnCustomTheme.contains(e.target)) {
-                customColorPopover.classList.remove('show');
-            }
-        });
-    }
-
-    if (customHueSlider) customHueSlider.addEventListener('input', () => updateCustomColor(true));
-    if (customLightnessSlider) customLightnessSlider.addEventListener('input', () => updateCustomColor(true));
-
-    if (themeDots) {
-        themeDots.forEach(dot => {
-            dot.addEventListener('click', () => {
-                const selectedTheme = dot.getAttribute('data-theme');
-                if (selectedTheme !== 'custom') {
-                    applyTheme(selectedTheme);
-                    if (customColorPopover) customColorPopover.classList.remove('show');
-                }
-            });
-        });
-    }
-
-    // Initialize theme from storage
-    if (AppState.activeTheme === 'custom') {
-        const savedCustom = localStorage.getItem('customThemeColor') || '#00ff66';
-        applyTheme('custom', savedCustom);
-    } else {
-        applyTheme(AppState.activeTheme);
-    }
-
-    // --- Easter Egg Tracker ---
-    const eggTrackerWidget = document.getElementById('egg-tracker-widget');
-    const eggCountSpan = document.getElementById('egg-tracker-count');
-    const totalEggs = 4;
-
-    function updateEggUI() {
-        if (!eggTrackerWidget) return;
-        const count = AppState.foundEggs.length;
-        eggCountSpan.textContent = `${count}/${totalEggs}`;
-        if (count >= totalEggs) {
-            eggTrackerWidget.classList.add('complete');
-        }
-        const lang = AppState.currentLang || localStorage.getItem('lang') || 'cs';
-        const titleMsg = i18n[lang]?.easterEggs?.trackerTitle || 'Odhaleno tajných Easter Eggů:';
-        eggTrackerWidget.title = `${titleMsg} ${count}/${totalEggs}`;
-    }
-
-    function discoverEgg(eggId) {
-        if (!AppState.foundEggs.includes(eggId)) {
-            AppState.foundEggs.push(eggId);
-            localStorage.setItem('foundEggs', JSON.stringify(AppState.foundEggs));
-            updateEggUI();
-            
-            const toast = document.createElement('div');
-            toast.className = 'type-falling-word';
-            toast.style.position = 'fixed';
-            toast.style.bottom = '80px';
-            toast.style.right = '20px';
-            toast.style.zIndex = '9999';
-            toast.style.pointerEvents = 'none';
-            toast.style.transform = 'none';
-            const lang = AppState.currentLang || localStorage.getItem('lang') || 'cs';
-            const foundMsg = i18n[lang]?.easterEggs?.found || '🎉 Skrytý Easter Egg nalezen!';
-            toast.innerHTML = `${foundMsg} (${AppState.foundEggs.length}/${totalEggs})`;
-            document.body.appendChild(toast);
-            
-            if (AppState.audioEnabled && AppState.audioCtx) {
-                const osc = AppState.audioCtx.createOscillator();
-                const gain = AppState.audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, AppState.audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1760, AppState.audioCtx.currentTime + 0.3);
-                gain.gain.setValueAtTime(0.1, AppState.audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, AppState.audioCtx.currentTime + 0.5);
-                osc.connect(gain);
-                gain.connect(AppState.audioCtx.destination);
-                osc.start();
-                osc.stop(AppState.audioCtx.currentTime + 0.5);
-            }
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
-
-            if (AppState.foundEggs.length === totalEggs) {
-                setTimeout(() => {
-                    const allFoundMsg = i18n[lang]?.easterEggs?.allFound || 'Neskutečné! Našel jsi všechny 4 skryté Easter Eggy. Jsi opravdový lovec pokladů! 🏆';
-                    alert(allFoundMsg);
-                }, 1000);
-            }
-        }
-    }
-
-    updateEggUI();
-    subscribe('currentLang', updateEggUI);
-
-    const eggTatranka = document.getElementById('egg-tatranka');
-    if (eggTatranka) {
-        eggTatranka.addEventListener('mouseenter', () => discoverEgg('tatranka'));
-        eggTatranka.addEventListener('click', () => discoverEgg('tatranka'));
-    }
-
-    const eggPcbs = document.getElementById('egg-pcbs');
-    if (eggPcbs) {
-        eggPcbs.addEventListener('mouseenter', () => discoverEgg('pcbs'));
-        eggPcbs.addEventListener('click', () => discoverEgg('pcbs'));
-    }
-
-    const eggLol = document.getElementById('egg-lol');
-    if (eggLol) {
-        eggLol.addEventListener('mouseenter', () => discoverEgg('lol'));
-        eggLol.addEventListener('click', () => discoverEgg('lol'));
-    }
-
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C'))) {
-            discoverEgg('f12');
-        }
-        if ((e.key === 'f' || e.key === 'F') && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-            if (eggTrackerWidget) eggTrackerWidget.classList.toggle('hidden');
-        }
-    });
-
-    // --- Arby Ipsum Generator ---
-    const btnGenerateIpsum = document.getElementById('btn-generate-ipsum');
-    const btnCopyIpsum = document.getElementById('btn-copy-ipsum');
-    const inputIpsumParagraphs = document.getElementById('ipsum-paragraphs');
-    const ipsumOutput = document.getElementById('ipsum-output');
-
-    const arbyDictionary = [
-        "RGB", "vodní chlazení", "airflow", "teplovodivá pasta", "mechanická klávesnice", 
-        "overclocking", "ping", "lagy", "Valorant", "headshot", "League of Legends", 
-        "Cisco router", "switch", "bottleneck", "základní deska", "FPS drop", 
-        "cable management", "cybersecurity", "server", "grafická karta", "monitor", 
-        "refresh rate", "BIOS", "síťařina", "Nexus", "CS:GO", "harddisk", "SSD",
-        "custom loop", "mechovka", "cherry mx", "DPI"
-    ];
-
-    function generateArbyIpsum(paragraphs) {
-        let text = "";
-        for (let i = 0; i < paragraphs; i++) {
-            let pText = "";
-            let sentenceCount = Math.floor(Math.random() * 4) + 4; // 4 to 7 sentences
-            for (let s = 0; s < sentenceCount; s++) {
-                let wordCount = Math.floor(Math.random() * 6) + 5; // 5 to 10 words
-                let sentence = [];
-                for (let w = 0; w < wordCount; w++) {
-                    let word = arbyDictionary[Math.floor(Math.random() * arbyDictionary.length)];
-                    // Randomly highlight some words
-                    if (Math.random() > 0.85) word = `<span class="highlight">${word}</span>`;
-                    sentence.push(word);
-                }
-                let sentenceStr = sentence.join(" ");
-                // Strip HTML for capitalization
-                let cleanStr = sentenceStr.replace(/<[^>]*>?/gm, '');
-                let firstChar = cleanStr.charAt(0);
-                // Simple capitalization that ignores the span tags
-                sentenceStr = sentenceStr.replace(firstChar, firstChar.toUpperCase()) + ".";
-                pText += sentenceStr + " ";
-            }
-            text += `<p>${pText.trim()}</p>`;
-        }
-        return text;
-    }
-
-    if (btnGenerateIpsum) {
-        btnGenerateIpsum.addEventListener('click', () => {
-            const num = parseInt(inputIpsumParagraphs.value) || 3;
-            ipsumOutput.innerHTML = generateArbyIpsum(Math.min(Math.max(num, 1), 20));
-            ipsumOutput.dataset.generated = 'true';
-            playClick();
-        });
-    }
-
-    if (btnCopyIpsum) {
-        btnCopyIpsum.addEventListener('click', () => {
-            if (ipsumOutput.innerText.trim() !== "" && !ipsumOutput.innerText.includes("Klikni na tlačítko")) {
-                navigator.clipboard.writeText(ipsumOutput.innerText).then(() => {
-                    const originalText = btnCopyIpsum.innerHTML;
-                    btnCopyIpsum.innerHTML = '<i class="fa-solid fa-check"></i> Zkopírováno!';
-                    setTimeout(() => {
-                        btnCopyIpsum.innerHTML = originalText;
-                    }, 2000);
-                });
-                playClick();
-            }
-        });
-    }
+    initEasterEggs();
 
     // --- FAQ Accordion ---
     const faqItems = document.querySelectorAll('.faq-item');
@@ -815,9 +382,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Initialise Sub-Modules & API sync ---
-    initTools();
-    initGames();
+    // --- Initialise Lazy Sub-Modules & API sync ---
+    let toolsLoaded = false;
+    let gamesLoaded = false;
+    const lazyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                if (entry.target.id === 'calculator-view' && !toolsLoaded) {
+                    toolsLoaded = true;
+                    import('./modules/tools.js').then(m => m.initTools()).catch(e => console.error('Failed to load tools', e));
+                }
+                if (entry.target.id === 'games-view' && !gamesLoaded) {
+                    gamesLoaded = true;
+                    import('./modules/games.js').then(m => m.initGames()).catch(e => console.error('Failed to load games', e));
+                }
+            }
+        });
+    }, { rootMargin: '200px' });
+    
+    const calcView = document.getElementById('calculator-view');
+    const gamesView = document.getElementById('games-view');
+    if (calcView) lazyObserver.observe(calcView);
+    if (gamesView) lazyObserver.observe(gamesView);
+
     applyLanguage(AppState.currentLang);
 
     // Fire safe Lanyard websocket connections and LoL profile requests

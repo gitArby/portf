@@ -1,0 +1,108 @@
+
+@media (max-width: 900px) {
+    .skills-categories {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .certs-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        /* Horizontal padding prevents content touching screen edge on phones */
+        padding: 3rem 1.2rem;
+    }
+    p {
+        font-size: 1rem;
+    }
+    .counters-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .skills-categories {
+        grid-template-columns: 1fr;
+    }
+    .project-card {
+        padding: 2.5rem 1.2rem 1.2rem;
+    }
+    .projects-grid {
+        gap: 1.2rem;
+    }
+    .lol-info {
+        gap: 1.2rem;
+    }
+    .lol-emblem {
+        width: 60px;
+        height: 60px;
+    }
+    .lol-name {
+        font-size: 1.1rem;
+    }
+    /* Hero buttons stack vertically on small phones */
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    .hero-actions .btn {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+    }
+    /* Footer mobile padding */
+    .site-footer {
+        padding: 2rem 1.2rem 1.5rem;
+    }
+}
+
+/* Extra small phones (iPhone SE, Pixel 4a etc) */
+@media (max-width: 400px) {
+    .container {
+        padding: 2.5rem 1rem;
+    }
+    /* Single column counters on very small screens */
+    .counters-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+    /* Reduce heading sizes slightly */
+    h3 {
+        font-size: 1.6rem;
+    }
+    /* Prevent mega-text from overflowing */
+    .mega-text {
+        letter-spacing: -2px;
+    }
+    /* Cert cards full width */
+    .cert-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    /* Timeline adjust */
+    .timeline {
+        padding-left: 1.5rem;
+    }
+}
+
+/* Touch Device Adjustments */
+@media (hover: none) and (pointer: coarse) {
+    html,
+    .main-nav,
+    .main-nav *,
+    .btn,
+    .social-links a,
+    .discord-badge,
+    #mega-trigger,
+    .progress-fill {
+        cursor: auto !important;
+    }
+    .cursor-dot,
+    .cursor-outline {
+        display: none !important;
+    }
+}
+

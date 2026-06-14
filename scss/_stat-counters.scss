@@ -1,0 +1,57 @@
+
+.counters-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.counter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem;
+    border: 1px solid #222;
+    border-radius: 12px;
+    background: rgba(17, 17, 17, 0.6);
+    backdrop-filter: blur(4px);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.counter-item:hover {
+    border-color: var(--arbyy-green);
+    box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.1);
+}
+
+.counter-value {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+}
+
+.counter-number {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--arbyy-green);
+    line-height: 1;
+}
+
+.counter-suffix {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--arbyy-green);
+    line-height: 1;
+}
+
+.counter-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 300;
+    text-align: center;
+}
+
