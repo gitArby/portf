@@ -418,6 +418,14 @@ export function applyLanguage(lang) {
         if (h4) h4.textContent = t.projects.c6t;
         if (p) p.textContent = t.projects.c6d;
     }
+    if (cards[6]) {
+        const h4 = cards[6].querySelector('h4');
+        const p = cards[6].querySelector('p');
+        const hint = cards[6].querySelector('.project-link-hint');
+        if (h4) h4.textContent = t.projects.c7t;
+        if (p) p.textContent = t.projects.c7d;
+        if (hint) hint.innerHTML = `${t.projects.c7hint} <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
+    }
 
     const projMoreText = document.getElementById('projects-more-text');
     if (projMoreText) projMoreText.textContent = t.projects.cMoreText;

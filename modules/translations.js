@@ -220,6 +220,9 @@ export const i18n = {
             c5d: 'Vlastní Discord bot navržený speciálně pro plynulé přehrávání českých rádiových stanic přímo v hlasových kanálech.',
             c6t: 'Roblox Gamedev',
             c6d: 'Experimentování s vývojem her v platformě Roblox. Skriptování vlastních herních mechanik, systémů a interakcí pomocí jazyka Lua.',
+            c7t: 'D&D Virtual Tabletop',
+            c7d: 'Projekt pro stolní hraní Dungeons & Dragons. Webové rozhraní (VTT) pro správu mapy, postav a hodů kostkou během našich herních seancí.',
+            c7hint: 'Spustit VTT',
             cMoreText: 'Všechny mé ostatní projekty a zdrojové kódy najdete na mém GitHubu.',
             cMoreBtn: 'Zobrazit další repozitáře'
         },
@@ -549,6 +552,9 @@ export const i18n = {
             c5d: 'A custom Discord bot designed specifically for seamless playback of Czech radio stations directly in voice channels.',
             c6t: 'Roblox Gamedev',
             c6d: 'Experimenting with game development on the Roblox platform. Scripting custom game mechanics, systems, and interactions using Lua.',
+            c7t: 'D&D Virtual Tabletop',
+            c7d: 'Project for playing Dungeons & Dragons tabletop. Web interface (VTT) for managing the map, characters, and dice rolls during our game sessions.',
+            c7hint: 'Open VTT',
             cMoreText: 'You can find all of my other projects and source codes on my GitHub.',
             cMoreBtn: 'View More Repositories'
         },
