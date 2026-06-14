@@ -937,13 +937,16 @@ export function generateCV(lang) {
             text-align: center;
         }
         @media print {
+            @page { margin: 5mm; }
             body {
                 width: 100%;
-                font-size: 9.5pt !important;
-                line-height: 1.3 !important;
+                font-size: 9pt !important;
+                line-height: 1.25 !important;
+                margin: 0;
+                padding: 0;
             }
             .cv-page {
-                padding: 1rem 1.5rem !important;
+                padding: 0.5rem 1rem !important;
             }
             .header {
                 padding-bottom: 0.5rem !important;
@@ -1012,8 +1015,8 @@ export function generateCV(lang) {
                 gap: 0.2rem !important;
             }
             .footer-note {
-                margin-top: 1rem !important;
-                padding-top: 0.4rem !important;
+                margin-top: 0.5rem !important;
+                padding-top: 0.2rem !important;
             }
             .cv-top-bar {
                 display: none !important;
