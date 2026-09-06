@@ -1,0 +1,698 @@
+/**
+ * Translations Module
+ * Contains the complete bilingual localization sets (Czech and English)
+ * for the entire application, including navigations, tool calculators,
+ * interactive CCNA console logs, and minigames.
+ */
+export const i18n = {
+    cs: {
+        nav: ['Domů', 'O mně', 'Dovednosti', 'Certifikáty', 'Nástroje', 'Terminál', 'Praxe', 'LoL', 'Minihry', 'Projekty', 'Ipsum', 'FAQ', 'Kontakt'],
+        subtitle: ['Tech nadšenec', 'hráč her', 'PC builder', 'web developer'],
+        hero: {
+            contactBtn: 'Kontakt',
+            cvBtn: 'Zobrazit CV'
+        },
+        ipsum: {
+            title: 'Arby Ipsum Generator',
+            subtitle: 'Proč používat nudnou latinu, když si můžeš vygenerovat pravý "Nerd" výplňový text plný RGB a síťařiny?',
+            label: 'Počet odstavců:',
+            btnGen: 'Generovat Arby Ipsum',
+            btnCopy: 'Kopírovat',
+            placeholder: 'Klikni na tlačítko "Generovat" pro vytvoření textu...'
+        },
+        easterEggs: {
+            hint: 'Zmáčkni <b>F</b> pro zobrazení tajných Easter Eggů',
+            found: '🏆 Skrytý Easter Egg nalezen!',
+            allFound: 'Neskutečné! Našel jsi všechny 4 skryté Easter Eggy. Jsi opravdový lovec pokladů! 🏆',
+            trackerTitle: 'Odhaleno tajných Easter Eggů:'
+        },
+        faq: {
+            title: 'Často kladené dotazy',
+            q1: 'Opravíš mi tiskárnu?',
+            a1: 'Ne. Tiskárny jsou dílem čisté temné magie a odmítám se jich dotýkat. Zkus ji vypnout a zapnout.',
+            q2: 'Složíš mi PC?',
+            a2: 'Jasně! Napiš mi do zpráv, sepíšeme si rozpočet, k čemu má PC sloužit a vymyslíme tu nejlepší sestavu.',
+            q3: 'Jsi opravdu 1v9 L9 mašina?',
+            a3: 'Samozřejmě. Moje herní mechaniky jsou bezchybné. Za případné prohry může čistě jen ping a špatný tým.',
+            q4: 'Co znamená "arbyy"?',
+            a4: 'To je tajemství, které se předává z generace na generaci. (Nebo prostě jen cool herní nick, záleží, čemu chceš věřit).'
+        },
+        about: {
+            title: 'O mně',
+            text: 'Ahoj! Jsem Adam a věnuji se technologiím. Působím jako Aplikační specialista - Junior ve společnosti VALBEK-EU, a.s. a jsem absolventem oboru Informační technologie se silným technickým zázemím a hlubokým zájmem o IT systémy, správu aplikací, hardware a sítě. Jsem proaktivní, rychle se učím novým systémům a baví mě správa IT, skládání PC, konfigurace sítí i tvorba s využitím AI (používám Claude a Gemini). Jsem velmi flexibilní, spolehlivý týmový hráč a po zaučení se dokážu rychle adaptovat na jakoukoliv činnost. Mimo technologie ve svém volném čase čtu mangu a jsem velkým fanouškem anime.',
+            locationLabel: 'Lokalita:',
+            locationValue: 'Liberec, Česká republika',
+            languagesLabel: 'Jazyky:',
+            languagesValue: 'Čeština (rodilý mluvčí), Angličtina (B2 - C1)'
+        },
+        skills: {
+            title: 'Dovednosti & Zájmy',
+            text: 'Kromě softwaru a vývoje se zajímám o počítačové sítě a hardware. Zde je strukturovaný přehled mých dovedností:',
+            catWeb: 'Vývoj & Web',
+            catNet: 'Počítačové sítě',
+            catSys: 'Hardware & OS',
+            diag: 'Diagnostika',
+            os: 'Správa OS',
+            support: 'IT Podpora',
+            office: 'MS Office',
+            photoshop: 'Photoshop (základy)',
+            php: 'PHP (základy)',
+            ai: 'AI Tvorba (Claude/Gemini)',
+            jellyfin: 'Jellyfin Server',
+            oop: 'OOP & Návrhové vzory',
+            graphs: 'Teorie grafů',
+            pcbs: '100h v PCBS 1 & 2',
+            apache: 'Apache (XAMPP)',
+            pma: 'phpMyAdmin'
+        },
+        certs: {
+            title: 'Certifikace',
+            subtitle: 'Oficiální osvědčení, která potvrzují mé teoretické i praktické znalosti v oblasti síťových technologií.',
+            status: 'Dokončeno',
+            ccna1: {
+                title: 'CCNA 1: Introduction to Networks',
+                desc: 'Základy počítačových sítí, IP adresace (IPv4/IPv6), síťové protokoly, Ethernet a základní konfigurace přepínačů a směrovačů.'
+            },
+            ccna2: {
+                title: 'CCNA 2: Switching, Routing, and Wireless Essentials',
+                desc: 'Směrovací protokoly (OSPF), konfigurace VLAN, redundantní sítě (STP/EtherChannel), bezpečnost sítě (ACL/DHCP Snooping) a základy WLAN.'
+            },
+            sololearn: {
+                title: 'Certifikáty ze všech zmíněných jazyků',
+                desc: 'Úspěšné absolvování kurzů a získání certifikátů pro všechny programovací jazyky uvedené v sekci dovedností.'
+            },
+            lol: {
+                title: '1V9 L9 Mašina (Not Low Elo)',
+                desc: 'Oficiální potvrzení, že jsem 1v9 L9 mašina, dokážu vyhrát hru i se zavázanýma očima a rozhodně nepatřím do low elo.',
+                status: 'Challenger potvrzen v mých očích'
+            }
+        },
+        calculator: {
+            title: 'Nástroje & Kalkulačky',
+            subtitle: 'Rychlé výpočty podsítí pro síťaře a standardní/vědecká kalkulačka pro každodenní úkoly.',
+            tabSubnet: 'Subnet kalkulačka',
+            tabMath: 'Matematická kalkulačka',
+            tabRaid: 'RAID kalkulačka',
+            tabPsu: 'PC Zdroj (PSU)',
+            tabPassword: 'Generátor hesel',
+            subnetIp: 'IP adresa:',
+            subnetCidr: 'Maska / CIDR:',
+            resMask: 'Maska sítě:',
+            resNet: 'Adresa sítě (Network):',
+            resBroadcast: 'Broadcast adresa:',
+            resRange: 'Rozsah použitelných IP:',
+            resHosts: 'Počet použitelných hostů:',
+            resWildcard: 'Wildcard maska:',
+            binHdr: 'Binární vizualizace',
+            mathMode: 'Režim:',
+            mathModeStd: 'Standardní',
+            mathModeSci: 'Vědecká',
+            raidDisks: 'Počet disků:',
+            raidCapacity: 'Kapacita disku:',
+            raidUsable: 'Využitelná kapacita:',
+            raidLost: 'Ztracená kapacita:',
+            raidFault: 'Odolnost proti chybám:',
+            raidRead: 'Rychlost čtení:',
+            raidWrite: 'Rychlost zápisu:',
+            raidErrorMin: 'Chyba: RAID {level} vyžaduje alespoň {min} disků.',
+            raidErrorEven: 'Chyba: RAID 10 vyžaduje sudý počet disků (minimálně 4).',
+            raidLevels: [
+                'RAID 0 (Prokládání - Rychlost)',
+                'RAID 1 (Zrcadlení - Bezpečnost)',
+                'RAID 5 (Parita - Efektivita)',
+                'RAID 6 (Dvojitá parita - Vysoká bezpečnost)',
+                'RAID 10 (Zrcadlené prokládané sady)'
+            ],
+            psuCpu: 'Procesor (CPU):',
+            psuGpu: 'Grafická karta (GPU):',
+            psuRam: 'Počet pamětí RAM:',
+            psuDrives: 'Počet disků (SSD/HDD):',
+            psuFans: 'Počet ventilátorů:',
+            psuOc: 'Taktování (OC +15%)',
+            psuEst: 'Odhadovaný špičkový příkon:',
+            psuRec: 'Doporučený výkon zdroje:',
+            psuEff: 'Doporučená certifikace:',
+            psuCpuOpts: [
+                'Kancelářský / Úsporný (65W)',
+                'Střední třída / Herní (125W)',
+                'High-end / Taktovaný (250W)'
+            ],
+            psuGpuOpts: [
+                'Integrovaná / Žádná (0W)',
+                'Základní (např. GTX 1650, 75W)',
+                'Střední třída (např. RTX 4060/4070, 200W)',
+                'High-end (např. RTX 4080/4090, 350W)'
+            ],
+            psuRamOpts: ['1 modul', '2 moduly', '4 moduly', '8 modulů'],
+            pwdLength: 'Délka hesla:',
+            pwdLower: 'Malá písmena (a-z)',
+            pwdUpper: 'Velká písmena (A-Z)',
+            pwdDigits: 'Číslice (0-9)',
+            pwdSymbols: 'Symboly (!@#$... )',
+            pwdStrength: 'Síla hesla / Entropie:',
+            pwdGenerate: 'Generovat',
+            pwdPlaceholder: 'Klikněte na Generovat',
+            pwdStrengthWeak: 'Slabé ({entropy} bitů) - Snadno prolomitelné',
+            pwdStrengthMedium: 'Střední ({entropy} bitů) - Dobré pro běžné účty',
+            pwdStrengthStrong: 'Silné ({entropy} bitů) - Velmi bezpečné',
+            hashHdr: 'SHA-256 Hasher',
+            hashPlaceholder: 'Zadejte text pro SHA-256 hash...',
+            hashCopied: 'Hash zkopírován!',
+            pwdCopied: 'Heslo zkopírováno!'
+        },
+        timeline: {
+            title: 'Vzdělání & Zkušenosti',
+            subtitle: 'Přehled mého studia a odborných praxí v IT oblasti.',
+            exp0: {
+                date: '2026 – současnost',
+                title: 'VALBEK-EU, a.s.',
+                sub: 'Aplikační specialista - Junior (Vývoj webových aplikací)',
+                desc: 'Vývoj a správa webových aplikací, implementace nových funkcionalit, práce s moderními webovými technologiemi, řešení technických požadavků a optimalizace aplikací.'
+            },
+            edu1: {
+                title: 'Střední průmyslová škola a Střední odborná škola, Varnsdorf',
+                sub: 'Obor: Informační technologie',
+                desc: 'Absolvent studia zakončeného maturitní zkouškou. Zaměření na správu systémů, základy programování, síťové technologie a hardware.'
+            },
+            exp1: {
+                date: 'Odborná stáž (2 týdny)',
+                title: 'IT servis Turnov',
+                sub: 'Servisní technik',
+                desc: 'Diagnostika, čištění a hardware opravy stolních počítačů a notebooků. Instalace operačních systémů, softwaru a údržba IT vybavení.'
+            },
+            exp2: {
+                date: 'Odborná stáž (2 týdny)',
+                title: 'Spolupráce na webových projektech (u Tomáše Hubičky)',
+                sub: 'Webový vývojář',
+                desc: 'Praktické seznámení s vývojovým procesem, tvorba a správa webových stránek. Práce s HTML, CSS a ladění kódu na reálných projektech.'
+            }
+        },
+        lol: {
+            title: 'League of Legends',
+            btn: 'Zobrazit na u.gg',
+            statsDesc: 'Podívej se na u.gg pro aktuální stats',
+            favChamps: 'Nejoblíbenější šampioni',
+            roles: { ADC: 'ADC / Bot laner', Support: 'Support', Mid: 'Mid laner', Jungle: 'Jungler', Top: 'Top laner' }
+        },
+        projects: {
+            title: 'Projekty',
+            text: 'Stále se posouvám dál. Tady je malá ukázka toho, na čem momentálně pracuji a co se teprve klube na svět:',
+            filterAll: 'Vše',
+            filterEdu: 'Vzdělání',
+            filterExp: 'Praxe',
+            c1t: 'Funny weby pro přítelkyni',
+            c1d: 'Dva propojené zábavné weby s detektivní a zamilovanou tématikou vytvořené pro mou přítelkyni Týnku.',
+            c1badge: 'Spuštěno',
+            c1hintDet: 'Detektivní web',
+            c1hintGf: 'Zamilovaný web',
+            c2t: 'ScrapScrap',
+            c2d: 'Velmi se zajímám o gamedev, a právě proto vznikla tahle steampunková webová hra. Obsahuje herní obchod, žebříčky a vlastní mechaniky.',
+            c2badge: 'Spuštěno',
+            c2hint: 'Hrát ScrapScrap',
+            c3t: 'Kasař',
+            c3d: 'Open-source webová aplikace pro správu financí. Umožňuje přehledně sledovat příjmy, výdaje a plánovat rozpočet.',
+            c3badge: 'Spuštěno',
+            c3hint: 'Spustit Kasař',
+            c4t: 'Výherní automaty',
+            c4d: 'Jednoduchá hra typu výherní automat vytvořená v Pythonu s využitím knihovny Pygame.',
+            c4badge: 'Python',
+            c4hint: 'Zobrazit GitHub',
+            c4summary: 'Návod ke spuštění',
+            c4step1: 'Stáhněte nebo klonujte repozitář z <a href="https://github.com/gitArby/mamradautomaty" target="_blank">GitHubu</a>.',
+            c4step2: 'Rozbalte staženou složku hry.',
+            c4step3: 'Spusťte soubor ',
+            c4controls: '<strong>Ovládání:</strong> ESC pro ukončení, tlačítko QUIT vpravo nahoře, kliknutí myší pro nastavení sázky a roztočení (SPIN).',
+            c5t: 'Rádio Bot',
+            c5d: 'Vlastní Discord bot navržený speciálně pro plynulé přehrávání českých rádiových stanic přímo v hlasových kanálech.',
+            c6t: 'Roblox Gamedev',
+            c6d: 'Experimentování s vývojem her v platformě Roblox. Skriptování vlastních herních mechanik, systémů a interakcí pomocí jazyka Lua.',
+            c7t: 'D&D Virtual Tabletop',
+            c7d: 'Projekt pro stolní hraní Dungeons & Dragons. Webové rozhraní (VTT) pro správu mapy, postav a hodů kostkou během našich herních seancí.',
+            c7hint: 'Spustit VTT',
+            cMoreText: 'Všechny mé ostatní projekty a zdrojové kódy najdete na mém GitHubu.',
+            cMoreBtn: 'Zobrazit další repozitáře'
+        },
+        contact: {
+            title: 'Kontakt',
+            text: 'Máš zájem o spolupráci, nebo si chceš jen zahrát? Napiš mi!',
+            placeholderName: 'Jméno / Name',
+            placeholderEmail: 'E-mail',
+            placeholderMessage: 'Zpráva / Message',
+            submit: 'Odeslat zprávu',
+            formAlert: 'Vaše zpráva byla připravena! Otevírám poštovního klienta...'
+        },
+        counters: ['hodin v LoL', 'sestavených PC', 'roky v tech', 'projektů'],
+        nowListening: 'Teď poslouchám', nowPlaying: 'Teď hraju', copyToast: 'Zkopírováno!',
+        hud: {
+            cvBlocked: 'Pro vygenerování CV prosím povolte vyskakovací okna (pop-ups).',
+            formSuccess: 'Zpráva byla úspěšně připravena! Otevírám poštovního klienta...'
+        },
+        ciscoLab: {
+            title: 'Cisco CCNA Interaktivní Laboratoř',
+            subtitle: 'Kliknutím na síťová zařízení v topologii spustíte simulaci IOS konzole a diagnostických logů.',
+            placeholder: '<div class="console-placeholder"><p class="blink-fast">> KONEKTIVITA: SMĚROVÁNÍ AKTIVNÍ [OSPFv2]</p><p>> Kliknutím na jakékoli zařízení na topologické mapě spustíte konzoli a vyvoláte stav konfigurace.</p></div>',
+            devices: {
+                router: [
+                    'Edge_Router# show ip interface brief',
+                    'Interface              IP-Address      OK? Method Status                Protocol',
+                    'GigabitEthernet0/0/0   82.114.79.46    YES NVRAM  up                    up      (WAN)',
+                    'GigabitEthernet0/0/1   192.168.10.1    YES NVRAM  up                    up      (LAN Gateway)',
+                    'Loopback0              1.1.1.1         YES NVRAM  up                    up      (Router ID)',
+                    'Edge_Router# show ip route ospf',
+                    'Codes: O - OSPF network, IA - OSPF inter area, N1 - OSPF NSSA external 1',
+                    'Gateway of last resort is 82.114.79.45 to interface GigabitEthernet0/0/0',
+                    '      192.168.20.0/24 [110/2] via 192.168.10.2, 04:12:33, GigabitEthernet0/0/1',
+                    '      192.168.30.0/24 [110/2] via 192.168.10.2, 04:12:33, GigabitEthernet0/0/1',
+                    'Edge_Router# _'
+                ],
+                switch: [
+                    'Core_Switch# show vlan brief',
+                    'VLAN Name                             Status    Ports',
+                    '---- -------------------------------- --------- -------------------------------',
+                    '1    default                          active    Gi0/2, Gi0/3, Gi0/4',
+                    '10   Management                       active    Fa0/1, Fa0/2',
+                    '20   Workstations                     active    Fa0/5, Fa0/6, Fa0/7, Fa0/8',
+                    '30   Servers                          active    Fa0/10, Fa0/11',
+                    'Core_Switch# show spanning-tree vlan 10',
+                    'VLAN0010',
+                    '  Spanning tree enabled protocol rstp',
+                    '  Root ID    Priority    32778',
+                    '             Address     000A.41F2.A780',
+                    '             This bridge is the root',
+                    'Core_Switch# _'
+                ],
+                pc: [
+                    'Workstation:\u007e$ ipconfig /all',
+                    'Ethernet adapter Local Area Connection:',
+                    '   Connection-specific DNS Suffix  . : arbyy.tech',
+                    '   IPv4 Address. . . . . . . . . . . : 192.168.20.105 (DHCP Active)',
+                    '   Subnet Mask . . . . . . . . . . . : 255.255.255.0',
+                    '   Default Gateway . . . . . . . . . : 192.168.20.1',
+                    '   DNS Servers . . . . . . . . . . . : 192.168.30.10 (Local_Server)',
+                    'Workstation:\u007e$ ping 192.168.30.10',
+                    'Pinging 192.168.30.10 with 32 bytes of data:',
+                    'Reply from 192.168.30.10: bytes=32 time<1ms TTL=63',
+                    'Reply from 192.168.30.10: bytes=32 time<1ms TTL=63',
+                    'Reply from 192.168.30.10: bytes=32 time<1ms TTL=63',
+                    'Reply from 192.168.30.10: bytes=32 time<1ms TTL=63',
+                    'Ping statistics for 192.168.30.10:',
+                    '    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)',
+                    'Workstation:\u007e$ _'
+                ],
+                server: [
+                    'Local_Server:\u007e$ show system-status',
+                    'OS: Ubuntu Server 24.04 LTS',
+                    'Kernel: 6.8.0-generic',
+                    'IP Address: 192.168.30.10 (Static)',
+                    'Active Services:',
+                    '  - BIND9 DNS Service (Port 53) -> [RUNNING]',
+                    '  - Kea DHCP Daemon   (Port 67) -> [RUNNING]',
+                    '  - NGINX Web Server  (Port 80) -> [RUNNING]',
+                    'Network Stats:',
+                    '  Uptime: 247 days, 14 hours, 2 minutes',
+                    '  Total Received: 1.42 TiB | Total Transmitted: 8.94 TiB',
+                    'Local_Server:\u007e$ _'
+                ]
+            }
+        },
+        terminal: {
+            title: 'Cyber Terminál',
+            subtitle: 'Interaktivní příkazová řádka arbyy-sh v2.4. Zadejte "help" pro seznam příkazů nebo použijte rychlá tlačítka.',
+            placeholder: 'Zadejte příkaz (např. neofetch, help, projects, theme blue)...',
+            quickTitle: 'Rychlé příkazy:',
+            welcomeMsg: 'Vítejte v arbyy-sh [Verze 2.4.0 (x86_64-pc-cyberdeck)]\nNapište "help" nebo klikněte na tlačítka níže pro spuštění příkazů.',
+        },
+        games: {
+            title: 'Minihry & Zábava',
+            subtitle: 'Klasický kyber-had na odreagování a hacker hledání min pro trénink síťového myšlení.',
+            tabSnake: 'Kybernetický had',
+            tabMines: 'Hacker Hledání min',
+            tabType: 'Obrana firewallu',
+            snakeScore: 'Skóre:',
+            snakeHigh: 'Nejlepší:',
+            snakeDiff: 'Obtížnost:',
+            snakeStartMsg: 'Stiskněte START pro spuštění',
+            snakeGameOver: 'KONEC HRY! Skóre: {score}',
+            snakeWin: 'VÍTĚZSTVÍ! Skvělá práce!',
+            minesNodes: 'Uzly:',
+            minesShields: 'Štíty:',
+            minesTime: 'Čas:',
+            minesReset: 'RESTART',
+            minesModeReveal: 'Režim: Odkrýt',
+            minesModeFlag: 'Režim: Štít',
+            minesGameOver: 'SYSTÉMOVÁ CHYBA: Detekován Firewall!',
+            minesWin: 'PŘÍSTUP POVOLEN: Všechny uzly zabezpečeny!',
+            typeScore: 'Skóre:',
+            typeHigh: 'Nejlepší:',
+            typeIntegrity: 'Integrita:',
+            typeStartMsg: 'Stiskněte START pro spuštění',
+            typePlaceholder: 'Zadejte příkaz...',
+            typeGameOver: 'SYSTÉM NABOURÁN! Firewall selhal.'
+        }
+    },
+    en: {
+        nav: ['Home', 'About', 'Skills', 'Certificates', 'Tools', 'Terminal', 'Experience', 'LoL', 'Minigames', 'Projects', 'Ipsum', 'FAQ', 'Contact'],
+        subtitle: ['Tech enthusiast', 'gamer', 'PC builder', 'web developer'],
+        hero: {
+            contactBtn: 'Contact',
+            cvBtn: 'View CV'
+        },
+        ipsum: {
+            title: 'Arby Ipsum Generator',
+            subtitle: 'Why use boring Latin when you can generate real "Nerd" filler text full of RGB and networking?',
+            label: 'Paragraphs count:',
+            btnGen: 'Generate Arby Ipsum',
+            btnCopy: 'Copy',
+            placeholder: 'Click the "Generate" button to create text...'
+        },
+        easterEggs: {
+            hint: 'Press <b>F</b> to show secret Easter Eggs',
+            found: '🏆 Secret Easter Egg found!',
+            allFound: 'Incredible! You found all 4 secret Easter Eggs. You are a true treasure hunter! 🏆',
+            trackerTitle: 'Secret Easter Eggs uncovered:'
+        },
+        faq: {
+            title: 'Frequently Asked Questions',
+            q1: 'Will you fix my printer?',
+            a1: 'No. Printers are a product of dark magic and I refuse to touch them. Have you tried turning it off and on again?',
+            q2: 'Will you build a PC for me?',
+            a2: 'Sure! Send me a message, we can discuss your budget, what the PC will be used for, and we will come up with the best build.',
+            q3: 'Are you really a 1v9 L9 machine?',
+            a3: 'Of course. My gaming mechanics are flawless. Any losses are purely due to ping and bad teammates.',
+            q4: 'What does "arbyy" mean?',
+            a4: 'It\'s a secret passed down from generation to generation. (Or just a cool gaming nick, depends on what you want to believe).'
+        },
+        about: {
+            title: 'About me',
+            text: 'Hey! I\'m Adam and I\'m passionate about tech. I currently work as an Application Specialist - Junior at VALBEK-EU, a.s. and hold an IT background with a deep interest in enterprise systems, application management, hardware, and networking. I am proactive, a fast learner, and enjoy IT operations, PC building, network configuration, and AI-driven creation (Claude and Gemini). Highly flexible, reliable team player, and quick to adapt to new tasks. Outside of tech, I enjoy reading manga and watching anime.',
+            locationLabel: 'Location:',
+            locationValue: 'Liberec, Czech Republic',
+            languagesLabel: 'Languages:',
+            languagesValue: 'Czech (Native), English (B2 - C1)'
+        },
+        skills: {
+            title: 'Skills & Interests',
+            text: 'Besides software and coding, I am passionate about computer networking and hardware. Here is a structured overview of my skills:',
+            catWeb: 'Development & Web',
+            catNet: 'Computer Networks',
+            catSys: 'Hardware & OS',
+            diag: 'Diagnostics',
+            os: 'OS Admin',
+            support: 'IT Support',
+            office: 'MS Office',
+            photoshop: 'Photoshop (basics)',
+            php: 'PHP (basics)',
+            ai: 'AI Creation (Claude/Gemini)',
+            jellyfin: 'Jellyfin Server',
+            oop: 'OOP & Design Patterns',
+            graphs: 'Graph Theory',
+            pcbs: '100h in PCBS 1 & 2',
+            apache: 'Apache (XAMPP)',
+            pma: 'phpMyAdmin'
+        },
+        certs: {
+            title: 'Certifications',
+            subtitle: 'Official credentials validating my theoretical and practical knowledge in network technologies.',
+            status: 'Completed',
+            ccna1: {
+                title: 'CCNA 1: Introduction to Networks',
+                desc: 'Introduction to network architectures, IP addressing (IPv4/IPv6), network protocols, Ethernet concepts, and basic switch/router configurations.'
+            },
+            ccna2: {
+                title: 'CCNA 2: Switching, Routing, and Wireless Essentials',
+                desc: 'Routing protocols (OSPF), VLAN configuration, redundant network topologies (STP/EtherChannel), network security (ACLs/DHCP Snooping), and WLAN basics.'
+            },
+            sololearn: {
+                title: 'Certificates in all mentioned languages',
+                desc: 'Successfully completed courses and obtained certificates for all programming languages listed in the skills section.'
+            },
+            lol: {
+                title: '1V9 L9 Machine (Not Low Elo)',
+                desc: 'Official confirmation that I am a 1v9 L9 machine, can win the game blindfolded, and definitely do not belong in low elo.',
+                status: 'Challenger Confirmed In My Eyes'
+            }
+        },
+        calculator: {
+            title: 'Tools & Calculators',
+            subtitle: 'Quick subnet calculations for networkers and standard/scientific calculator for daily tasks.',
+            tabSubnet: 'Subnet Calculator',
+            tabMath: 'Math Calculator',
+            tabRaid: 'RAID Calculator',
+            tabPsu: 'PC PSU Calculator',
+            tabPassword: 'Password Gen',
+            subnetIp: 'IP Address:',
+            subnetCidr: 'Mask / CIDR:',
+            resMask: 'Subnet Mask:',
+            resNet: 'Network Address:',
+            resBroadcast: 'Broadcast Address:',
+            resRange: 'Usable IP Range:',
+            resHosts: 'Usable Hosts:',
+            resWildcard: 'Wildcard Mask:',
+            binHdr: 'Binary Visualization',
+            mathMode: 'Mode:',
+            mathModeStd: 'Standard',
+            mathModeSci: 'Scientific',
+            raidDisks: 'Number of Disks:',
+            raidCapacity: 'Disk Capacity:',
+            raidUsable: 'Usable Capacity:',
+            raidLost: 'Lost Capacity:',
+            raidFault: 'Fault Tolerance:',
+            raidRead: 'Read Speed:',
+            raidWrite: 'Write Speed:',
+            raidErrorMin: 'Error: RAID {level} requires at least {min} disks.',
+            raidErrorEven: 'Error: RAID 10 requires an even number of disks (min 4).',
+            raidLevels: [
+                'RAID 0 (Striping - Speed)',
+                'RAID 1 (Mirroring - Safety)',
+                'RAID 5 (Parity - Efficiency)',
+                'RAID 6 (Double Parity - High Safety)',
+                'RAID 10 (Stripe of Mirrors)'
+            ],
+            psuCpu: 'Processor (CPU):',
+            psuGpu: 'Graphics Card (GPU):',
+            psuRam: 'RAM Modules Count:',
+            psuDrives: 'Drives (SSD/HDD):',
+            psuFans: 'Fans Count:',
+            psuOc: 'Overclocking (OC +15%)',
+            psuEst: 'Estimated Peak Power:',
+            psuRec: 'Recommended PSU Wattage:',
+            psuEff: 'Recommended Certification:',
+            psuCpuOpts: [
+                'Office / Budget (65W)',
+                'Mid-range / Gaming (125W)',
+                'High-end / Overclocked (250W)'
+            ],
+            psuGpuOpts: [
+                'Integrated / None (0W)',
+                'Budget (e.g. GTX 1650, 75W)',
+                'Mid-range (e.g. RTX 4060/4070, 200W)',
+                'High-end (e.g. RTX 4080/4090, 350W)'
+            ],
+            psuRamOpts: ['1 module', '2 modules', '4 modules', '8 modules'],
+            pwdLength: 'Password Length:',
+            pwdLower: 'Lowercase (a-z)',
+            pwdUpper: 'Uppercase (A-Z)',
+            pwdDigits: 'Digits (0-9)',
+            pwdSymbols: 'Symbols (!@#$... )',
+            pwdStrength: 'Password Strength / Entropy:',
+            pwdGenerate: 'Generate',
+            pwdPlaceholder: 'Click Generate',
+            pwdStrengthWeak: 'Weak ({entropy} bits) - Easily cracked',
+            pwdStrengthMedium: 'Medium ({entropy} bits) - Good for normal use',
+            pwdStrengthStrong: 'Strong ({entropy} bits) - Highly secure',
+            hashHdr: 'SHA-256 Hasher',
+            hashPlaceholder: 'Type text for SHA-256 hash...',
+            hashCopied: 'Hash copied!',
+            pwdCopied: 'Password copied!'
+        },
+        timeline: {
+            title: 'Education & Experience',
+            subtitle: 'Overview of my academic background and professional internships in IT.',
+            exp0: {
+                date: '2026 – Present',
+                title: 'VALBEK-EU, a.s.',
+                sub: 'Application Specialist - Junior (Web Development)',
+                desc: 'Development and maintenance of web applications, implementation of new features, working with modern web technologies, technical requirements, and application optimization.'
+            },
+            edu1: {
+                title: 'Secondary Technical and Vocational School, Varnsdorf',
+                sub: 'Field of Study: Information Technology',
+                desc: 'Graduate of a study program completed with the school-leaving exam (Maturita). Focused on systems administration, programming basics, networking, and hardware.'
+            },
+            exp1: {
+                date: 'Internship (2 weeks)',
+                title: 'IT service Turnov',
+                sub: 'Service Technician',
+                desc: 'Diagnostics, cleaning, and hardware repairs of desktop computers and laptops. Installation of operating systems, software, and general maintenance of IT equipment.'
+            },
+            exp2: {
+                date: 'Internship (2 weeks)',
+                title: 'Web Projects Collaboration (with Tomáš Hubička)',
+                sub: 'Web Developer',
+                desc: 'Practical hands-on experience with web development workflows, creating and managing websites. Writing HTML, CSS, and debugging code on real-world projects.'
+            }
+        },
+        lol: {
+            title: 'League of Legends',
+            btn: 'View on u.gg',
+            statsDesc: 'Check u.gg for current stats',
+            favChamps: 'Favorite Champions',
+            roles: { ADC: 'ADC / Bot laner', Support: 'Support', Mid: 'Mid laner', Jungle: 'Jungler', Top: 'Top laner' }
+        },
+        projects: {
+            title: 'Projects',
+            text: 'Still pushing forward. Here\'s a small preview of what I\'m currently working on and what\'s coming soon:',
+            filterAll: 'All',
+            filterEdu: 'Education',
+            filterExp: 'Experience',
+            c1t: 'Fun websites for my girlfriend',
+            c1d: 'Two interconnected fun websites with detective and love themes, created for my girlfriend Týnka.',
+            c1badge: 'Live',
+            c1hintDet: 'Detective Site',
+            c1hintGf: 'Love Site',
+            c2t: 'ScrapScrap',
+            c2d: 'I am very interested in gamedev, which is why this steampunk web game was created. It features an in-game shop, leaderboards, and custom mechanics.',
+            c2badge: 'Live',
+            c2hint: 'Play ScrapScrap',
+            c3t: 'Kasař',
+            c3d: 'An open-source personal finance manager web application. Allows you to easily track income, expenses, and plan budgets.',
+            c3badge: 'Live',
+            c3hint: 'Open Kasař',
+            c4t: 'Slot Machine Game',
+            c4d: 'A simple slot machine game made using Python and Pygame.',
+            c4badge: 'Python',
+            c4hint: 'View GitHub',
+            c4summary: 'Running Instructions',
+            c4step1: 'Clone or download the project files from <a href="https://github.com/gitArby/mamradautomaty" target="_blank">GitHub</a>.',
+            c4step2: 'Extract the downloaded game folder.',
+            c4step3: 'Run the file ',
+            c4controls: '<strong>Controls:</strong> ESC to exit, QUIT button in top right, mouse click to set bet and SPIN.',
+            c5t: 'Radio Bot',
+            c5d: 'A custom Discord bot designed specifically for seamless playback of Czech radio stations directly in voice channels.',
+            c6t: 'Roblox Gamedev',
+            c6d: 'Experimenting with game development on the Roblox platform. Scripting custom game mechanics, systems, and interactions using Lua.',
+            c7t: 'D&D Virtual Tabletop',
+            c7d: 'Project for playing Dungeons & Dragons tabletop. Web interface (VTT) for managing the map, characters, and dice rolls during our game sessions.',
+            c7hint: 'Open VTT',
+            cMoreText: 'You can find all of my other projects and source codes on my GitHub.',
+            cMoreBtn: 'View More Repositories'
+        },
+        contact: {
+            title: 'Contact',
+            text: 'Interested in collaboration, or just want to play? Hit me up!',
+            placeholderName: 'Jméno / Name',
+            placeholderEmail: 'E-mail',
+            placeholderMessage: 'Zpráva / Message',
+            submit: 'Send Message',
+            formAlert: 'Message prepared! Launching email client...'
+        },
+        counters: ['hours in LoL', 'built PCs', 'years in tech', 'projects'],
+        nowListening: 'Now listening', nowPlaying: 'Now playing', copyToast: 'Copied!',
+        hud: {
+            cvBlocked: 'Please enable pop-ups to generate your CV.',
+            formSuccess: 'Message successfully prepared! Opening email client...'
+        },
+        ciscoLab: {
+            title: 'Cisco CCNA Interactive Lab',
+            subtitle: 'Click on network devices in the topology map to start the simulated IOS console and diagnostic logs.',
+            placeholder: '<div class="console-placeholder"><p class="blink-fast">> CONNECTIVITY: ROUTING ACTIVE [OSPFv2]</p><p>> Click on any device on the topology map to start the console and retrieve configuration status.</p></div>',
+            devices: {
+                router: [
+                    'Edge_Router# show ip interface brief',
+                    'Interface              IP-Address      OK? Method Status                Protocol',
+                    'GigabitEthernet0/0/0   82.114.79.46    YES NVRAM  up                    up      (WAN)',
+                    'GigabitEthernet0/0/1   192.168.10.1    YES NVRAM  up                    up      (LAN Gateway)',
+                    'Loopback0              1.1.1.1         YES NVRAM  up                    up      (Router ID)',
+                    'Edge_Router# show ip route ospf',
+                    'Codes: O - OSPF network, IA - OSPF inter area, N1 - OSPF NSSA external 1',
+                    'Gateway of last resort is 82.114.79.45 to interface GigabitEthernet0/0/0',
+                    '      192.168.20.0/24 [110/2] via 192.168.10.2, 04:12:33, GigabitEthernet0/0/1',
+                    '      192.168.30.0/24 [110/2] via 192.168.10.2, 04:12:33, GigabitEthernet0/0/1',
+                    'Edge_Router# _'
+                ],
+                switch: [
+                    'Core_Switch# show vlan brief',
+                    'VLAN Name                             Status    Ports',
+                    '---- -------------------------------- --------- -------------------------------',
+                    '1    default                          active    Gi0/2, Gi0/3, Gi0/4',
+                    '10   Management                       active    Fa0/1, Fa0/2',
+                    '20   Workstations                     active    Fa0/5, Fa0/6, Fa0/7, Fa0/8',
+                    '30   Servers                          active    Fa0/10, Fa0/11',
+                    'Core_Switch# show spanning-tree vlan 10',
+                    'VLAN0010',
+                    '  Spanning tree enabled protocol rstp',
+                    '  Root ID    Priority    32778',
+                    '             Address     000A.41F2.A780',
+                    '             This bridge is the root',
+                    'Core_Switch# _'
+                ],
+                pc: [
+                    'Workstation:\u007e$ ipconfig /all',
+                    'Ethernet adapter Local Area Connection:',
+                    '   Connection-specific DNS Suffix  . : arbyy.tech',
+                    '   IPv4 Address. . . . . . . . . . . : 192.168.20.105 (DHCP Active)',
+                    '   Subnet Mask . . . . . . . . . . . : 255.255.255.0',
+                    '   Default Gateway . . . . . . . . . : 192.168.20.1',
+                    '   DNS Servers . . . . . . . . . . . : 192.168.30.10 (Local_Server)',
+                    'Workstation:\u007e$ ping 192.168.30.10',
+                    'Pinging 192.168.30.10 with 32 bytes of data:',
+                    'Reply from 192.168.30.10: bytes=32 time<1ms TTL=63',
+                    'Reply from 192.168.30.10: bytes=32 time<1ms TTL=63',
+                    'Reply from 192.168.30.10: bytes=32 time<1ms TTL=63',
+                    'Reply from 192.168.30.10: bytes=32 time<1ms TTL=63',
+                    'Ping statistics for 192.168.30.10:',
+                    '    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)',
+                    'Workstation:\u007e$ _'
+                ],
+                server: [
+                    'Local_Server:\u007e$ show system-status',
+                    'OS: Ubuntu Server 24.04 LTS',
+                    'Kernel: 6.8.0-generic',
+                    'IP Address: 192.168.30.10 (Static)',
+                    'Active Services:',
+                    '  - BIND9 DNS Service (Port 53) -> [RUNNING]',
+                    '  - Kea DHCP Daemon   (Port 67) -> [RUNNING]',
+                    '  - NGINX Web Server  (Port 80) -> [RUNNING]',
+                    'Network Stats:',
+                    '  Uptime: 247 days, 14 hours, 2 minutes',
+                    '  Total Received: 1.42 TiB | Total Transmitted: 8.94 TiB',
+                    'Local_Server:\u007e$ _'
+                ]
+            }
+        },
+        terminal: {
+            title: 'Cyber Terminal',
+            subtitle: 'Interactive command line arbyy-sh v2.4. Type "help" for a list of available commands or use the quick action chips.',
+            placeholder: 'Type a command (e.g. neofetch, help, projects, theme blue)...',
+            quickTitle: 'Quick commands:',
+            welcomeMsg: 'Welcome to arbyy-sh [Version 2.4.0 (x86_64-pc-cyberdeck)]\nType "help" or click the quick action chips below to execute commands.',
+        },
+        games: {
+            title: 'Minigames & Fun',
+            subtitle: 'Classic cyber snake to relax and hacker minesweeper to train network thinking.',
+            tabSnake: 'Cyber Snake',
+            tabMines: 'Hacker Minesweeper',
+            tabType: 'Firewall Defender',
+            snakeScore: 'Score:',
+            snakeHigh: 'High Score:',
+            snakeDiff: 'Difficulty:',
+            snakeStartMsg: 'Press START to play',
+            snakeGameOver: 'GAME OVER! Score: {score}',
+            snakeWin: 'VICTORY! Amazing job!',
+            minesNodes: 'Nodes:',
+            minesShields: 'Shields:',
+            minesTime: 'Time:',
+            minesReset: 'RESTART',
+            minesModeReveal: 'Mode: Scan',
+            minesModeFlag: 'Mode: Shield',
+            minesGameOver: 'SYSTEM ERROR: Firewall Detected!',
+            minesWin: 'ACCESS GRANTED: All nodes secured!',
+            typeScore: 'Score:',
+            typeHigh: 'High Score:',
+            typeIntegrity: 'Integrity:',
+            typeStartMsg: 'Press START to play',
+            typePlaceholder: 'Type command...',
+            typeGameOver: 'SYSTEM COMPROMISED! Firewall failed.'
+        }
+    }
+};

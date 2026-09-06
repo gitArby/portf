@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>arbyy.tech | Adam "Arbyy" Macků</title>
-    <link class="favicon" rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link class="favicon" rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta name="description" content="Tech nadšenec, hráč her a PC builder z Česka. Portfolio Adama Macků alias arbyy.">
     <meta property="og:title" content="arbyy.tech | Adam Macků">
     <meta property="og:description" content="Tech nadšenec, hráč her a PC builder z Česka.">
@@ -30,7 +30,7 @@
       "email": "mackuadam37@gmail.com",
       "sameAs": [
         "https://github.com/gitArby",
-        "https://www.instagram.com/arbycek"
+        "https://www.instagram.com/adam.macku"
       ]
     }
     </script>
@@ -39,62 +39,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="stylesheet" href="style.scss">
     <link
         href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700;900&family=Orbitron:wght@900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <script type="module" src="script.js"></script>
 </head>
 
 <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+</body>
 
-    <div id="scroll-progress"></div>
-
-            <load src="./components/nav.html" />
-
-    <div id="boot-screen">
-        <div class="terminal-text">
-            <p id="boot-1">> Inicializace arbyy_OS...</p>
-            <p id="boot-2">> Načítání hardwarových modulů... [OK]</p>
-            <p id="boot-3">> Připojování k League of Legends serverům... [OK]</p>
-            <p id="boot-4">> Vítej, uživateli.</p>
-            <div class="cursor-blink">_</div>
-        </div>
-    </div>
-    <script>
-        (function(){
-            var lang = localStorage.getItem('lang') || 'cs';
-            if (lang === 'en') {
-                document.getElementById('boot-1').textContent = '> Initializing arbyy_OS...';
-                document.getElementById('boot-2').textContent = '> Loading hardware modules... [OK]';
-                document.getElementById('boot-3').textContent = '> Connecting to League of Legends servers... [OK]';
-                document.getElementById('boot-4').textContent = '> Welcome, user.';
-            }
-        })();
-    </script>
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
-    <canvas id="easter-egg-canvas"></canvas>
-
-    <main class="main-content" id="main-content">
-        <!-- Home View -->
-                <load src="./components/home.html" />
-                <load src="./components/about.html" />
-        <load src="./components/skills.html" />
-        <load src="./components/certificates.html" />
-        <load src="./components/calculator.html" />
-        <load src="./components/experience.html" />
-        <load src="./components/lol-stats.html" />
-        <load src="./components/games.html" />
-        <load src="./components/projects.html" />
-        <load src="./components/ipsum.html" />
-        <load src="./components/faq.html" />
-        <load src="./components/contact.html" />
-</main>
-    <div id="hud-notifier-container"></div>
-    <div id="egg-tracker-widget" class="egg-tracker hidden" title="Odhaleno tajných Easter Eggů: 0/4">
-        🥚 <span id="egg-tracker-count">0/4</span>
-    </div>
+</html>
